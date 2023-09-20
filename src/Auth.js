@@ -1,19 +1,14 @@
 // Modules
 import { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 // CSS
 import "./auth.css";
 // Components
 import Login from "./Login";
 import Signup from "./Signup";
-import AlertMsg from "./components/AlertMsg";
+import EmailConfirmation from "./EmailConfirmation";
 
 export default function Auth() {
-  const [auth, setAuth] = useState("login");
-
-  function handleAuthState() {
-    setAuth((prevState) => (prevState === "login" ? "signup" : "login"));
-  }
-
   return (
     <div id="auth-con" className="c-i d-c">
       <img
@@ -21,23 +16,27 @@ export default function Auth() {
         alt="amazon-logo"
         width="200"
       />
-      {auth === "login" ? (
-        <Login
-          toggleTxtAppearance={toggleTxtAppearance}
-          handleAuthState={handleAuthState}
-        />
-      ) : (
-        <Signup
-          toggleTxtAppearance={toggleTxtAppearance}
-          handleAuthState={handleAuthState}
-        />
-      )}
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={<Login toggleTxtAppearance={toggleTxtAppearance} />}
+          ></Route>
+          <Route
+            path="/signup"
+            element={<Signup toggleTxtAppearance={toggleTxtAppearance} />}
+          ></Route>
+          <Route
+            path="/send-email-confirmation"
+            element={<EmailConfirmation />}
+          ></Route>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
 function toggleTxtAppearance(e) {
-  console.log();
-  const passInput = e.target.parentNode.querySelector('input[name="password"]');
+  const passInput = e.target.parentNode.querySelector("input");
   const toggleBtn = e.target;
 
   if (passInput.getAttribute("type") === "password") {

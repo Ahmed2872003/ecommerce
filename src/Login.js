@@ -1,7 +1,10 @@
-export default function Login({ toggleTxtAppearance, handleAuthState }) {
+import { useNavigate } from "react-router-dom";
+
+export default function Login({ toggleTxtAppearance }) {
+  const navigate = useNavigate();
   return (
     <>
-      <form>
+      <form className="container">
         <h1>Sign in</h1>
         <div>
           <label for="email">Email</label>
@@ -24,7 +27,7 @@ export default function Login({ toggleTxtAppearance, handleAuthState }) {
       <div className="center-line-con">
         <p className="center-line-content">New to Amazon?</p>
       </div>
-      <button type="button" onClick={handleAuthState}>
+      <button type="button" onClick={() => navigate("signup")}>
         Create your Amazon account
       </button>
     </>

@@ -1,5 +1,6 @@
 * {
   box-sizing: border-box;
+  white-space: pre-line;
 }
 body {
   font-family: "Lato", sans-serif;
@@ -40,8 +41,24 @@ body {
 .hover-yellow:hover {
   background-color: var(--amz-alt-yellow);
 }
+.hint {
+  display: flex;
+  align-items: center;
+  margin: 5px;
+  gap: 5px;
+  font-size: var(--font-s-s);
+}
+.hint * {
+  margin: 0;
+  color: var(--amz-grey);
+}
+.hint i {
+  color: var(--amz-yellow);
+}
+
 /* inputs */
-input:not(input[type="checkbox"]) {
+input:not(input[type="checkbox"]),
+select {
   width: 100%;
   outline: none;
   padding: 5px;

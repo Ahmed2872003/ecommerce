@@ -1,5 +1,5 @@
 // CSS
-import { useState } from "react";
+import { useEffect } from "react";
 import "./alertMsg.css";
 
 export default function AlertMsg(props) {
@@ -7,11 +7,11 @@ export default function AlertMsg(props) {
     const alertMsgCon = document.querySelector(".alert-msg-con");
     alertMsgCon.classList.remove("show-con");
   }
-  setTimeout(() => {
+  useEffect(() => {
     const alertMsgCon = document.querySelector(".alert-msg-con");
     if (props.msg) alertMsgCon.classList.add("show-con");
     else alertMsgCon.classList.remove("show-con");
-  }, 100);
+  }, [props.msg]);
 
   return (
     <div

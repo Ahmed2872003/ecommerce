@@ -12,23 +12,23 @@
   font-weight: var(--font-w-bold);
 }
 
-#auth-con form {
+#auth-con .container {
   border: 1px solid var(--amz-borderC);
   border-radius: 5px;
 }
-#auth-con form {
+#auth-con .container {
   display: flex;
   width: 450px;
   flex-direction: column;
   padding: 5px 30px;
 }
 @media (max-width: 640px) {
-  #auth-con form {
+  #auth-con .container {
     width: 90%;
   }
 }
 
-#auth-con form > div {
+#auth-con .container > div {
   margin-bottom: 20px;
 }
 .password-con {

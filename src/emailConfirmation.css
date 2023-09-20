@@ -1,0 +1,12 @@
+#conf-con {
+  display: flex;
+  gap: 20px;
+}
+
+#conf-con button {
+  flex: 0;
+}
+#timer {
+  color: var(--amz-grey);
+  font-size: var(--font-s-s);
+}
