@@ -1,6 +1,6 @@
 * {
   box-sizing: border-box;
-  white-space: pre-line;
+  transition: var(--main-time);
 }
 body {
   font-family: "Lato", sans-serif;
@@ -40,6 +40,12 @@ body {
 }
 .hover-yellow:hover {
   background-color: var(--amz-alt-yellow);
+}
+.hover-reg {
+  background-color: white;
+}
+.hover-reg:hover {
+  background-color: #f7fafa;
 }
 .hint {
   display: flex;
@@ -113,4 +119,17 @@ i {
 }
 .hover-red-i:hover {
   color: var(--amz-red);
+}
+
+/* a */
+a {
+  color: var(--amz-black);
+}
+.custom-a {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 7px;
+  transition: var(--short-time);
+  border-radius: 7px;
 }

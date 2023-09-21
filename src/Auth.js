@@ -1,6 +1,5 @@
 // Modules
-import { useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
 // CSS
 import "./auth.css";
 // Components
@@ -9,6 +8,7 @@ import Signup from "./Signup";
 import EmailConfirmation from "./EmailConfirmation";
 
 export default function Auth() {
+  const navigate = useNavigate();
   return (
     <div id="auth-con" className="c-i d-c">
       <img
@@ -16,22 +16,21 @@ export default function Auth() {
         alt="amazon-logo"
         width="200"
       />
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path="/"
-            element={<Login toggleTxtAppearance={toggleTxtAppearance} />}
-          ></Route>
-          <Route
-            path="/signup"
-            element={<Signup toggleTxtAppearance={toggleTxtAppearance} />}
-          ></Route>
-          <Route
-            path="/send-email-confirmation"
-            element={<EmailConfirmation />}
-          ></Route>
-        </Routes>
-      </BrowserRouter>
+      <Routes>
+        <Route index element={<MainAuthPage />}></Route>
+        <Route
+          path="login"
+          element={<Login toggleTxtAppearance={toggleTxtAppearance} />}
+        ></Route>
+        <Route
+          path="signup"
+          element={<Signup toggleTxtAppearance={toggleTxtAppearance} />}
+        ></Route>
+        <Route
+          path="send-email-confirmation"
+          element={<EmailConfirmation />}
+        ></Route>
+      </Routes>
     </div>
   );
 }
@@ -46,4 +45,18 @@ function toggleTxtAppearance(e) {
     toggleBtn.style.color = "";
     passInput.setAttribute("type", "password");
   }
+}
+
+function MainAuthPage() {
+  return (
+    <div className="container">
+      <Link to="login" className="custom-a hover-yellow">
+        Login
+      </Link>
+      <br />
+      <Link to="signup" className="custom-a hover-yellow">
+        Register
+      </Link>
+    </div>
+  );
 }

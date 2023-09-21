@@ -35,9 +35,11 @@ export default function Signup({ toggleTxtAppearance, handleAuthState }) {
     try {
       await axios.post(axios.BASE_URL + "/customer/auth/signup", formData);
       setMsg(["success", "Account have been created successfully"]);
-      navigate("/send-email-confirmation", {
-        state: { email: formData.get("email") },
-      });
+      setTimeout(() => {
+        navigate("/auth/send-email-confirmation", {
+          state: { email: formData.get("email") },
+        });
+      }, 1000);
     } catch (err) {
       setMsg(["error", err.response.data.msg]);
     }
@@ -45,7 +47,7 @@ export default function Signup({ toggleTxtAppearance, handleAuthState }) {
 
   return (
     <>
-      <AlertMsg type={msgType} msg={msgContent} />
+      <AlertMsg type={msgType} msg={msgContent} setMsg={setMsg} />
       <form onSubmit={handleSubmit} className="container">
         <h1>Create account</h1>
         <div className="c-i" style={{ gap: 20 }}>
@@ -204,7 +206,7 @@ export default function Signup({ toggleTxtAppearance, handleAuthState }) {
       <div className="center-line-con">
         <p className="center-line-content">Already have an account?</p>
       </div>
-      <button type="button" onClick={() => navigate("/")}>
+      <button type="button" onClick={() => navigate("/auth/login")}>
         Sign in
       </button>
     </>
@@ -273,7 +275,7 @@ function validateData(e, setMsg) {
       errMessage = `Provide a valid ${targetName} number. ex.0-(10 or 11 or 12 or 15)-xxxx-xxxx`;
     }
   } else if (targetName === "Address") {
-    const addressRegExp = /^[#.0-9a-zA-Z\s,-]+$/;
+    const addressRegExp = /^[#.0-9a-zA-Z\u0621-\u064A\u0660-\u0669\s,-]+$/;
     if (!addressRegExp.test(targetValue)) {
       isThereError = true;
       errMessage = `Provide a valid ${targetName} (with no special characters). ex. Building number, Street name, Area name`;

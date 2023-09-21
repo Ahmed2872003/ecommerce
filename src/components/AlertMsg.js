@@ -6,6 +6,7 @@ export default function AlertMsg(props) {
   function hideAlertMsg() {
     const alertMsgCon = document.querySelector(".alert-msg-con");
     alertMsgCon.classList.remove("show-con");
+    props.setMsg(["", ""]);
   }
   useEffect(() => {
     const alertMsgCon = document.querySelector(".alert-msg-con");
