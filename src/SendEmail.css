@@ -1,9 +1,9 @@
-#conf-con {
+#send-e-con {
   display: flex;
   gap: 20px;
 }
 
-#conf-con button {
+#send-e-con button {
   flex: 0;
 }
 #timer {

@@ -1,6 +1,5 @@
 #auth-con {
   display: flex;
-  width: fit-content;
   margin: auto;
   min-height: 100vh;
   padding: 15px;
@@ -9,26 +8,11 @@
 }
 
 #auth-con h1 {
-  margin-top: 0;
+  margin-bottom: 15px;
   font-weight: var(--font-w-bold);
 }
 
-#auth-con .container {
-  display: flex;
-  width: 450px;
-  flex-direction: column;
-  padding: 30px;
-  border: 1px solid var(--amz-borderC);
-  border-radius: 5px;
-}
-
-@media (max-width: 640px) {
-  #auth-con .container {
-    width: 90%;
-  }
-}
-
-#auth-con .container > div {
+#auth-con .auth-content > div {
   margin-bottom: 20px;
 }
 .password-con {
@@ -37,8 +21,6 @@
 
 .center-line-con {
   position: relative;
-  width: 100%;
-  border-bottom: 1px solid var(--amz-borderC);
 }
 
 .center-line-content {
@@ -50,8 +32,4 @@
   background-color: white;
   color: var(--amz-grey);
   padding: 5px;
-}
-
-#auth-con button[type="button"] {
-  border: 1px solid var(--amz-borderC);
 }

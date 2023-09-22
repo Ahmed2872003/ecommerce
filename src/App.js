@@ -8,8 +8,9 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/*" element={<p>Home page</p>}></Route>
+        <Route path="/" element={<p>Home page</p>}></Route>
         <Route path="/auth/*" element={<Auth />}></Route>
+        <Route path="*" element={<p>Not found</p>}></Route>
       </Routes>
     </BrowserRouter>
   );

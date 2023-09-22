@@ -33,7 +33,7 @@ export default function Signup({ toggleTxtAppearance, handleAuthState }) {
     }
 
     try {
-      await axios.post(axios.BASE_URL + "/customer/auth/signup", formData);
+      await axios.post(axios.BASE_URL + "/auth/signup", formData);
       setMsg(["success", "Account have been created successfully"]);
       setTimeout(() => {
         navigate("/auth/send-email-confirmation", {
@@ -41,17 +41,23 @@ export default function Signup({ toggleTxtAppearance, handleAuthState }) {
         });
       }, 1000);
     } catch (err) {
-      setMsg(["error", err.response.data.msg]);
+      if (err.response) setMsg(["error", err.response.data.msg]);
+      else if (err.code === "ERR_NETWORK")
+        setMsg(["error", "Server error pelase try again later."]);
+      else console.log(err);
     }
   }
 
   return (
     <>
       <AlertMsg type={msgType} msg={msgContent} setMsg={setMsg} />
-      <form onSubmit={handleSubmit} className="container">
+      <form
+        onSubmit={handleSubmit}
+        className="auth-content w-50 border p-4 rounded"
+      >
         <h1>Create account</h1>
-        <div className="c-i" style={{ gap: 20 }}>
-          <div>
+        <div className="d-flex" style={{ gap: 20 }}>
+          <div className="flex-fill">
             <label for="first_name">First name</label>
             <input
               type="text"
@@ -64,7 +70,7 @@ export default function Signup({ toggleTxtAppearance, handleAuthState }) {
               required
             />
           </div>
-          <div>
+          <div className="flex-fill">
             <label for="last_name">Last name</label>
             <input
               type="text"
@@ -198,15 +204,19 @@ export default function Signup({ toggleTxtAppearance, handleAuthState }) {
           <label for="seller">Seller account</label>
         </div>
         <div>
-          <button type="submit" className="hover-yellow">
+          <button type="submit" className="hover-yellow w-100 p-2 rounded">
             Create
           </button>
         </div>
       </form>
-      <div className="center-line-con">
+      <div className="center-line-con w-50 border-bottom">
         <p className="center-line-content">Already have an account?</p>
       </div>
-      <button type="button" onClick={() => navigate("/auth/login")}>
+      <button
+        type="button"
+        className="w-50 rounded p-2 border"
+        onClick={() => navigate("/auth/login")}
+      >
         Sign in
       </button>
     </>

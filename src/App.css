@@ -85,12 +85,9 @@ input.wrong-input:focus {
 
 /* button */
 button {
-  width: 100%;
-  padding: 7px;
   border: none;
   cursor: pointer;
   transition: var(--short-time);
-  border-radius: 7px;
   background-color: white;
 }
 button:hover {
@@ -124,11 +121,11 @@ i {
 /* a */
 a {
   color: var(--amz-black);
+  text-decoration: none;
 }
 .custom-a {
   display: flex;
   justify-content: center;
-  width: 100%;
   padding: 7px;
   transition: var(--short-time);
   border-radius: 7px;

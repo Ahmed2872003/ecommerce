@@ -1,16 +1,15 @@
 // Modules
-import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 // CSS
-import "./auth.css";
+import "./Auth.css";
 // Components
 import Login from "./Login";
 import Signup from "./Signup";
-import EmailConfirmation from "./EmailConfirmation";
+import SendEmail from "./SendEmail";
 
 export default function Auth() {
-  const navigate = useNavigate();
   return (
-    <div id="auth-con" className="c-i d-c">
+    <div id="auth-con" className="c-i d-c container">
       <img
         src={require("./images/amz-logo.png")}
         alt="amazon-logo"
@@ -26,10 +25,7 @@ export default function Auth() {
           path="signup"
           element={<Signup toggleTxtAppearance={toggleTxtAppearance} />}
         ></Route>
-        <Route
-          path="send-email-confirmation"
-          element={<EmailConfirmation />}
-        ></Route>
+        <Route path="send-email-confirmation" element={<SendEmail />}></Route>
       </Routes>
     </div>
   );
@@ -49,12 +45,12 @@ function toggleTxtAppearance(e) {
 
 function MainAuthPage() {
   return (
-    <div className="container">
-      <Link to="login" className="custom-a hover-yellow">
+    <div className="w-50">
+      <Link to="login" className="custom-a hover-yellow w-100">
         Login
       </Link>
       <br />
-      <Link to="signup" className="custom-a hover-yellow">
+      <Link to="signup" className="custom-a hover-yellow w-100">
         Register
       </Link>
     </div>
