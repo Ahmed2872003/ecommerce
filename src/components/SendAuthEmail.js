@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import axios from "axios";
 // CSS
-import "./SendEmail.css";
+import "./SendAuthEmail.css";
 // Components
-import AlertMsg from "./components/AlertMsg";
+import AlertMsg from "./AlertMsg";
 
 const neededMinutes = 1;
 const neededSeconds = 0;
@@ -51,7 +51,6 @@ function SendEmail({ URL_Request, title, hint }) {
       else if (err.code === "ERR_NETWORK")
         setMsg(["error", "Server error pelase try again later."]);
       else console.log(err);
-
       clearInterval(interval);
     }
   }
@@ -88,10 +87,7 @@ function SendEmail({ URL_Request, title, hint }) {
         </div>
         <p id="timer">{formatedTime}</p>
       </div>
-      <Link
-        to="/auth/login"
-        className="w-50 d-flex justify-content-center p-2 rounded hover-reg border"
-      >
+      <Link to="/auth/login" className="w-50 p-2 reg-btn border rounded">
         Login
       </Link>
     </>
@@ -108,6 +104,14 @@ export default function DirectEmailType({ type }) {
       info.title = "Send confirmation";
       info.hint =
         "When you click the link that has been sent to that email you can login";
+      break;
+    }
+    case "resetPassword": {
+      info.URL_Request = "/email/reset/password";
+      info.title = "Reset password";
+      info.hint =
+        "You can know the process of reseting password by the email that have been sent to you";
+      break;
     }
   }
 

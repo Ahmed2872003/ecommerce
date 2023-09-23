@@ -5,7 +5,8 @@ import "./Auth.css";
 // Components
 import Login from "./Login";
 import Signup from "./Signup";
-import SendEmail from "./SendEmail";
+import SendAuthEmail from "./components/SendAuthEmail";
+import ResetPass from "./ResetPass";
 
 export default function Auth() {
   return (
@@ -17,30 +18,17 @@ export default function Auth() {
       />
       <Routes>
         <Route index element={<MainAuthPage />}></Route>
+        <Route path="login" element={<Login />}></Route>
+        <Route path="signup" element={<Signup />}></Route>
+        <Route path="email-confirmation" element={<SendAuthEmail />}></Route>
         <Route
-          path="login"
-          element={<Login toggleTxtAppearance={toggleTxtAppearance} />}
+          path="reset/password/*"
+          element={<SendAuthEmail type="resetPassword" />}
         ></Route>
-        <Route
-          path="signup"
-          element={<Signup toggleTxtAppearance={toggleTxtAppearance} />}
-        ></Route>
-        <Route path="send-email-confirmation" element={<SendEmail />}></Route>
+        <Route path="reset/password/:token" element={<ResetPass />}></Route>
       </Routes>
     </div>
   );
-}
-function toggleTxtAppearance(e) {
-  const passInput = e.target.parentNode.querySelector("input");
-  const toggleBtn = e.target;
-
-  if (passInput.getAttribute("type") === "password") {
-    toggleBtn.style.color = "var(--amz-alt-yellow)";
-    passInput.setAttribute("type", "text");
-  } else {
-    toggleBtn.style.color = "";
-    passInput.setAttribute("type", "password");
-  }
 }
 
 function MainAuthPage() {

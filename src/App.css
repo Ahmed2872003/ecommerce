@@ -86,11 +86,17 @@ input.wrong-input:focus {
 /* button */
 button {
   border: none;
+}
+.reg-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
   cursor: pointer;
   transition: var(--short-time);
   background-color: white;
 }
-button:hover {
+.reg-btn:hover {
   background-color: #f7fafa;
 }
 

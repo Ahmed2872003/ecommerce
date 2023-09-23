@@ -4,8 +4,9 @@ import { useState } from "react";
 import axios from "axios";
 // Components
 import AlretMsg from "./components/AlertMsg";
+import TogglePass from "./components/togglePass";
 
-export default function Login({ toggleTxtAppearance }) {
+export default function Login() {
   const navigate = useNavigate();
   const [[msgType, msgContent], setMsg] = useState(["", ""]);
   const [email, setEmail] = useState("");
@@ -38,7 +39,7 @@ export default function Login({ toggleTxtAppearance }) {
       >
         <h1>Sign in</h1>
         <div>
-          <label for="email">Email</label>
+          <label htmlFor="email">Email</label>
           <input
             type="email"
             id="email"
@@ -47,35 +48,28 @@ export default function Login({ toggleTxtAppearance }) {
             required
           />
         </div>
-        <label for="password">Password</label>
-        <div className="password-con c-i">
-          <input type="password" id="password" name="password" required />
-          <i
-            className="fa-solid fa-eye hover-yellow-i"
-            onClick={toggleTxtAppearance}
-          ></i>
-        </div>
+        <label htmlFor="password">Password</label>
+
+        <TogglePass id="password" name="password" />
         <div>
           <button type="submit" className="hover-yellow w-100 p-2 rounded">
             Login
           </button>
         </div>
-        <Link>Forgot password?</Link>
+        <Link to="/auth/reset/password" state={{ email }}>
+          Forgot password?
+        </Link>
         <br />
-        <Link to="/auth/send-email-confirmation" state={{ email }}>
+        <Link to="/auth/email-confirmation" state={{ email }}>
           Confirm email
         </Link>
       </form>
       <div className="center-line-con w-50 border-bottom">
         <p className="center-line-content">New to Amazon?</p>
       </div>
-      <button
-        type="button"
-        className="w-50 p-2 rounded border"
-        onClick={() => navigate("/auth/signup")}
-      >
+      <Link className="w-50 p-2 reg-btn border rounded" to="/auth/signup">
         Create your Amazon account
-      </button>
+      </Link>
     </>
   );
 }
