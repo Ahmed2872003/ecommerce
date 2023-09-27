@@ -16,12 +16,8 @@ export default function Login() {
     const formData = new FormData(e.target);
 
     try {
-      const {
-        data: {
-          data: { token, name },
-        },
-      } = await axios.post(axios.BASE_URL + "/auth/login", formData);
-      localStorage.setItem("user", JSON.stringify({ token, name }));
+      await axios.post(axios.BASE_URL + "/auth/login", formData);
+
       navigate("/");
     } catch (err) {
       if (err.response) setMsg(["error", err.response.data.msg]);
@@ -41,6 +37,7 @@ export default function Login() {
         <div>
           <label htmlFor="email">Email</label>
           <input
+            className="w-100"
             type="email"
             id="email"
             name="email"
@@ -60,7 +57,7 @@ export default function Login() {
           Forgot password?
         </Link>
         <br />
-        <Link to="/auth/email-confirmation" state={{ email }}>
+        <Link to="/auth/confirm/email" state={{ email }}>
           Confirm email
         </Link>
       </form>

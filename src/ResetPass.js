@@ -36,7 +36,7 @@ export default function ResetPass() {
       const {
         data: { msg },
       } = await axios.post(
-        axios.BASE_URL + `/email/reset/password/${token}`,
+        axios.BASE_URL + `/auth/reset/password/${token}`,
         formData
       );
       setMsg(["success", msg]);
@@ -74,7 +74,7 @@ export default function ResetPass() {
         </button>
       </form>
       <Link to="/auth/login" className="w-50 p-2 border reg-btn rounded">
-        Login
+        Sign in
       </Link>
     </>
   );

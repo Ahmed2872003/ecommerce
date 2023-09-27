@@ -38,7 +38,7 @@ export default function Signup({ handleAuthState }) {
       await axios.post(axios.BASE_URL + "/auth/signup", formData);
       setMsg(["success", "Account have been created successfully"]);
       setTimeout(() => {
-        navigate("/auth/send-email-confirmation", {
+        navigate("/auth/confirm/email", {
           state: { email: formData.get("email") },
         });
       }, 1000);
@@ -62,6 +62,7 @@ export default function Signup({ handleAuthState }) {
           <div className="flex-fill">
             <label htmlFor="first_name">First name</label>
             <input
+              className="w-100"
               type="text"
               name="first_name"
               id="first_name"
@@ -75,6 +76,7 @@ export default function Signup({ handleAuthState }) {
           <div className="flex-fill">
             <label htmlFor="last_name">Last name</label>
             <input
+              className="w-100"
               type="text"
               name="last_name"
               id="last_name"
@@ -89,6 +91,7 @@ export default function Signup({ handleAuthState }) {
         <div>
           <label htmlFor="email">Email</label>
           <input
+            className="w-100"
             type="email"
             id="email"
             name="email"
@@ -114,6 +117,7 @@ export default function Signup({ handleAuthState }) {
         <div>
           <label htmlFor="phone">Phone</label>
           <input
+            className="w-100"
             type="text"
             id="phone"
             name="phone"
@@ -126,6 +130,7 @@ export default function Signup({ handleAuthState }) {
         <div>
           <label htmlFor="address">Address</label>
           <input
+            className="w-100"
             type="text"
             id="address"
             name="address"
@@ -142,6 +147,7 @@ export default function Signup({ handleAuthState }) {
         <div>
           <label htmlFor="city">City</label>
           <input
+            className="w-100"
             type="text"
             id="city"
             name="city"
@@ -154,6 +160,7 @@ export default function Signup({ handleAuthState }) {
           <label htmlFor="country">Country</label>
           {/* <input type="" id="country" name="country" required /> */}
           <select
+            className="w-100"
             name="country"
             id="country"
             defaultValue="Egypt"
@@ -173,6 +180,7 @@ export default function Signup({ handleAuthState }) {
         <div>
           <label htmlFor="zip-codd">Zip code</label>
           <input
+            className="w-100"
             type="text"
             id="zip-codd"
             name="zip_code"

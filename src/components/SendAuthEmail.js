@@ -67,6 +67,7 @@ function SendEmail({ URL_Request, title, hint }) {
         <label>Email</label>
         <form id="send-e-con" onSubmit={send}>
           <input
+            className="w-100"
             type="email"
             name="email"
             readOnly={email ? true : false}
@@ -88,7 +89,7 @@ function SendEmail({ URL_Request, title, hint }) {
         <p id="timer">{formatedTime}</p>
       </div>
       <Link to="/auth/login" className="w-50 p-2 reg-btn border rounded">
-        Login
+        Sign in
       </Link>
     </>
   );
@@ -100,7 +101,7 @@ export default function DirectEmailType({ type }) {
   switch (type) {
     case "emailConfirmation":
     default: {
-      info.URL_Request = "/email/confirmation";
+      info.URL_Request = "/email/confirm";
       info.title = "Send confirmation";
       info.hint =
         "When you click the link that has been sent to that email you can login";

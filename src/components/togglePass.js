@@ -3,6 +3,7 @@ export default function TogglePass({ id, name, validateHandler }) {
     <>
       <div className="c-i gap-2">
         <input
+          className="w-100"
           type="password"
           {...{ id, name }}
           onChange={validateHandler}

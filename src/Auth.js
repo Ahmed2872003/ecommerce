@@ -20,9 +20,9 @@ export default function Auth() {
         <Route index element={<MainAuthPage />}></Route>
         <Route path="login" element={<Login />}></Route>
         <Route path="signup" element={<Signup />}></Route>
-        <Route path="email-confirmation" element={<SendAuthEmail />}></Route>
+        <Route path="confirm/email" element={<SendAuthEmail />}></Route>
         <Route
-          path="reset/password/*"
+          path="reset/password"
           element={<SendAuthEmail type="resetPassword" />}
         ></Route>
         <Route path="reset/password/:token" element={<ResetPass />}></Route>
