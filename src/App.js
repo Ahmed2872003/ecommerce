@@ -1,6 +1,7 @@
 // Components
 import Auth from "./Auth";
 import MainApp from "./MainApp";
+// Modules
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 // CSS
 import "./App.css";

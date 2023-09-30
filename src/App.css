@@ -1,6 +1,5 @@
 * {
   box-sizing: border-box;
-  transition: var(--main-time);
 }
 body {
   font-family: "Lato", sans-serif;
@@ -38,12 +37,14 @@ body {
 }
 .hover-yellow {
   background-color: var(--amz-yellow);
+  transition: var(--short-time);
 }
 .hover-yellow:hover {
   background-color: var(--amz-alt-yellow);
 }
 .hover-reg {
   background-color: white;
+  transition: var(--short-time);
 }
 .hover-reg:hover {
   background-color: #f7fafa;

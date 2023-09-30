@@ -1,17 +1,22 @@
 // Modules
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import Cookies from "js-cookie";
 // Components
 import Header from "./Header";
 
-export default function Home() {
-  const navigate = useNavigate();
+export default function MainApp() {
+  const [isLoggedIn, setLogIn] = useState(false);
+  const [user, setUser] = useState({});
 
-  const user = Cookies.get("user")
-    ? JSON.parse(Cookies.get("user"))
-    : undefined;
+  useEffect(() => {
+    const encodedData = Cookies.get("user");
+    if (encodedData) {
+      setLogIn(true);
+      setUser(JSON.parse(encodedData));
+    }
+  }, []);
 
-  return <div id="main-app">{<Header user={user} />}</div>;
+  return (
+    <div id="main-app">{<Header user={user} isLoggedIn={isLoggedIn} />}</div>
+  );
 }
