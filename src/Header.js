@@ -1,10 +1,14 @@
 // Modules
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import Cookies from "js-cookie";
 // CSS
 import "./Header.css";
 
 export default function Header({ user, isLoggedIn }) {
   const navigate = useNavigate();
+
+  const [numberOfCartItems, setNumberOfCartItems] = useState(0);
 
   return (
     <header id="main-header">
@@ -15,7 +19,7 @@ export default function Header({ user, isLoggedIn }) {
           width="113"
         />
       </Link>
-      <form className="search">
+      <form className="search align-self-center">
         <select name="category" defaultValue="All">
           <option value="All">All</option>
           <option value="Electronics">Electronics</option>
@@ -79,24 +83,33 @@ export default function Header({ user, isLoggedIn }) {
               <li>
                 <Link>Your Seller Account</Link>
               </li>
-              <li>
-                <Link></Link>
-              </li>
-              <li>
-                <Link></Link>
-              </li>
-              <li>
-                <Link></Link>
-              </li>
-              <li>
-                <Link></Link>
-              </li>
+              {isLoggedIn && (
+                <li>
+                  <Link
+                    to="/auth/login"
+                    onClick={() => {
+                      Cookies.remove("user");
+                    }}
+                  >
+                    Sign Out
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
         </div>
       </div>
-      <Link to="/" className="p-2">
+      <Link to="/" className="p-2 d-flex align-items-center">
         Orders
+      </Link>
+      <Link to="/" className="p-2 d-flex align-items-center gap-2">
+        <span className="cart-icon">
+          <span className="n-of-cart-items rounded-circle">
+            {numberOfCartItems}
+          </span>
+          <i className="fa-solid fa-cart-shopping" style={{ fontSize: 25 }}></i>
+        </span>
+        Cart
       </Link>
     </header>
   );
