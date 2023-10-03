@@ -1,21 +1,24 @@
-#main-header {
+#main-header > div:first-child {
   display: flex;
-  padding: 10px;
   gap: 5px;
   background-color: var(--amz-dark-blue);
   font-weight: var(--font-w-b);
+  padding: 10px;
 }
-#main-header > * {
-  transition: var(--short-time);
+
+#main-header > div:first-child > *,
+.catigory-nav ul li {
   border-radius: 2px;
   color: white;
+  border: 1px solid transparent;
 }
-#main-header > *:not(.search):hover {
+#main-header > div:first-child > *:not(.search):hover,
+.catigory-nav ul li:hover {
   border: 1px solid white;
 }
 .search {
   display: flex;
-  height: 40px;
+  height: 45px;
   flex: 1;
 }
 .search input {
@@ -69,7 +72,7 @@
 .list::before {
   content: "";
   position: absolute;
-  right: 2px;
+  right: 20px;
   display: block;
   border: 10px solid;
   border-color: transparent transparent #ffffff transparent;
@@ -79,39 +82,54 @@
 .list {
   position: absolute;
   cursor: auto;
-  right: 0;
+  right: -20px;
   min-width: 400px;
   border-radius: 2px;
   top: 100%;
   background-color: #ffffff;
   color: black;
-  display: none;
 }
 
 .auth-nav {
-  border-bottom: 1px solid var(--amz-borderC);
-  margin-bottom: 15px;
-}
-
-.list .auth-nav {
   display: flex;
   flex-direction: column;
   text-align: center;
   gap: 5px;
+  border-bottom: 1px solid var(--amz-borderC);
+  margin-bottom: 15px;
+  cursor: auto;
 }
-.list .auth-nav p:nth-child(2) {
+.auth-nav p:nth-child(2) {
   font-size: var(--font-s-s);
 }
-.list .auth-nav p:nth-child(2) a {
+.auth-nav p:nth-child(2) a {
   color: blue;
 }
 
-.list a:hover:not(.auth-nav > a:nth-child(1)) {
+.auth-nav a:hover:not(.auth-nav > a:nth-child(1)),
+.list-content a:hover {
   text-decoration: underline;
   color: orange !important;
 }
-.drop-list:hover .list {
+.temp-auth-nav::before {
+  content: "";
+  position: absolute;
+  right: 50%;
+  transform: translateX(50%);
   display: block;
+  border: 10px solid;
+  border-color: transparent transparent #ffffff transparent;
+  top: -19px;
+}
+.temp-auth-nav {
+  color: black;
+  position: absolute;
+  top: 100%;
+  margin: 0;
+  align-self: center;
+  width: 200px;
+  background-color: white;
+  transition: var(--main-time);
 }
 
 .list-content {
@@ -145,4 +163,24 @@
   color: black;
   width: 20px;
   height: 20px;
+}
+
+.catigory-nav {
+  padding-left: 1px;
+  background-color: var(--amz-alt-blue);
+  max-height: 42px;
+}
+
+.catigory-nav ul {
+  display: flex;
+  margin-bottom: 0;
+  list-style: none;
+  padding: 0;
+}
+.catigory-nav ul li a {
+  display: block;
+  color: white;
+  padding: 0.5rem;
+}
+@media (max-width: 767px) {
 }
