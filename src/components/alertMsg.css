@@ -5,12 +5,17 @@
   justify-content: space-between;
   gap: 20px;
   padding: 0 20px;
-  width: 40%;
+  width: 50%;
   border-radius: 5px;
   background-color: var(--amz-offWhite);
   color: #66607b;
   font-weight: var(--font-w-b);
   transition: var(--short-time);
+}
+@media (max-width: 767px) {
+  .alert-msg-con {
+    width: 90%;
+  }
 }
 .show-con {
   top: 15px;

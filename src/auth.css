@@ -2,9 +2,14 @@
   display: flex;
   margin: auto;
   min-height: 100vh;
-  padding: 15px;
+  padding: 25px;
   flex-direction: column;
   gap: 30px;
+}
+@media (max-width: 767px) {
+  #auth-con > *:not(img, .alert-msg-con) {
+    width: 100% !important;
+  }
 }
 
 #auth-con h1 {

@@ -1,47 +1,47 @@
 // Modules
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // CSS
 import "./Header.css";
 import axios from "axios";
 
-export default function Header({ user, isLoggedIn }) {
+export default function Header({ user, isLoggedIn, isMobile }) {
   const navigate = useNavigate();
-
+  const timeoutId = useRef(0);
+  const tempAuthNav = useRef();
   const [numberOfCartItems, setNumberOfCartItems] = useState(0);
 
+  function tempAuthNavMouseLeave(e) {
+    if (e) e.stopPropagation();
+    timeoutId.current = setTimeout(() => {
+      toggleAppearance(tempAuthNav.current, { show: false });
+    }, 1000 * 10);
+  }
+
+  function tempAuthNavMouseEnter(e) {
+    clearTimeout(timeoutId.current);
+  }
+
   useEffect(() => {
-    let timeoutId;
-
     if (!isLoggedIn) {
-      const authNav = document.querySelector(".temp-auth-nav");
-
-      toggleAppearance(authNav, { show: true });
-
-      timeoutId = setTimeout(() => {
-        toggleAppearance(authNav, { show: false });
-      }, 1000 * 10);
-
-      authNav.onmouseleave = (e) => {
-        e.stopPropagation();
-        timeoutId = setTimeout(() => {
-          toggleAppearance(authNav, { show: false });
-        }, 1000 * 10);
-      };
-
-      authNav.onmouseenter = (e) => {
-        clearTimeout(timeoutId);
-      };
+      toggleAppearance(tempAuthNav.current, { show: true });
+      tempAuthNavMouseLeave();
+    } else {
+      handleListsAppearance("nav-list");
     }
 
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [isLoggedIn]);
+
+  useEffect(() => {
     function handleDocClickEvent(e) {
       handleListsAppearance("nav-list");
     }
 
     document.addEventListener("click", handleDocClickEvent);
-
     return () => {
-      clearTimeout(timeoutId);
       document.removeEventListener("click", handleDocClickEvent);
     };
   }, []);
@@ -49,11 +49,11 @@ export default function Header({ user, isLoggedIn }) {
   return (
     <header id="main-header">
       <div>
-        <Link to="/" className="p-2 d-flex align-items-center">
+        <Link to="/" className="p-2 d-flex align-items-center logo">
           <img
             src={require("./images/amz-white-logo.png")}
             alt="amz-logo"
-            width="113"
+            width="80"
           />
         </Link>
         <form className="search align-self-center">
@@ -65,23 +65,33 @@ export default function Header({ user, isLoggedIn }) {
             <option value="Cameras">Cameras</option>
             <option value="Home">Home</option>
           </select>
-          <input placeholder="Search Amazon" type="text" />
+          <input placeholder="Search Amazon" type="text" name="name" />
           <button type="submit" className="hover-yellow">
             <i className="fa-solid fa-magnifying-glass"></i>
           </button>
         </form>
         <div
-          className="drop-list p-2"
-          onClick={(e) => (isLoggedIn ? "" : navigate("/auth/login"))}
+          className="drop-list p-2 nav-list"
+          onClick={(e) => {
+            e.stopPropagation();
+            return isLoggedIn
+              ? isMobile
+                ? toggleAppearance(document.querySelector(".list"))
+                : ""
+              : navigate("/auth/login");
+          }}
           onMouseEnter={(e) => {
-            if (!e.target.classList.contains("temp-auth-nav")) {
+            if (!e.target.classList.contains("temp-auth-nav") && !isMobile) {
               handleListsAppearance("nav-list");
               toggleAppearance(document.querySelector(".list"), { show: true });
             }
           }}
-          onMouseLeave={(e) =>
-            toggleAppearance(document.querySelector(".list"), { show: false })
-          }
+          onMouseLeave={(e) => {
+            if (!isMobile)
+              toggleAppearance(document.querySelector(".list"), {
+                show: false,
+              });
+          }}
         >
           <p>Hello, {isLoggedIn ? user.first_name : "sign in"}</p>
           <p>
@@ -90,7 +100,9 @@ export default function Header({ user, isLoggedIn }) {
           <div
             className="auth-nav temp-auth-nav p-3 border rounded nav-list hidden"
             onClick={(e) => e.stopPropagation()}
-            onMouseLeave={(e) => e.stopPropagation()}
+            onMouseLeave={tempAuthNavMouseLeave}
+            onMouseEnter={tempAuthNavMouseEnter}
+            ref={tempAuthNav}
           >
             <Link to="/auth/login" className="rounded hover-yellow p-2">
               Sign in
@@ -160,7 +172,7 @@ export default function Header({ user, isLoggedIn }) {
         <Link to="/" className="p-2 d-flex align-items-center">
           Orders
         </Link>
-        <Link to="/" className="p-2 d-flex align-items-center gap-2">
+        <Link to="/" className="p-2 d-flex align-items-center gap-2 cart-nav">
           <span className="cart-icon">
             <span className="n-of-cart-items rounded-circle">
               {numberOfCartItems > 9 ? "9+" : numberOfCartItems}
@@ -170,7 +182,7 @@ export default function Header({ user, isLoggedIn }) {
               style={{ fontSize: 25 }}
             ></i>
           </span>
-          Cart
+          <span>Cart</span>
         </Link>
       </div>
       <div className="catigory-nav">
@@ -197,12 +209,24 @@ export default function Header({ user, isLoggedIn }) {
 }
 
 function toggleAppearance(element, options = {}) {
-  if (options.show === true) {
-    element.classList.remove("hidden");
-    element.classList.add("show");
-  } else if (options.show === false) {
-    element.classList.remove("show");
-    element.classList.add("hidden");
+  switch (options.show) {
+    case true:
+      element.classList.remove("hidden");
+      element.classList.add("show");
+      break;
+    case false:
+      element.classList.remove("show");
+      element.classList.add("hidden");
+      break;
+    default: {
+      if (element.classList.contains("hidden")) {
+        element.classList.remove("hidden");
+        element.classList.add("show");
+      } else if (element.classList.contains("show")) {
+        element.classList.remove("show");
+        element.classList.add("hidden");
+      }
+    }
   }
 }
 
