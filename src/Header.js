@@ -27,17 +27,17 @@ export default function Header({ user, isLoggedIn, isMobile }) {
       toggleAppearance(tempAuthNav.current, { show: true });
       tempAuthNavMouseLeave();
     } else {
-      handleListsAppearance("nav-list");
+      hideAllLists("nav-list");
     }
 
     return () => {
-      clearTimeout(timeoutId);
+      clearTimeout(timeoutId.current);
     };
   }, [isLoggedIn]);
 
   useEffect(() => {
     function handleDocClickEvent(e) {
-      handleListsAppearance("nav-list");
+      hideAllLists("nav-list");
     }
 
     document.addEventListener("click", handleDocClickEvent);
@@ -74,6 +74,7 @@ export default function Header({ user, isLoggedIn, isMobile }) {
           className="drop-list p-2 nav-list"
           onClick={(e) => {
             e.stopPropagation();
+            console.log("Clicked", isMobile);
             return isLoggedIn
               ? isMobile
                 ? toggleAppearance(document.querySelector(".list"))
@@ -82,7 +83,7 @@ export default function Header({ user, isLoggedIn, isMobile }) {
           }}
           onMouseEnter={(e) => {
             if (!e.target.classList.contains("temp-auth-nav") && !isMobile) {
-              handleListsAppearance("nav-list");
+              hideAllLists("nav-list");
               toggleAppearance(document.querySelector(".list"), { show: true });
             }
           }}
@@ -230,7 +231,7 @@ function toggleAppearance(element, options = {}) {
   }
 }
 
-function handleListsAppearance(className) {
+function hideAllLists(className) {
   const lists = document.querySelectorAll(`.${className}`);
 
   lists.forEach((list) => {

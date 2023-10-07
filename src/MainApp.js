@@ -3,11 +3,12 @@ import Cookies from "js-cookie";
 import { useEffect, useRef, useState } from "react";
 // Components
 import Header from "./Header";
+import Home from "./Home";
 
 export default function MainApp() {
   const isLoggedIn = useRef(false);
   const user = useRef({});
-  let [isMobile, setMobileScreen] = useState(false);
+  let [isMobile, setMobileScreen] = useState(undefined);
 
   useEffect(() => {
     const encodedData = Cookies.get("user");
@@ -18,7 +19,7 @@ export default function MainApp() {
     }
 
     function handleScreenResize(e) {
-      if (window.innerWidth < 768) setMobileScreen(true);
+      if (window.innerWidth <= 769) setMobileScreen(true);
       else setMobileScreen(false);
     }
 
@@ -38,6 +39,9 @@ export default function MainApp() {
         isLoggedIn={isLoggedIn.current}
         isMobile={isMobile}
       />
+      <main>
+        <Home />
+      </main>
     </div>
   );
 }

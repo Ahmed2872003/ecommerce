@@ -1,5 +1,9 @@
-#main-header > div:first-child {
+#main-header {
   position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+#main-header > div:first-child {
   display: flex;
   gap: 5px;
   background-color: var(--amz-dark-blue);
@@ -126,7 +130,7 @@
   margin-bottom: 15px;
   cursor: auto;
 }
-.auth-nav p:nth-child(2) {
+.auth-nav p {
   font-size: var(--font-s-s);
 }
 .auth-nav p:nth-child(2) a {
@@ -229,6 +233,9 @@
   }
   .drop-list {
     order: 1 !important;
+  }
+  .list {
+    text-align: center;
   }
   .cart-nav > span:nth-child(2) {
     display: none;

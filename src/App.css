@@ -155,3 +155,7 @@ a {
   transition: var(--short-time);
   border-radius: 7px;
 }
+
+main {
+  padding: calc(10px + 0.5rem);
+}
