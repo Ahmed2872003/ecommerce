@@ -17,17 +17,44 @@ async function getProducts(page, limit) {
 }
 
 export default function Home(props) {
-  const [productsLimit, setProductsLimit] = useState(5);
+  const [productsLimit, setProductsLimit] = useState(20);
   const [pageNum, setPageNum] = useState(1);
   const [products, setProducts] = useState([]);
+  let getMoreProducts = useRef(true);
 
   useEffect(() => {
     (async () => {
       const { products, length } = await getProducts(pageNum, productsLimit);
-      console.log(products);
+      if (!length) {
+        getMoreProducts.current = false;
+        return;
+      }
       setProducts((prevData) => [...prevData, ...products]);
+      getMoreProducts.current = true;
     })();
   }, [pageNum, productsLimit]);
+
+  useEffect(() => {
+    function handleScroll() {
+      let documentHeight = document.body.scrollHeight;
+      let currentScroll = window.scrollY + window.innerHeight;
+      const modifier = 20;
+
+      console.log(documentHeight, Math.ceil(currentScroll));
+      if (
+        Math.ceil(currentScroll) + modifier >= documentHeight &&
+        getMoreProducts.current
+      ) {
+        getMoreProducts.current = false;
+        setPageNum((prevPage) => prevPage + 1);
+      }
+    }
+    document.addEventListener("scroll", handleScroll);
+
+    return () => {
+      document.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   let productElements = products.map((productData) => (
     <Product {...productData} key={productData.id} />

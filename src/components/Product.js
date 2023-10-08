@@ -16,6 +16,7 @@ export default function Product({
   name,
   price,
   rating,
+  reviewsCount,
 }) {
   const productImg = cloudinary.image(imgURL);
 
@@ -34,7 +35,7 @@ export default function Product({
         <p className="name">{name}</p>
         <span className="rating-sec">
           <span className="r-icons-con">{starsElements}</span>&nbsp;
-          <span>{`(${rating})`}</span>
+          <span>{`(${reviewsCount})`}</span>
         </span>
         <p className="price-sec">
           <span>{currency}</span>
