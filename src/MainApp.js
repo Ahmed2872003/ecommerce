@@ -1,9 +1,12 @@
 // Modules
 import Cookies from "js-cookie";
 import { useEffect, useRef, useState } from "react";
+import { Route } from "react-router-dom";
 // Components
 import Header from "./Header";
 import Home from "./Home";
+// Utils
+import CustomSwitch from "./util/CustomSwitch";
 
 export default function MainApp() {
   const isLoggedIn = useRef(false);
@@ -40,7 +43,9 @@ export default function MainApp() {
         isMobile={isMobile}
       />
       <main>
-        <Home />
+        <CustomSwitch>
+          <Route index element={<Home />}></Route>
+        </CustomSwitch>
       </main>
     </div>
   );

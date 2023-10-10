@@ -27,7 +27,13 @@ function SendEmail({ URL_Request, title, hint }) {
   const [[msgType, msgContent], setMsg] = useState(["", ""]);
 
   useEffect(() => {
-    if (email) send();
+    let intervalId;
+    (async () => {
+      if (email) intervalId = await send();
+    })();
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
 
   async function send(e) {
@@ -52,7 +58,9 @@ function SendEmail({ URL_Request, title, hint }) {
         setMsg(["error", "Server error pelase try again later."]);
       else console.log(err);
       clearInterval(interval);
+      setTimer({ minutes: 0, seconds: 0 });
     }
+    return interval;
   }
 
   const formatedTime = `${timer.minutes < 10 ? "0" : ""}${timer.minutes}:${

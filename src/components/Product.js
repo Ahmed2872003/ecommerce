@@ -7,7 +7,7 @@ import genStars from "../util/genStars";
 import { AdvancedImage } from "@cloudinary/react";
 import { Resize } from "@cloudinary/url-gen/actions/resize";
 import cloudinary from "../util/cloudinary";
-import { useRef } from "react";
+import axios from "axios";
 
 export default function Product({
   id,
@@ -27,7 +27,7 @@ export default function Product({
   price = (price * 1.0).toFixed(2).split(".");
 
   return (
-    <div className="product">
+    <div className="product" onClick={(e) => navToProduct(id)}>
       <div className="img-cover">
         <AdvancedImage cldImg={productImg} alt={name} />
       </div>
@@ -49,4 +49,12 @@ export default function Product({
       </div>
     </div>
   );
+}
+
+async function navToProduct(id) {
+  const {
+    data: {
+      data: { product },
+    },
+  } = await axios.get(axios.BASE_URL + `/product/${id}`);
 }

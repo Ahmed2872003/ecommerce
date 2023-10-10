@@ -7,6 +7,7 @@ import axios from "axios";
 
 // Components
 import Product from "./components/Product";
+import LoadingIcons from "react-loading-icons";
 
 async function getProducts(page, limit) {
   const {
@@ -20,16 +21,21 @@ export default function Home(props) {
   const [productsLimit, setProductsLimit] = useState(20);
   const [pageNum, setPageNum] = useState(1);
   const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   let getMoreProducts = useRef(true);
 
   useEffect(() => {
     (async () => {
       const { products, length } = await getProducts(pageNum, productsLimit);
+
       if (!length) {
-        getMoreProducts.current = false;
+        setIsLoading(false);
         return;
       }
+
       setProducts((prevData) => [...prevData, ...products]);
+      setIsLoading(false);
       getMoreProducts.current = true;
     })();
   }, [pageNum, productsLimit]);
@@ -40,12 +46,12 @@ export default function Home(props) {
       let currentScroll = window.scrollY + window.innerHeight;
       const modifier = 20;
 
-      console.log(documentHeight, Math.ceil(currentScroll));
       if (
         Math.ceil(currentScroll) + modifier >= documentHeight &&
         getMoreProducts.current
       ) {
         getMoreProducts.current = false;
+        setIsLoading(true);
         setPageNum((prevPage) => prevPage + 1);
       }
     }
@@ -61,8 +67,16 @@ export default function Home(props) {
   ));
 
   return (
-    <div className="product-con">
-      {products.length ? productElements : <Spinner />}
-    </div>
+    <>
+      <div className="product-con">
+        {products.length ? productElements : <Spinner />}
+      </div>
+      {isLoading && (
+        <LoadingIcons.Puff
+          stroke="var(--amz-yellow)"
+          style={{ margin: "auto", display: "block" }}
+        />
+      )}
+    </>
   );
 }
