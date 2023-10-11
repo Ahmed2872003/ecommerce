@@ -159,3 +159,8 @@ a {
 main {
   padding: calc(10px + 0.5rem);
 }
+
+.a-hover:hover {
+  color: var(--amz-orange) !important;
+  text-decoration: underline;
+}

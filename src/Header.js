@@ -5,11 +5,15 @@ import { useEffect, useRef, useState } from "react";
 import "./Header.css";
 import axios from "axios";
 
-export default function Header({ user, isLoggedIn, isMobile }) {
+export default function Header({
+  user,
+  isLoggedIn,
+  isMobile,
+  numberOfCartItems,
+}) {
   const navigate = useNavigate();
   const timeoutId = useRef(0);
   const tempAuthNav = useRef();
-  const [numberOfCartItems, setNumberOfCartItems] = useState(0);
 
   function tempAuthNavMouseLeave(e) {
     if (e) e.stopPropagation();

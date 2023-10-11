@@ -1,5 +1,4 @@
 //Modules
-import { render } from "react-dom";
 import { createRoot } from "react-dom/client";
 import "./axios";
 // CSS

@@ -1,4 +1,4 @@
-export default function genStars(rating) {
+export default function genStars({ rating }) {
   let starsElements = [];
   for (let i = 0; i < 5; i++) {
     if (rating > 0 && rating < 1)
@@ -7,5 +7,5 @@ export default function genStars(rating) {
     else starsElements.push(<i class="fa-regular fa-star"></i>);
     rating--;
   }
-  return starsElements;
+  return <span className="r-icons-con">{starsElements}</span>;
 }

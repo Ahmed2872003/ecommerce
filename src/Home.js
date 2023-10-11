@@ -1,5 +1,5 @@
 // CSS
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, isValidElement } from "react";
 import "./Home.css";
 import Spinner from "./components/Spinner";
 // Modules
@@ -17,8 +17,9 @@ async function getProducts(page, limit) {
   return data;
 }
 
+const productsLimit = 20;
+
 export default function Home(props) {
-  const [productsLimit, setProductsLimit] = useState(20);
   const [pageNum, setPageNum] = useState(1);
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,11 +35,22 @@ export default function Home(props) {
         return;
       }
 
-      setProducts((prevData) => [...prevData, ...products]);
+      setProducts((prevData) =>
+        [...prevData, ...products].map((product) => {
+          const productData = isValidElement(product) ? product.props : product;
+
+          return <Product key={productData.id} {...productData} />;
+        })
+      );
+    })();
+  }, [pageNum]);
+
+  useEffect(() => {
+    if (products.length) {
       setIsLoading(false);
       getMoreProducts.current = true;
-    })();
-  }, [pageNum, productsLimit]);
+    }
+  }, [products]);
 
   useEffect(() => {
     function handleScroll() {
@@ -62,14 +74,10 @@ export default function Home(props) {
     };
   }, []);
 
-  let productElements = products.map((productData) => (
-    <Product {...productData} key={productData.id} />
-  ));
-
   return (
     <>
       <div className="product-con">
-        {products.length ? productElements : <Spinner />}
+        {products.length ? products : <Spinner />}
       </div>
       {isLoading && (
         <LoadingIcons.Puff

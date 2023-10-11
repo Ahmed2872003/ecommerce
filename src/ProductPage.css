@@ -1,0 +1,26 @@
+.slide-container {
+  max-width: 700px;
+  min-width: 200px;
+  padding: 10px;
+  background-color: var(--amz-offWhite);
+}
+
+.slide-container img {
+  width: 100%;
+  align-self: start;
+  position: sticky;
+  top: 135px;
+  z-index: 100;
+}
+
+#product-name {
+  color: #565959;
+  font-size: calc(1rem + 1vw);
+}
+#review-nav {
+  color: #007185;
+}
+
+#product-detail {
+  flex: auto;
+}
