@@ -1,5 +1,5 @@
-import { useNavigate, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
+import { useNavigate, Routes, Route } from "react-router-dom";
 
 function NotFoundPage() {
   const navigate = useNavigate();
