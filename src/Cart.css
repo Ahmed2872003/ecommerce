@@ -1,0 +1,31 @@
+.item {
+  margin-bottom: 50px;
+  display: block;
+}
+
+.item-details a {
+  font-size: calc(1rem + 0.3vw);
+}
+td,
+th {
+  margin: 5px;
+  display: inline-block;
+}
+
+table,
+td,
+th {
+  border: 1px solid black;
+}
+
+.delete-item-btn {
+  cursor: pointer;
+  transition: var(--short-time);
+  display: block;
+  width: fit-content;
+  margin: 3px;
+}
+
+.delete-item-btn:hover {
+  color: var(--amz-red);
+}

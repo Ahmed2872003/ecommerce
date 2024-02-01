@@ -1,0 +1,12 @@
+#send-e-con {
+  display: flex;
+  gap: 20px;
+}
+
+#send-e-con button {
+  flex: 0;
+}
+#timer {
+  color: var(--amz-grey);
+  font-size: var(--font-s-s);
+}

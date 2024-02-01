@@ -1,0 +1,61 @@
+.review-con {
+  display: flex;
+  justify-content: space-between;
+}
+
+.reviews-methods-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: flex-start;
+  font-size: 17px;
+  color: var(--amz-grey);
+  border-radius: 50%;
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+}
+@media (min-width: 992px) {
+  .reviews-methods-btn:hover {
+    background-color: var(--amz-grey);
+    color: white;
+  }
+}
+.clicked {
+  background-color: var(--amz-grey);
+  color: white;
+}
+
+.review-methods-list-con {
+  position: relative;
+  align-self: flex-start;
+}
+
+.review-methods-list {
+  position: absolute;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background-color: var(--amz-offWhite);
+  right: 100%;
+  border: 1px solid var(--amz-borderC);
+}
+
+.review-methods-list li {
+  cursor: pointer;
+  padding: 10px 30px;
+  transition: 0.2s;
+  user-select: none;
+}
+
+.review-methods-list li:hover {
+  background-color: var(--amz-grey);
+  color: white !important;
+}
+
+.review-methods-list #delete-btn {
+  color: var(--amz-red);
+}
+.review-methods-list #delete-btn:hover {
+  background-color: var(--amz-red);
+}
