@@ -17,7 +17,9 @@ export default function AlertMsg(props) {
   return (
     <div
       className={`alert-msg-con  ${props.type ? `${props.type}-con` : ""} c-i`}
-      style={{ top: props.msg ? props.top : -150 }}
+      style={{
+        display: props.msg ? "flex" : "none",
+      }}
     >
       <p>{props.msg}</p>
       <i

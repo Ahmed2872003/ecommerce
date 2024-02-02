@@ -1,7 +1,7 @@
 .alert-msg-con {
-  position: fixed;
+  position: sticky;
   z-index: 100;
-  top: -150px;
+  top: 5px;
   left: 50%;
   transform: translateX(-50%);
   justify-content: space-between;
@@ -12,7 +12,6 @@
   background-color: var(--amz-offWhite);
   color: #66607b;
   font-weight: var(--font-w-b);
-  transition: var(--short-time);
 }
 @media (max-width: 767px) {
   .alert-msg-con {

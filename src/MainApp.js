@@ -9,6 +9,7 @@ import ProductPage from "./ProductPage";
 import Spinner from "./components/Spinner";
 import AlertMsg from "./components/AlertMsg";
 import Cart from "./Cart";
+import SuccessPayment from "./SuccessPayment";
 // Utils
 import CustomSwitch from "./util/CustomSwitch";
 import { UserContextProvider } from "./util/Contexts/UserContext";
@@ -72,6 +73,10 @@ export default function MainApp() {
                   setNumberOfCartItems={setNumberOfCartItems}
                 />
               }
+            ></Route>
+            <Route
+              path="payment-status/success"
+              element={<SuccessPayment />}
             ></Route>
           </CustomSwitch>
         </main>
