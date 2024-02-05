@@ -8,6 +8,8 @@
   justify-content: center;
   background-color: var(--amz-offWhite);
   padding: 10px;
+}
+.img-cover img {
   max-width: var(--max-img-width);
 }
 .img-cover,

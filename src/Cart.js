@@ -5,6 +5,7 @@ import ReactDOMServer from "react-dom/server";
 import axios from "axios";
 // Utils
 import { userContext } from "./util/Contexts/UserContext";
+import generateCart from "./util/generateCart";
 // Components
 import { Link } from "react-router-dom";
 // CSS
@@ -14,7 +15,7 @@ import cloudinary from "./util/cloudinary";
 
 export default function Cart(props) {
   // useContext
-  const { user } = useContext(userContext);
+  const { user, isLoggedIn } = useContext(userContext);
   // useState
   const [cartDetails, setCartDetails] = useState(null);
   const [isCartChanging, setIsCartChanging] = useState(false);
@@ -23,13 +24,28 @@ export default function Cart(props) {
   useEffect(() => {
     async function getUserCart() {
       props.setIsLoading(true);
-      const {
-        data: {
-          data: { cart },
-        },
-      } = await axios.get(axios.BASE_URL + "/cart");
 
-      return cart;
+      let UserCart;
+
+      if (!isLoggedIn) {
+        UserCart = await handleGetCartLoggedOff();
+      } else {
+        const {
+          data: {
+            data: { cart },
+          },
+        } = await axios.get(axios.BASE_URL + "/cart");
+
+        UserCart = cart;
+      }
+
+      return UserCart;
+    }
+
+    async function handleGetCartLoggedOff() {
+      const LScart = JSON.parse(window.localStorage.getItem("cart") || "[]");
+
+      return await generateCart(LScart);
     }
 
     getUserCart()

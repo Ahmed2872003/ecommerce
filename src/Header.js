@@ -68,6 +68,10 @@ export default function Header({
           setNumberOfCartItems(Products.length);
         })
         .catch((err) => console.log(err.response));
+    } else {
+      const LSCart = JSON.parse(window.localStorage.getItem("cart") || "[]");
+
+      setNumberOfCartItems(LSCart.length);
     }
   }, []);
 
@@ -202,13 +206,13 @@ export default function Header({
           </div>
         </div>
         <Link
-          to={isLoggedIn ? "/" : "/auth/login"}
+          to={isLoggedIn ? "/orders" : "/auth/login"}
           className="p-2 d-flex align-items-center"
         >
           Orders
         </Link>
         <Link
-          to={isLoggedIn ? "cart" : "/auth/login"}
+          to="cart"
           className="p-2 d-flex align-items-center gap-2 cart-nav"
         >
           <span className="cart-icon">

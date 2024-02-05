@@ -10,6 +10,7 @@ import Spinner from "./components/Spinner";
 import AlertMsg from "./components/AlertMsg";
 import Cart from "./Cart";
 import SuccessPayment from "./SuccessPayment";
+import Order from "./Order";
 // Utils
 import CustomSwitch from "./util/CustomSwitch";
 import { UserContextProvider } from "./util/Contexts/UserContext";
@@ -74,6 +75,8 @@ export default function MainApp() {
                 />
               }
             ></Route>
+
+            <Route path="orders" element={<Order />}></Route>
             <Route
               path="payment-status/success"
               element={<SuccessPayment />}

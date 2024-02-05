@@ -29,11 +29,7 @@ export default function Product({
   return (
     <div className="product" onClick={(e) => navigate(`/product/${id}`)}>
       <div className="img-cover">
-        <AdvancedImage
-          cldImg={cloudinary.image(imgURL)}
-          width="223"
-          alt={name}
-        />
+        <AdvancedImage cldImg={cloudinary.image(imgURL)} alt={name} />
       </div>
       <div className="detail-sec">
         <p className="name">{name}</p>

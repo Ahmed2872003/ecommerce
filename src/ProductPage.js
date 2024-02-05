@@ -93,7 +93,7 @@ export default function ProductPage(props) {
   // handling functions
   async function handleAddToCart(e) {
     if (!isLoggedIn) {
-      nav("/auth/login");
+      handleAddToCartNoAccount(e);
       return;
     }
     const btnText = e.target.innerText;
@@ -121,11 +121,25 @@ export default function ProductPage(props) {
     e.target.innerText = btnText;
   }
 
-  async function handleBuyNow(e) {
-    if (!isLoggedIn) {
-      nav("/auth/login");
-      return;
-    }
+  function handleAddToCartNoAccount(e) {
+    const neededQuantity = +quantityInput.current.value;
+
+    const currentCart = JSON.parse(window.localStorage.getItem("cart") || "[]");
+
+    const currentCartMap = new Map(currentCart);
+
+    if (!currentCartMap.has(id)) {
+      currentCartMap.set(id, neededQuantity);
+
+      props.setMsg(["success", "Added to cart successfully"]);
+      props.setNumberOfCartItems((prevNumber) => prevNumber + 1);
+    } else
+      props.setMsg(["error", "This item has been already added to the cart"]);
+
+    window.localStorage.setItem(
+      "cart",
+      JSON.stringify(Array.from(currentCartMap.entries()))
+    );
   }
 
   async function getRelatedProducts(offset) {
@@ -272,14 +286,6 @@ export default function ProductPage(props) {
                       disabled={isOwnProduct ? true : false}
                     >
                       Add to cart
-                    </button>
-                    <button
-                      className="reg-btn"
-                      id="buyNow-btn"
-                      onClick={handleBuyNow}
-                      disabled={isOwnProduct ? true : false}
-                    >
-                      Buy now
                     </button>
                   </div>
                 </div>
