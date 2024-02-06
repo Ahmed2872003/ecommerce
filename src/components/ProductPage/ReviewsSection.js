@@ -2,6 +2,7 @@
 
 import { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
+import ReactDOMServer from "react-dom/server";
 
 // Components
 import Review from "../Review";
@@ -75,6 +76,7 @@ export default function ReveiwsSection(props) {
 
   //   Handling function
   async function handleReviewsFilter(event) {
+    event.stopPropagation();
     try {
       const reviewRate = Number.parseInt(event.target.innerText);
 
@@ -158,7 +160,13 @@ export default function ReveiwsSection(props) {
   async function handleReviewSubmit(e) {
     e.preventDefault();
 
+    const BtnTxt = addReviewBtn.current.innerText;
+
     addReviewBtn.current["disabled"] = true;
+
+    addReviewBtn.current.innerHTML = ReactDOMServer.renderToString(
+      props.btnLoading.current
+    );
 
     const formData = new FormData(e.target);
 
@@ -187,9 +195,11 @@ export default function ReveiwsSection(props) {
       setCurrentUserReview(userReview[0] || null);
       props.setMsg(["success", "Your review is added"]);
     } catch (err) {
-      addReviewBtn.current["disabled"] = false;
       console.log(err.response);
     }
+
+    addReviewBtn.current["disabled"] = false;
+    addReviewBtn.current.innerText = BtnTxt;
   }
 
   const filterMenu = [
@@ -214,7 +224,7 @@ export default function ReveiwsSection(props) {
             <strong>Users reviews</strong>
           </h4>
 
-          <div id="reviews-con">
+          <div id="reviews-con" className="flex-column flex-md-row">
             <div id="reviews-filter-con">
               <p>
                 <GenStars rating={props.productData.rating}></GenStars>&nbsp;
@@ -230,12 +240,15 @@ export default function ReveiwsSection(props) {
               </p>
               <ul id="filters">
                 {filterMenu.map((filterName, index) => (
-                  <li
-                    key={index}
-                    id={filterName}
-                    className={filterName === selectedFilterId ? "active" : ""}
-                  >
-                    <p onClick={handleReviewsFilter}>{filterName}</p>
+                  <li key={index} id={filterName}>
+                    <p
+                      onClick={handleReviewsFilter}
+                      className={
+                        filterName === selectedFilterId ? "active" : ""
+                      }
+                    >
+                      {filterName}
+                    </p>
                   </li>
                 ))}
               </ul>
@@ -253,7 +266,7 @@ export default function ReveiwsSection(props) {
                   <form onSubmit={handleReviewSubmit}>
                     <textarea
                       name="reviewContent"
-                      placeholder="Enter your review"
+                      placeholder="Add your review"
                       className="flex-grow-1 p-2 w-100"
                       minLength={3}
                       maxLength={200}

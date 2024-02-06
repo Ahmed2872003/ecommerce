@@ -19,6 +19,10 @@
 
 .detail-sec {
   padding: 10px;
+  border-style: none solid solid solid;
+  border-width: 2px;
+  border-color: var(--amz-offWhite);
+  border-radius: 0 0 5px 5px;
 }
 .name {
   width: fit-content;

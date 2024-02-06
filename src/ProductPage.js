@@ -179,7 +179,7 @@ export default function ProductPage(props) {
     <>
       {productData && (
         <div id="productPage" key={productData.id}>
-          <div className="d-flex gap-4">
+          <div className="d-flex gap-4 flex-column flex-md-row flex-md-wrap flex-lg-nowrap">
             <div className="slide-container">
               <Slide transitionDuration={500} key={productData.id}>
                 {productData.images.map((imgUrl, index) => {

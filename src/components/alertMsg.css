@@ -15,7 +15,8 @@
 }
 @media (max-width: 767px) {
   .alert-msg-con {
-    width: 90%;
+    width: 100%;
+    transform: none;
   }
 }
 
