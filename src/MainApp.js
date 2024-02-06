@@ -23,7 +23,7 @@ export default function MainApp() {
 
   useEffect(() => {
     function handleScreenResize(e) {
-      if (window.innerWidth <= 769) setMobileScreen(true);
+      if (window.innerWidth <= 767) setMobileScreen(true);
       else setMobileScreen(false);
     }
 

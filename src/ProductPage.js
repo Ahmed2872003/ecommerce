@@ -100,6 +100,7 @@ export default function ProductPage(props) {
 
     try {
       e.target.innerHTML = ReactDOMServer.renderToString(btnLoading.current);
+      e.target.disabled = true;
 
       await axios.post(axios.BASE_URL + "/cart", {
         productId: id,
@@ -119,6 +120,7 @@ export default function ProductPage(props) {
       }
     }
     e.target.innerText = btnText;
+    e.target.disabled = false;
   }
 
   function handleAddToCartNoAccount(e) {

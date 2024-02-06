@@ -7,7 +7,7 @@ import axios from "axios";
 import { userContext } from "./util/Contexts/UserContext";
 import generateCart from "./util/generateCart";
 // Components
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // CSS
 import "./Cart.css";
 import { AdvancedImage } from "@cloudinary/react";
@@ -19,6 +19,8 @@ export default function Cart(props) {
   // useState
   const [cartDetails, setCartDetails] = useState(null);
   const [isCartChanging, setIsCartChanging] = useState(false);
+  // useNavigate
+  const nav = useNavigate();
 
   // useEffect
   useEffect(() => {
@@ -63,24 +65,48 @@ export default function Cart(props) {
 
     const productId = e.target.getAttribute("itemId");
 
-    try {
-      const {
-        data: {
-          data: { subtotal },
-        },
-      } = await axios.delete(axios.BASE_URL + `/cart/item/${productId}`);
+    if (!isLoggedIn) {
+      try {
+        await handleDeleteCartItemLoggedOff(productId);
+        props.setNumberOfCartItems((preValue) => preValue - 1);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        await axios.delete(axios.BASE_URL + `/cart/item/${productId}`);
 
-      setCartDetails((preValue) => ({ ...preValue, subtotal }));
+        const {
+          data: {
+            data: { cart },
+          },
+        } = await axios.get(axios.BASE_URL + "/cart");
 
-      document.getElementById(`product${productId}`).remove();
+        setCartDetails(cart);
 
-      if (subtotal === 0) setCartDetails(null);
-
-      props.setNumberOfCartItems((preValue) => preValue - 1);
-    } catch (err) {
-      console.log(err.response);
+        props.setNumberOfCartItems((preValue) => preValue - 1);
+      } catch (err) {
+        console.log(err.response);
+      }
     }
+
     setIsCartChanging(false);
+  }
+
+  async function handleDeleteCartItemLoggedOff(productId) {
+    const LSCart = JSON.parse(window.localStorage.getItem("cart") || "[]");
+
+    const LSCartMap = new Map(LSCart);
+
+    if (LSCartMap.has(`${productId}`)) {
+      LSCartMap.delete(`${productId}`);
+
+      const newLSCart = Array.from(LSCartMap.entries());
+
+      window.localStorage.setItem("cart", JSON.stringify(newLSCart));
+
+      setCartDetails(await generateCart(newLSCart));
+    }
   }
 
   async function handleChangeItemQuantity(e) {
@@ -89,23 +115,48 @@ export default function Cart(props) {
     const productId = e.target.getAttribute("itemId");
     const quantity = e.target.value;
 
-    const body = { productId, quantity };
+    if (!isLoggedIn)
+      await handleChangeItemQuantityLoggedOff(productId, quantity);
+    else {
+      const body = { productId, quantity };
+      try {
+        const {
+          data: {
+            data: { cart },
+          },
+        } = await axios.patch(axios.BASE_URL + "/cart", body);
 
-    try {
-      const {
-        data: {
-          data: { cart },
-        },
-      } = await axios.patch(axios.BASE_URL + "/cart", body);
-
-      setCartDetails(cart);
-    } catch (err) {
-      console.log(err.response);
+        setCartDetails(cart);
+      } catch (err) {
+        console.log(err.response);
+      }
     }
+
     setIsCartChanging(false);
   }
 
+  async function handleChangeItemQuantityLoggedOff(productId, quantity) {
+    const LSCart = JSON.parse(window.localStorage.getItem("cart") || "[]");
+
+    const LSCartMap = new Map(LSCart);
+
+    if (LSCartMap.has(`${productId}`)) {
+      LSCartMap.set(`${productId}`, +quantity);
+
+      const newLSCart = Array.from(LSCartMap.entries());
+
+      window.localStorage.setItem("cart", JSON.stringify(newLSCart));
+
+      setCartDetails(await generateCart(newLSCart));
+    }
+  }
+
   async function hadleProceedToPay(e) {
+    if (!isLoggedIn) {
+      nav("/auth/login");
+      return;
+    }
+
     setIsCartChanging(true);
     try {
       const {
@@ -136,10 +187,10 @@ export default function Cart(props) {
       <div
         id="cart-con"
         style={{ opacity: isCartChanging ? 0.7 : 1 }}
-        className="d-flex justify-content-between gap-5"
+        className="d-flex flex-column flex-md-row  justify-content-between gap-5"
       >
-        <div id="cart-items" className="flex-grow-1">
-          <div className="d-flex justify-content-between p-1">
+        <div id="cart-items">
+          <div className="d-none d-md-flex justify-content-between p-1">
             <p style={{ color: "var(--amz-grey)" }} className="m-0">
               Item
             </p>
@@ -150,11 +201,11 @@ export default function Cart(props) {
           <hr className="mt-0 mb-5" />
           {cartDetails.Products.map((productData, index) => (
             <div
-              className=" item d-flex justify-content-between"
+              className="item d-flex justify-content-center justify-content-md-between"
               key={index}
               id={`product${productData.id}`}
             >
-              <div className="d-flex gap-3">
+              <div className="d-flex flex-column flex-md-row gap-3">
                 <Link to={`/product/${productData.id}`} key={index}>
                   <AdvancedImage
                     cldImg={cloudinary.image(productData.image)}
@@ -168,6 +219,7 @@ export default function Cart(props) {
                   >
                     {productData.name}
                   </Link>
+                  <p className="d-block d-md-none">{productData.price}$</p>
                   <div>
                     <label for="quantity">Quantity</label>
                     <select
@@ -193,11 +245,11 @@ export default function Cart(props) {
                   ></i>
                 </div>
               </div>
-              <p>{productData.price}$</p>
+              <p className="d-none d-md-block">{productData.price}$</p>
             </div>
           ))}
         </div>
-        <div>
+        <div id="pay-nav" className="align">
           <button
             className="hover-yellow rounded align-self-start p-2"
             onClick={hadleProceedToPay}

@@ -43,6 +43,10 @@ function MainAuthPage() {
       <Link to="signup" className="custom-a hover-yellow w-100">
         Register
       </Link>
+      <br />
+      <Link to="/" className="custom-a hover-yellow w-100">
+        Guest
+      </Link>
     </div>
   );
 }
