@@ -1,6 +1,6 @@
 // Modules
 import Cookies from "js-cookie";
-import { createContext, useEffect, useRef, useState } from "react";
+import { useContext, useState } from "react";
 import { Route } from "react-router-dom";
 // Components
 import Header from "./Header";
@@ -13,45 +13,37 @@ import SuccessPayment from "./SuccessPayment";
 import Order from "./Order";
 // Utils
 import CustomSwitch from "./util/CustomSwitch";
-import { UserContextProvider } from "./util/Contexts/UserContext";
+import { UserContextProvider } from "./util/Contexts/User";
+import { pageConext } from "./util/Contexts/Page";
 
 export default function MainApp() {
-  let [isMobile, setMobileScreen] = useState(undefined);
   const [numberOfCartItems, setNumberOfCartItems] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [[msgType, msgContent], setMsg] = useState(["", ""]);
 
-  useEffect(() => {
-    function handleScreenResize(e) {
-      if (window.innerWidth <= 767) setMobileScreen(true);
-      else setMobileScreen(false);
-    }
-
-    window.addEventListener("resize", handleScreenResize);
-
-    handleScreenResize();
-
-    return () => {
-      window.removeEventListener("resize", handleScreenResize);
-    };
-  }, []);
+  const page = useContext(pageConext);
 
   return (
     <UserContextProvider>
       <div id="main-app">
         <Header
-          isMobile={isMobile}
           numberOfCartItems={numberOfCartItems}
           setNumberOfCartItems={setNumberOfCartItems}
         />
         <main>
-          {isLoading && <Spinner />}
-          <AlertMsg msg={msgContent} type={msgType} setMsg={setMsg} top={140} />
+          {page.loading.value && <Spinner />}
+          <AlertMsg
+            msg={page.alertMsg.content}
+            type={page.alertMsg.type}
+            setMsg={page.alertMsg.setMsg}
+            top={140}
+          />
           <CustomSwitch>
             <Route
               index
               element={
-                <Home setIsLoading={setIsLoading} isLoading={isLoading} />
+                <Home
+                  setIsLoading={page.loading.setLoading}
+                  isLoading={page.loading.value}
+                />
               }
             ></Route>
             <Route
@@ -59,9 +51,8 @@ export default function MainApp() {
               element={
                 <ProductPage
                   setNumberOfCartItems={setNumberOfCartItems}
-                  setIsLoading={setIsLoading}
-                  setMsg={setMsg}
-                  isMobile={isMobile}
+                  setIsLoading={page.loading.setLoading}
+                  setMsg={page.alertMsg.setMsg}
                 />
               }
             ></Route>
@@ -69,8 +60,8 @@ export default function MainApp() {
               path="cart"
               element={
                 <Cart
-                  setIsLoading={setIsLoading}
-                  setMsg={setMsg}
+                  setIsLoading={page.loading.setLoading}
+                  setMsg={page.alertMsg.setMsg}
                   setNumberOfCartItems={setNumberOfCartItems}
                 />
               }

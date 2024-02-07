@@ -4,7 +4,7 @@ import ReactDOMServer from "react-dom/server";
 
 import axios from "axios";
 // Utils
-import { userContext } from "./util/Contexts/UserContext";
+import { userContext } from "./util/Contexts/User";
 import generateCart from "./util/generateCart";
 // Components
 import { Link, useNavigate } from "react-router-dom";

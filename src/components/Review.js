@@ -7,7 +7,8 @@ import ReactDOMServer from "react-dom/server";
 
 // Utils
 import getCurrentCustomerData from "../util/getCurrentUserData";
-import { userContext } from "../util/Contexts/UserContext";
+import { userContext } from "../util/Contexts/User";
+import { pageConext } from "../util/Contexts/Page";
 
 // CSS
 import "./Review.css";
@@ -18,6 +19,7 @@ const userData = getCurrentCustomerData();
 export default function Review(props) {
   // useContext
   const { user, isLoggedIn } = useContext(userContext);
+  const { alertMsg } = useContext(pageConext);
 
   // useState
   const [isEditRequired, setIsEditRequired] = useState(false);
@@ -91,7 +93,7 @@ export default function Review(props) {
 
       setIsEditRequired(false);
 
-      props.setMsg(["success", "Review is edited successfully"]);
+      alertMsg.setMsg(["success", "Review is edited successfully"]);
     } catch (err) {
       if (err.response.data) {
         if (err.response.status === 400) {
@@ -99,7 +101,7 @@ export default function Review(props) {
           setRatingInput(props.reviewData.rating);
         }
 
-        props.setMsg(["error", err.response.data.msg]);
+        alertMsg.setMsg(["error", err.response.data.msg]);
       }
     }
     e.target.innerText = btnText;
@@ -117,7 +119,7 @@ export default function Review(props) {
 
       props.setCurrentUserReview(null);
 
-      props.setMsg(["success", "Your review has been deleted"]);
+      alertMsg.setMsg(["success", "Your review has been deleted"]);
 
       const product = await props.getProduct(props.productId);
 

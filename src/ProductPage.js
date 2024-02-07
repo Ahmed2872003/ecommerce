@@ -22,7 +22,7 @@ import "react-slideshow-image/dist/styles.css";
 import priceFormatter from "./util/priceFormatter";
 import convertToQuery from "./util/convertToQuery";
 import LoadingIcons from "react-loading-icons";
-import { userContext } from "./util/Contexts/UserContext";
+import { userContext } from "./util/Contexts/User";
 
 export default function ProductPage(props) {
   const nav = useNavigate();
@@ -181,7 +181,7 @@ export default function ProductPage(props) {
         <div id="productPage" key={productData.id}>
           <div className="d-flex gap-4 flex-column flex-md-row flex-md-wrap flex-lg-nowrap">
             <div className="slide-container">
-              <Slide transitionDuration={500} key={productData.id}>
+              <Slide transitionDuration={500}>
                 {productData.images.map((imgUrl, index) => {
                   const imageObj = cloudinary.image(imgUrl);
 
@@ -302,8 +302,6 @@ export default function ProductPage(props) {
                   <strong>Related products</strong>
                 </h4>
                 <Slider
-                  key={productData.id}
-                  isMobile={props.isMobile}
                   getRelatedItems={getRelatedProducts}
                   setRelatedItems={setRelatedProducts}
                 >
@@ -325,7 +323,6 @@ export default function ProductPage(props) {
             setProductData={setProductData}
             setRelated
             getProduct={getProduct}
-            setMsg={props.setMsg}
             btnLoading={btnLoading}
           />
         </div>

@@ -2,20 +2,20 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useContext } from "react";
 // Utils
-import { userContext } from "./util/Contexts/UserContext";
+import { userContext } from "./util/Contexts/User";
+import { pageConext } from "./util/Contexts/Page";
 // CSS
 import "./Header.css";
 import axios from "axios";
 
-export default function Header({
-  isMobile,
-  numberOfCartItems,
-  setNumberOfCartItems,
-}) {
+export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
   const navigate = useNavigate();
   const timeoutId = useRef(0);
   const tempAuthNav = useRef();
   const { user, isLoggedIn } = useContext(userContext);
+  const {
+    screen: { isMobile },
+  } = useContext(pageConext);
 
   function tempAuthNavMouseLeave(e) {
     if (e) e.stopPropagation();

@@ -11,7 +11,8 @@ import LoadingIcons from "react-loading-icons";
 // Utils
 import convertToQuery from "../../util/convertToQuery";
 import GenStars from "../genStars";
-import { userContext } from "../../util/Contexts/UserContext";
+import { userContext } from "../../util/Contexts/User";
+import { pageConext } from "../../util/Contexts/Page";
 
 export default function ReveiwsSection(props) {
   const [reviewsData, setReviewsData] = useState([]);
@@ -24,7 +25,9 @@ export default function ReveiwsSection(props) {
     isLoading: false,
   });
 
+  // useContext
   const { user, isLoggedIn } = useContext(userContext);
+  const { alertMsg } = useContext(pageConext);
 
   // userRef
   const reviewsSection = useRef(null);
@@ -193,7 +196,7 @@ export default function ReveiwsSection(props) {
       }));
 
       setCurrentUserReview(userReview[0] || null);
-      props.setMsg(["success", "Your review is added"]);
+      alertMsg.setMsg(["success", "Your review is added"]);
     } catch (err) {
       console.log(err.response);
     }
@@ -299,7 +302,6 @@ export default function ReveiwsSection(props) {
                     getProduct={props.getProduct}
                     setProductData={props.setProductData}
                     setCurrentUserReview={setCurrentUserReview}
-                    setMsg={props.setMsg}
                     key={currentUserReview.id}
                     btnLoading={props.btnLoading}
                   />
