@@ -1,5 +1,12 @@
 .product-con {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  justify-content: center;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 30px;
+}
+
+@media (max-width: 768px) {
+  .product-con {
+    grid-template-columns: 300px;
+  }
 }
