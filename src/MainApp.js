@@ -1,6 +1,6 @@
 // Modules
 import Cookies from "js-cookie";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Route } from "react-router-dom";
 // Components
 import Header from "./Header";
@@ -13,13 +13,18 @@ import SuccessPayment from "./SuccessPayment";
 import Order from "./Order";
 // Utils
 import CustomSwitch from "./util/CustomSwitch";
-import { UserContextProvider } from "./util/Contexts/User";
 import { pageConext } from "./util/Contexts/Page";
+import { UserContextProvider } from "./util/Contexts/User";
+import getCurrentCustomerData from "./util/getCurrentUserData";
+
+import axios from "axios";
 
 export default function MainApp() {
   const [numberOfCartItems, setNumberOfCartItems] = useState(0);
 
   const page = useContext(pageConext);
+
+  useMergeCart(setNumberOfCartItems);
 
   return (
     <UserContextProvider>
@@ -78,3 +83,48 @@ export default function MainApp() {
     </UserContextProvider>
   );
 }
+
+function useMergeCart(setNumberOfCartItems) {
+  useEffect(() => {
+    async function start() {
+      const LSCart = getLSCart();
+
+      if (getCurrentCustomerData() && LSCart.length) {
+        // The user is logged in
+        window.localStorage.removeItem("cart");
+
+        try {
+          await mergetCart(LSCart);
+
+          const {
+            data: { data },
+          } = await axios.get(axios.BASE_URL + "/cart");
+
+          setNumberOfCartItems(data.cart.Products.length);
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    }
+
+    start();
+  }, []);
+}
+
+async function mergetCart(LSCart) {
+  const errs = [];
+
+  for (const [productId, quantity] of LSCart) {
+    try {
+      await axios.post(axios.BASE_URL + "/cart", {
+        productId,
+        quantity,
+      });
+    } catch (err) {
+      errs.push(err);
+    }
+  }
+  if (errs.length) console.log(errs);
+}
+
+const getLSCart = () => JSON.parse(window.localStorage.getItem("cart") || "[]");

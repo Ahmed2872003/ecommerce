@@ -52,7 +52,6 @@ export default function Cart(props) {
 
     getUserCart()
       .then((res) => {
-        console.log(res);
         setCartDetails(res);
       })
       .catch((err) => console.log(err))
@@ -221,7 +220,7 @@ export default function Cart(props) {
                   </Link>
                   <p className="d-block d-md-none">{productData.price}$</p>
                   <div>
-                    <label for="quantity">Quantity</label>
+                    <label htmlFor="quantity">Quantity</label>
                     <select
                       defaultValue={productData.neededQuantity}
                       id="quantity"
