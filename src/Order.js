@@ -15,9 +15,17 @@ export default function Order() {
       return orders;
     }
 
-    getOrders()
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+    async function start() {
+      try {
+        const orders = await getOrders();
+
+        console.log(orders);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    start();
   }, []);
 
   return null;

@@ -1,6 +1,11 @@
+import { useEffect } from "react";
 import "./SuccessPayment.css";
 
-export default function SuccessPayment() {
+export default function SuccessPayment(props) {
+  useEffect(() => {
+    setTimeout(() => props.setNumberOfCartItems(0), 0);
+  }, []);
+
   return (
     <div id="success-payment-con">
       <i class="fa-regular fa-circle-check text-success"></i>

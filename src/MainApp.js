@@ -75,7 +75,9 @@ export default function MainApp() {
             <Route path="orders" element={<Order />}></Route>
             <Route
               path="payment-status/success"
-              element={<SuccessPayment />}
+              element={
+                <SuccessPayment setNumberOfCartItems={setNumberOfCartItems} />
+              }
             ></Route>
           </CustomSwitch>
         </main>

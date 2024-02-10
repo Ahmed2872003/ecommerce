@@ -81,6 +81,7 @@
 
 .drop-list {
   position: relative;
+  z-index: 1;
   display: flex;
   user-select: none;
   flex-direction: column;
@@ -110,6 +111,7 @@
 
 .list {
   position: absolute;
+
   cursor: auto;
   right: -20px;
   min-width: 400px;
@@ -127,6 +129,11 @@
   border-bottom: 1px solid var(--amz-borderC);
   margin-bottom: 15px;
   cursor: auto;
+}
+
+.auth-nav,
+.list {
+  z-index: 1000000;
 }
 .auth-nav p {
   font-size: var(--font-s-s);

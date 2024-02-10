@@ -12,6 +12,7 @@ import Slider from "./components/Slider";
 import Product from "./components/Product";
 import ReviewsSection from "./components/ProductPage/ReviewsSection";
 import { Link } from "react-router-dom";
+import { ScrollRestoration } from "react-router-dom";
 
 // CSS
 import "./ProductPage.css";
@@ -52,6 +53,7 @@ export default function ProductPage(props) {
 
   // useEffect
   useEffect(() => {
+    setProductData(null);
     props.setIsLoading(true);
     (async () => {
       try {
@@ -178,7 +180,7 @@ export default function ProductPage(props) {
   return (
     <>
       {productData && (
-        <div id="productPage" key={productData.id}>
+        <div id="productPage">
           <div className="d-flex gap-4 flex-column flex-md-row flex-md-wrap flex-lg-nowrap">
             <div className="slide-container">
               <Slide transitionDuration={500}>
@@ -189,7 +191,7 @@ export default function ProductPage(props) {
                     <AdvancedImage
                       cldImg={imageObj}
                       alt={productData.name}
-                      key={index + 1}
+                      key={imgUrl}
                     />
                   );
                 })}

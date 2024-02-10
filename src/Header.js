@@ -168,7 +168,9 @@ export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
                   </Link>
                 </li>
                 <li>
-                  <Link to={isLoggedIn ? "/" : "/auth/login"}>Your Orders</Link>
+                  <Link to={isLoggedIn ? "/orderes" : "/auth/login"}>
+                    Your Orders
+                  </Link>
                 </li>
                 <li>
                   <Link to={isLoggedIn ? "/" : "/auth/login"}>
