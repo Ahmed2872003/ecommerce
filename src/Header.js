@@ -54,6 +54,11 @@ export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
 
   useEffect(() => {
     if (isLoggedIn) {
+      if (window.location.pathname === "/payment-status/success") {
+        setNumberOfCartItems(0);
+        return;
+      }
+
       axios
         .get(axios.BASE_URL + "/cart")
         .then((res) => {
@@ -168,7 +173,7 @@ export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
                   </Link>
                 </li>
                 <li>
-                  <Link to={isLoggedIn ? "/orderes" : "/auth/login"}>
+                  <Link to={isLoggedIn ? "/orders" : "/auth/login"}>
                     Your Orders
                   </Link>
                 </li>

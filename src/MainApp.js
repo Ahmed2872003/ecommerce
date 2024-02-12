@@ -2,6 +2,7 @@
 import Cookies from "js-cookie";
 import { useContext, useEffect, useState } from "react";
 import { Route } from "react-router-dom";
+import axios from "axios";
 // Components
 import Header from "./Header";
 import Home from "./Home";
@@ -16,8 +17,6 @@ import CustomSwitch from "./util/CustomSwitch";
 import { pageConext } from "./util/Contexts/Page";
 import { UserContextProvider } from "./util/Contexts/User";
 import getCurrentCustomerData from "./util/getCurrentUserData";
-
-import axios from "axios";
 
 export default function MainApp() {
   const [numberOfCartItems, setNumberOfCartItems] = useState(0);
@@ -75,9 +74,7 @@ export default function MainApp() {
             <Route path="orders" element={<Order />}></Route>
             <Route
               path="payment-status/success"
-              element={
-                <SuccessPayment setNumberOfCartItems={setNumberOfCartItems} />
-              }
+              element={<SuccessPayment />}
             ></Route>
           </CustomSwitch>
         </main>

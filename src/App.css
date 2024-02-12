@@ -94,6 +94,24 @@ button {
   top: 0;
 }
 
+.centered-msg {
+  color: var(--amz-grey);
+  font-size: 1.5rem;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: var(--font-w-b);
+}
+
+.title {
+  font-weight: var(--font-w-b);
+  font-size: calc(1.275rem + 0.3vw);
+  margin-bottom: 3rem;
+  border-bottom: 2px solid var(--amz-borderC);
+  padding: 5px 0;
+}
+
 /* inputs */
 input:not(input[type="checkbox"]),
 select,

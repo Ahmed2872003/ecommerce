@@ -7,7 +7,7 @@ import axios from "axios";
 import { userContext } from "./util/Contexts/User";
 import generateCart from "./util/generateCart";
 // Components
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, parsePath } from "react-router-dom";
 // CSS
 import "./Cart.css";
 import { AdvancedImage } from "@cloudinary/react";
@@ -162,12 +162,9 @@ export default function Cart(props) {
         data: {
           data: { url },
         },
-      } = await axios.post(
-        axios.BASE_URL + "/stripe/create-checkout-session?buyNow=0",
-        {
-          products: cartDetails.Products,
-        }
-      );
+      } = await axios.post(axios.BASE_URL + "/stripe/create-checkout-session", {
+        products: cartDetails.Products,
+      });
 
       window.open(url, "_self");
     } catch (err) {
@@ -180,9 +177,7 @@ export default function Cart(props) {
   return cartDetails && cartDetails.Products.length ? (
     <div id="cart">
       {isCartChanging && <div className="cover-con"></div>}
-      <h4>
-        <strong>Cart</strong>
-      </h4>
+      <h4 className="title">Cart</h4>
       <div
         id="cart-con"
         style={{ opacity: isCartChanging ? 0.7 : 1 }}
@@ -197,7 +192,6 @@ export default function Cart(props) {
               Price
             </p>
           </div>
-          <hr className="mt-0 mb-5" />
           {cartDetails.Products.map((productData, index) => (
             <div
               className="item d-flex justify-content-center justify-content-md-between"
@@ -270,17 +264,6 @@ export default function Cart(props) {
       </div>
     </div>
   ) : (
-    <p
-      style={{
-        color: "var(--amz-grey)",
-        fontSize: "1.5rem",
-        position: "absolute",
-        left: "50%",
-        top: "50%",
-        transform: "translate(-50%, -50%)",
-      }}
-    >
-      <strong>No items have been added yet</strong>
-    </p>
+    <p className="centered-msg">No items have been added yet</p>
   );
 }
