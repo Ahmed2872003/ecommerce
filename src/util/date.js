@@ -14,34 +14,48 @@ const months = [
   "Dec",
 ];
 
-const getDateAfter = (nOfDays, startDate) => {
-  nOfDays = Number.parseInt(nOfDays);
+class CustomDate extends Date {
+  // eslint-disable-next-line no-useless-constructor
+  constructor(date) {
+    super(date);
+  }
 
-  if (Number.isNaN(nOfDays) || nOfDays < 0 || !startDate) return null;
+  getDateAfter(nOfDays) {
+    nOfDays = Number.parseInt(nOfDays);
 
-  return constructDateObj(
-    new Date(startDate).getTime() + nOfDays * 24 * 60 * 60 * 1000
-  );
-};
+    if (Number.isNaN(nOfDays) || nOfDays < 0) return null;
 
-const constructDateObj = (date) => {
-  const dateObj = new Date(date);
+    return new CustomDate(this.getTime() + nOfDays * 24 * 60 * 60 * 1000);
+  }
 
-  const dayName = days[dateObj.getDay()];
+  getInfo() {
+    const dayName = days[this.getDay()];
 
-  const dayNumberOfMonth = dateObj.getDate();
+    const dayNumberOfMonth = this.getDate();
 
-  const monthName = months[dateObj.getMonth()];
+    const monthName = months[this.getMonth()];
 
-  const monthNumber = dateObj.getMonth() + 1;
+    const monthNumber = this.getMonth() + 1;
 
-  const year = dateObj.getFullYear();
+    const year = this.getFullYear();
 
-  return {
-    day: { name: dayName, numberInMonth: dayNumberOfMonth },
-    month: { name: monthName, number: monthNumber },
-    year,
-  };
-};
+    return {
+      day: { name: dayName, numberInMonth: dayNumberOfMonth },
+      month: { name: monthName, number: monthNumber },
+      year,
+    };
+  }
 
-export { constructDateObj, getDateAfter };
+  toString() {
+    const dateInfo = this.getInfo();
+
+    return `${dateInfo.month.name} ${dateInfo.day.numberInMonth}, ${dateInfo.year}`;
+  }
+  equals(date) {
+    if (date instanceof Date) return this.getTime() === date.getTime();
+
+    return false;
+  }
+}
+
+export { CustomDate };

@@ -36,6 +36,7 @@ button {
   --font-w-black: 900;
   --font-s-s: 12px;
   --max-img-width: 250px;
+  --min-img-width: 150px;
 }
 
 /* util */
@@ -198,6 +199,7 @@ main {
 
 .a-hover {
   cursor: pointer;
+  font-size: calc(1rem + 0.3vw) !important;
 }
 .a-hover:hover {
   color: var(--amz-orange) !important;

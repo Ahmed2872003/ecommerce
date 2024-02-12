@@ -1,0 +1,7 @@
+#orders-con {
+  padding: 0.5rem;
+}
+
+#orders-con > p:first-child {
+  font-size: calc(1rem + 0.2vw);
+}

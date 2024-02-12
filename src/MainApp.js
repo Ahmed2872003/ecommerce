@@ -11,7 +11,7 @@ import Spinner from "./components/Spinner";
 import AlertMsg from "./components/AlertMsg";
 import Cart from "./Cart";
 import SuccessPayment from "./SuccessPayment";
-import Order from "./Order";
+import OrderPage from "./OrderPage";
 // Utils
 import CustomSwitch from "./util/CustomSwitch";
 import { pageConext } from "./util/Contexts/Page";
@@ -71,7 +71,7 @@ export default function MainApp() {
               }
             ></Route>
 
-            <Route path="orders" element={<Order />}></Route>
+            <Route path="orders" element={<OrderPage />}></Route>
             <Route
               path="payment-status/success"
               element={<SuccessPayment />}
