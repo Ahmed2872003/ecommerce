@@ -1,17 +1,22 @@
 // Modules
-import { useState } from "react";
+import { useContext, useState } from "react";
 import cloudinary from "../util/cloudinary";
 import { Link, useNavigate } from "react-router-dom";
 // Utils
 import { CustomDate } from "../util/date";
 import { AdvancedImage } from "@cloudinary/react";
 import priceFormatter from "../util/priceFormatter";
+import { pageContext } from "../util/Contexts/Page";
 
 // CSS
 import "./Order.css";
 
 export default function Order({ order }) {
   const [selected, setIsSelected] = useState(false);
+
+  const {
+    screen: { isMobile },
+  } = useContext(pageContext);
 
   const createdAt = new CustomDate(order.createdAt);
 
@@ -31,22 +36,38 @@ export default function Order({ order }) {
               <h6>ORDER PLACED</h6>
               <p>{createdAt.toString()}</p>
             </div>
-            <div>
-              <h6>TOTAL</h6>
-              <p>{order.total_amount}$</p>
-            </div>
-            <div>
-              <h6>DISPATCH TO</h6>
-              <p>{order.Address.line1}</p>
-            </div>
+            {!isMobile && (
+              <>
+                <div>
+                  <h6>TOTAL</h6>
+                  <p>{order.total_amount}$</p>
+                </div>
+                <div>
+                  <h6>DISPATCH TO</h6>
+                  <p>{order.Address.line1}</p>
+                </div>
+              </>
+            )}
           </div>
-          <p className="order-id-con">ORDER #{order.id}</p>
+          <p className="order-id-con">
+            ORDER #
+            <span
+              className={isMobile ? "overflow-scroll d-block" : ""}
+              style={{ width: isMobile ? 50 : "" }}
+            >
+              {order.id}
+            </span>
+          </p>
         </div>
         <i
           className={`fa-solid ${selected ? "fa-angle-up" : "fa-angle-down"}`}
         ></i>
       </div>
-      <div className={`order-body d-${selected ? "flex" : "none"}`}>
+      <div
+        className={`order-body d-${
+          selected ? "flex" : "none"
+        } flex-wrap-reverse`}
+      >
         <div>
           <p className="delivery-date">
             Deliver
@@ -54,6 +75,7 @@ export default function Order({ order }) {
               ? ` In  ${deliveryDateFrom.toString()}`
               : ` From  ${deliveryDateFrom.toString()}    To    ${deliveryDateTo.toString()}`}
           </p>
+          {isMobile && <p>Dispatch to {order.Address.line1}</p>}
           <div className="order-products-con">
             {order.Products.map((product) => (
               <Product key={product.id} {...product} />
@@ -81,7 +103,7 @@ function Product({ id, image, name, price, quantity, currency }) {
     <div id={id} className="d-flex gap-4 mb-4   ">
       <AdvancedImage cldImg={image} onClick={() => nav(`/product/${id}`)} />
       <div>
-        <Link className="a-hover d-block mb-3" to={`/product/${id}`}>
+        <Link className="a-hover d-block mb-2" to={`/product/${id}`}>
           {name}
         </Link>
         <p className="price-sec">
@@ -93,7 +115,9 @@ function Product({ id, image, name, price, quantity, currency }) {
           &nbsp;
           <span>{price[1]}</span>
         </p>
-        <p style={{ fontWeight: "var(--font-w-b)" }}>Quantity {quantity}</p>
+        <p style={{ fontWeight: "var(--font-w-b)" }} className="m-0">
+          Quantity {quantity}
+        </p>
       </div>
     </div>
   );

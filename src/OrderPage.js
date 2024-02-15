@@ -3,7 +3,7 @@ import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 
 // Utils
-import { pageConext } from "./util/Contexts/Page";
+import { pageContext } from "./util/Contexts/Page";
 
 // Components
 import Order from "./components/Order";
@@ -32,7 +32,7 @@ export default function OrderPage() {
 function useGetOrders() {
   const [ordersDetails, setOrdersDetails] = useState(null);
 
-  const page = useContext(pageConext);
+  const page = useContext(pageContext);
 
   useEffect(() => {
     async function start() {

@@ -66,7 +66,7 @@
 .delivery-date {
   font-size: calc(0.75rem + 0.5vw);
   font-weight: var(--font-w-b);
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   white-space: pre-wrap;
 }
 

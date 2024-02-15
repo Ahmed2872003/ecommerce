@@ -8,7 +8,7 @@ import ReactDOMServer from "react-dom/server";
 // Utils
 import getCurrentCustomerData from "../util/getCurrentUserData";
 import { userContext } from "../util/Contexts/User";
-import { pageConext } from "../util/Contexts/Page";
+import { pageContext } from "../util/Contexts/Page";
 
 // CSS
 import "./Review.css";
@@ -19,7 +19,7 @@ const userData = getCurrentCustomerData();
 export default function Review(props) {
   // useContext
   const { user, isLoggedIn } = useContext(userContext);
-  const { alertMsg } = useContext(pageConext);
+  const { alertMsg } = useContext(pageContext);
 
   // useState
   const [isEditRequired, setIsEditRequired] = useState(false);

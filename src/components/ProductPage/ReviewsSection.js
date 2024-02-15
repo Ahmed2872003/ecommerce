@@ -12,7 +12,7 @@ import LoadingIcons from "react-loading-icons";
 import convertToQuery from "../../util/convertToQuery";
 import GenStars from "../genStars";
 import { userContext } from "../../util/Contexts/User";
-import { pageConext } from "../../util/Contexts/Page";
+import { pageContext } from "../../util/Contexts/Page";
 
 export default function ReveiwsSection(props) {
   const [reviewsData, setReviewsData] = useState([]);
@@ -27,7 +27,7 @@ export default function ReveiwsSection(props) {
 
   // useContext
   const { user, isLoggedIn } = useContext(userContext);
-  const { alertMsg } = useContext(pageConext);
+  const { alertMsg } = useContext(pageContext);
 
   // userRef
   const reviewsSection = useRef(null);

@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 
-const pageConext = createContext();
+const pageContext = createContext();
 
 function PageContextProvider({ children }) {
   const windowWidth = useWindowWidth();
@@ -12,7 +12,7 @@ function PageContextProvider({ children }) {
   const isMobile = isMobileScreen(windowWidth);
 
   return (
-    <pageConext.Provider
+    <pageContext.Provider
       value={{
         screen: { width: windowWidth, isMobile },
         alertMsg: { type: msgType, content: msgContent, setMsg },
@@ -20,7 +20,7 @@ function PageContextProvider({ children }) {
       }}
     >
       {children}
-    </pageConext.Provider>
+    </pageContext.Provider>
   );
 }
 
@@ -47,4 +47,4 @@ function isMobileScreen(size) {
   else return false;
 }
 
-export { pageConext, PageContextProvider };
+export { pageContext, PageContextProvider };

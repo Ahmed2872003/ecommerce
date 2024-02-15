@@ -14,14 +14,14 @@ import SuccessPayment from "./SuccessPayment";
 import OrderPage from "./OrderPage";
 // Utils
 import CustomSwitch from "./util/CustomSwitch";
-import { pageConext } from "./util/Contexts/Page";
+import { pageContext } from "./util/Contexts/Page";
 import { UserContextProvider } from "./util/Contexts/User";
 import getCurrentCustomerData from "./util/getCurrentUserData";
 
 export default function MainApp() {
   const [numberOfCartItems, setNumberOfCartItems] = useState(0);
 
-  const page = useContext(pageConext);
+  const page = useContext(pageContext);
 
   useMergeCart(setNumberOfCartItems);
 

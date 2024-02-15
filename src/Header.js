@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useContext } from "react";
 // Utils
 import { userContext } from "./util/Contexts/User";
-import { pageConext } from "./util/Contexts/Page";
+import { pageContext } from "./util/Contexts/Page";
 // CSS
 import "./Header.css";
 import axios from "axios";
@@ -15,7 +15,7 @@ export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
   const { user, isLoggedIn } = useContext(userContext);
   const {
     screen: { isMobile },
-  } = useContext(pageConext);
+  } = useContext(pageContext);
 
   function tempAuthNavMouseLeave(e) {
     if (e) e.stopPropagation();
