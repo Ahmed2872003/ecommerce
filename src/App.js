@@ -1,7 +1,7 @@
 // Components
-import Auth from "./Auth";
-import MainApp from "./MainApp";
-import NotFound from "./NotFound";
+import Auth from "./components/Auth";
+import MainApp from "./components/MainApp";
+import NotFound from "./components/NotFound";
 import CustomSwitch from "./util/CustomSwitch";
 
 // Modules
@@ -9,7 +9,7 @@ import { BrowserRouter, Route } from "react-router-dom";
 // CSS
 import "./App.css";
 // Utils
-import { PageContextProvider } from "./util/Contexts/Page";
+import { PageContextProvider } from "./Contexts/Page";
 
 export default function App() {
   return (

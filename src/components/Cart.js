@@ -4,14 +4,14 @@ import ReactDOMServer from "react-dom/server";
 
 import axios from "axios";
 // Utils
-import { userContext } from "./util/Contexts/User";
-import generateCart from "./util/generateCart";
+import { userContext } from "../Contexts/User";
+import generateCart from "../util/generateCart";
 // Components
 import { Link, useNavigate, parsePath } from "react-router-dom";
 // CSS
 import "./Cart.css";
 import { AdvancedImage } from "@cloudinary/react";
-import cloudinary from "./util/cloudinary";
+import cloudinary from "../util/cloudinary";
 
 export default function Cart(props) {
   // useContext

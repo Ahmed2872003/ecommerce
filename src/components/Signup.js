@@ -3,9 +3,9 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 // Components
-import AlertMsg from "./components/AlertMsg";
-import validateData from "./util/validateData";
-import TogglePass from "./components/togglePass";
+import AlertMsg from "./AlertMsg";
+import validateData from "../util/validateData";
+import TogglePass from "./togglePass";
 
 export default function Signup({ handleAuthState }) {
   const [[msgType, msgContent], setMsg] = useState(["", ""]);

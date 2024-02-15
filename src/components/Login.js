@@ -3,8 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 // Components
-import AlretMsg from "./components/AlertMsg";
-import TogglePass from "./components/togglePass";
+import AlretMsg from "./AlertMsg";
+import TogglePass from "./togglePass";
 
 export default function Login() {
   const navigate = useNavigate();

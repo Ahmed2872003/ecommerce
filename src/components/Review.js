@@ -1,5 +1,5 @@
 // Components
-import GenStars from "./genStars";
+import GenStars from "./Rating";
 
 // Modules
 import React, { useContext, useEffect, useRef, useState } from "react";
@@ -7,8 +7,8 @@ import ReactDOMServer from "react-dom/server";
 
 // Utils
 import getCurrentCustomerData from "../util/getCurrentUserData";
-import { userContext } from "../util/Contexts/User";
-import { pageContext } from "../util/Contexts/Page";
+import { userContext } from "../Contexts/User";
+import { pageContext } from "../Contexts/Page";
 
 // CSS
 import "./Review.css";

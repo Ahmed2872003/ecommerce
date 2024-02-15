@@ -5,16 +5,16 @@ import "./Auth.css";
 // Components
 import Login from "./Login";
 import Signup from "./Signup";
-import SendAuthEmail from "./components/SendAuthEmail";
+import SendAuthEmail from "./SendAuthEmail";
 import ResetPass from "./ResetPass";
 // Utils
-import CustomSwitch from "./util/CustomSwitch";
+import CustomSwitch from "../util/CustomSwitch";
 
 export default function Auth() {
   return (
     <div id="auth-con" className="c-i d-c container">
       <img
-        src={require("./images/amz-logo.png")}
+        src={require("../images/amz-logo.png")}
         alt="amazon-logo"
         width="200"
       />

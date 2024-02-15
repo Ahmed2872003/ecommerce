@@ -6,17 +6,17 @@ import axios from "axios";
 // Components
 import Header from "./Header";
 import Home from "./Home";
-import ProductPage from "./ProductPage";
-import Spinner from "./components/Spinner";
-import AlertMsg from "./components/AlertMsg";
+import ProductPage from "./ProductPage/ProductPage";
+import Spinner from "./Spinner";
+import AlertMsg from "./AlertMsg";
 import Cart from "./Cart";
 import SuccessPayment from "./SuccessPayment";
-import OrderPage from "./OrderPage";
+import OrderPage from "./OrderPage/OrderPage";
 // Utils
-import CustomSwitch from "./util/CustomSwitch";
-import { pageContext } from "./util/Contexts/Page";
-import { UserContextProvider } from "./util/Contexts/User";
-import getCurrentCustomerData from "./util/getCurrentUserData";
+import CustomSwitch from "../util/CustomSwitch";
+import { pageContext } from "../Contexts/Page";
+import { UserContextProvider } from "../Contexts/User";
+import getCurrentCustomerData from "../util/getCurrentUserData";
 
 export default function MainApp() {
   const [numberOfCartItems, setNumberOfCartItems] = useState(0);

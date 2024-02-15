@@ -1,29 +1,29 @@
 // Modules
 import { useEffect, useRef, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router";
-import cloudinary from "./util/cloudinary";
+import cloudinary from "../../util/cloudinary";
 import axios from "axios";
 import ReactDOMServer from "react-dom/server";
 // Components
 import { AdvancedImage } from "@cloudinary/react";
 import { Slide } from "react-slideshow-image";
-import GenStars from "./components/genStars";
-import Slider from "./components/Slider";
-import Product from "./components/Product";
-import ReviewsSection from "./components/ProductPage/ReviewsSection";
+import Rating from "../Rating";
+import Slider from "../Slider";
+import Product from "../Product";
+import ReviewsSection from "./ReviewsSection";
 import { Link } from "react-router-dom";
 import { ScrollRestoration } from "react-router-dom";
 
 // CSS
 import "./ProductPage.css";
-import "./Home.css";
+import "../Home.css";
 import "react-slideshow-image/dist/styles.css";
 
 // Utils
-import priceFormatter from "./util/priceFormatter";
-import convertToQuery from "./util/convertToQuery";
+import priceFormatter from "../../util/priceFormatter";
+import convertToQuery from "../../util/convertToQuery";
 import LoadingIcons from "react-loading-icons";
-import { userContext } from "./util/Contexts/User";
+import { userContext } from "../../Contexts/User";
 
 export default function ProductPage(props) {
   const nav = useNavigate();
@@ -202,7 +202,7 @@ export default function ProductPage(props) {
               <p>
                 <span>{productData.rating}</span>&nbsp;
                 <span>
-                  <GenStars rating={productData.rating} />
+                  <Rating rating={productData.rating} />
                 </span>
                 &emsp;
                 <Link id="review-nav" className="a-hover">

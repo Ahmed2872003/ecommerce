@@ -1,12 +1,12 @@
 // Modules
 import { useContext, useState } from "react";
-import cloudinary from "../util/cloudinary";
+import cloudinary from "../../util/cloudinary";
 import { Link, useNavigate } from "react-router-dom";
 // Utils
-import { CustomDate } from "../util/date";
+import { CustomDate } from "../../util/date";
 import { AdvancedImage } from "@cloudinary/react";
-import priceFormatter from "../util/priceFormatter";
-import { pageContext } from "../util/Contexts/Page";
+import priceFormatter from "../../util/priceFormatter";
+import { pageContext } from "../../Contexts/Page";
 
 // CSS
 import "./Order.css";

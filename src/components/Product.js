@@ -2,7 +2,7 @@
 import "./Product.css";
 
 // Components
-import GenStars from "./genStars";
+import Rating from "./Rating";
 // Modules
 import { AdvancedImage } from "@cloudinary/react";
 
@@ -34,7 +34,7 @@ export default function Product({
       <div className="detail-sec">
         <p className="name">{name}</p>
         <span className="rating-sec">
-          <GenStars rating={rating} />
+          <Rating rating={rating} />
           &nbsp;
           <span>{`(${reviewsCount})`}</span>
         </span>

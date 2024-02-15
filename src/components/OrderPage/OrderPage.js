@@ -3,10 +3,10 @@ import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 
 // Utils
-import { pageContext } from "./util/Contexts/Page";
+import { pageContext } from "../../Contexts/Page";
 
 // Components
-import Order from "./components/Order";
+import Order from "./Order";
 
 // CSS
 import "./OrderPage.css";

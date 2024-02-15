@@ -1,5 +1,5 @@
 // Utils
-import getCurrentCustomerData from "../getCurrentUserData";
+import getCurrentCustomerData from "../util/getCurrentUserData";
 
 // Modules
 import { createContext } from "react";

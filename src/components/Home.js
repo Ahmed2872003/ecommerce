@@ -5,11 +5,11 @@ import "./Home.css";
 import axios from "axios";
 
 // Components
-import Product from "./components/Product";
+import Product from "./Product";
 import LoadingIcons from "react-loading-icons";
 
 // Utils
-import convertToQuery from "./util/convertToQuery";
+import convertToQuery from "../util/convertToQuery";
 
 const productsLimit = 20;
 

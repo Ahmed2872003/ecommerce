@@ -10,9 +10,9 @@ import LoadingIcons from "react-loading-icons";
 
 // Utils
 import convertToQuery from "../../util/convertToQuery";
-import GenStars from "../genStars";
-import { userContext } from "../../util/Contexts/User";
-import { pageContext } from "../../util/Contexts/Page";
+import Rating from "../Rating";
+import { userContext } from "../../Contexts/User";
+import { pageContext } from "../../Contexts/Page";
 
 export default function ReveiwsSection(props) {
   const [reviewsData, setReviewsData] = useState([]);
@@ -230,7 +230,8 @@ export default function ReveiwsSection(props) {
           <div id="reviews-con" className="flex-column flex-md-row">
             <div id="reviews-filter-con">
               <p>
-                <GenStars rating={props.productData.rating}></GenStars>&nbsp;
+                <Rating rating={props.productData.rating} />
+                &nbsp;
                 <span>{props.productData.rating} From 5</span>
               </p>
               <p

@@ -1,4 +1,4 @@
-export default function genStars({ rating }) {
+export default function Rating({ rating }) {
   let starsElements = [];
   // rating = +rating;
   for (let i = 0; i < 5; i++) {

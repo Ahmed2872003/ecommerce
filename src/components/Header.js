@@ -2,8 +2,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useContext } from "react";
 // Utils
-import { userContext } from "./util/Contexts/User";
-import { pageContext } from "./util/Contexts/Page";
+import { userContext } from "../Contexts/User";
+import { pageContext } from "../Contexts/Page";
 // CSS
 import "./Header.css";
 import axios from "axios";
@@ -85,7 +85,7 @@ export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
       <div>
         <Link to="/" className="p-2 d-flex align-items-center logo">
           <img
-            src={require("./images/amz-white-logo.png")}
+            src={require("../images/amz-white-logo.png")}
             alt="amz-logo"
             width="80"
           />
