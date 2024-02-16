@@ -12,6 +12,7 @@ import AlertMsg from "./AlertMsg";
 import Cart from "./Cart";
 import SuccessPayment from "./SuccessPayment";
 import OrderPage from "./OrderPage/OrderPage";
+import FilterProductsPage from "./FilterProductsPage/FilterProductsPage";
 // Utils
 import CustomSwitch from "../util/CustomSwitch";
 import { pageContext } from "../Contexts/Page";
@@ -50,6 +51,7 @@ export default function MainApp() {
                 />
               }
             ></Route>
+            <Route path="/search" element={<FilterProductsPage />}></Route>
             <Route
               path="product/:id"
               element={

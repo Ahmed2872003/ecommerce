@@ -8,25 +8,24 @@ import { pageContext } from "../Contexts/Page";
 import "./Header.css";
 import axios from "axios";
 
+const categories = [
+  "",
+  "Electronics",
+  "Computers",
+  "Fitness",
+  "Cameras",
+  "Home",
+];
+
 export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
   const navigate = useNavigate();
   const timeoutId = useRef(0);
   const tempAuthNav = useRef();
+  const selectCatForm = useRef(null);
   const { user, isLoggedIn } = useContext(userContext);
   const {
     screen: { isMobile },
   } = useContext(pageContext);
-
-  function tempAuthNavMouseLeave(e) {
-    if (e) e.stopPropagation();
-    timeoutId.current = setTimeout(() => {
-      toggleAppearance(tempAuthNav.current, { show: false });
-    }, 1000 * 10);
-  }
-
-  function tempAuthNavMouseEnter(e) {
-    clearTimeout(timeoutId.current);
-  }
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -51,6 +50,36 @@ export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
       document.removeEventListener("click", handleDocClickEvent);
     };
   }, []);
+
+  function tempAuthNavMouseLeave(e) {
+    if (e) e.stopPropagation();
+    timeoutId.current = setTimeout(() => {
+      toggleAppearance(tempAuthNav.current, { show: false });
+    }, 1000 * 10);
+  }
+
+  function tempAuthNavMouseEnter(e) {
+    clearTimeout(timeoutId.current);
+  }
+
+  function handleSearchSubmit(e) {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+
+    const params = new URLSearchParams(formData);
+
+    navigate(`/search/?${params.toString()}`);
+  }
+
+  function syncNavCatWithFormSelect(e) {
+    if (selectCatForm.current) {
+      const target = e.target;
+
+      selectCatForm.current.value =
+        target.innerText === "All" ? "" : target.innerText;
+    }
+  }
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -80,6 +109,20 @@ export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
     }
   }, []);
 
+  const categoryNavElements = categories.map((category) => (
+    <li key={category}>
+      <Link
+        onClick={(e) => {
+          e.preventDefault();
+          syncNavCatWithFormSelect(e);
+          navigate(`/search?category=${category}`);
+        }}
+      >
+        {category ? category : "All"}
+      </Link>
+    </li>
+  ));
+
   return (
     <header id="main-header">
       <div>
@@ -90,14 +133,16 @@ export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
             width="80"
           />
         </Link>
-        <form className="search align-self-center">
-          <select name="category" defaultValue="All">
-            <option value="All">All</option>
-            <option value="Electronics">Electronics</option>
-            <option value="Computers">Computers</option>
-            <option value="Fitness">Fitness</option>
-            <option value="Cameras">Cameras</option>
-            <option value="Home">Home</option>
+        <form
+          className="search align-self-center"
+          onSubmit={handleSearchSubmit}
+        >
+          <select name="category" defaultValue="All" ref={selectCatForm}>
+            {categories.map((category) => (
+              <option value={category} key={category}>
+                {category ? category : "All"}
+              </option>
+            ))}
           </select>
           <input placeholder="Search Amazon" type="text" name="name" />
           <button type="submit" className="hover-yellow">
@@ -235,23 +280,7 @@ export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
         </Link>
       </div>
       <div className="catigory-nav">
-        <ul>
-          <li>
-            <Link>Electronics</Link>
-          </li>
-          <li>
-            <Link>Computers</Link>
-          </li>
-          <li>
-            <Link>Fitness</Link>
-          </li>
-          <li>
-            <Link>Cameras</Link>
-          </li>
-          <li>
-            <Link>Home</Link>
-          </li>
-        </ul>
+        <ul>{categoryNavElements}</ul>
       </div>
     </header>
   );
