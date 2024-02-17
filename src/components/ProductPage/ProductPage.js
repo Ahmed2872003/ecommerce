@@ -21,7 +21,7 @@ import "react-slideshow-image/dist/styles.css";
 
 // Utils
 import priceFormatter from "../../util/priceFormatter";
-import convertToQuery from "../../util/convertToQuery";
+import CustomQuery from "../../util/CustomQuery";
 import LoadingIcons from "react-loading-icons";
 import { userContext } from "../../Contexts/User";
 
@@ -148,7 +148,7 @@ export default function ProductPage(props) {
 
   async function getRelatedProducts(offset) {
     try {
-      const query = convertToQuery({
+      const query = CustomQuery.stringRepOf({
         category: { like: productData.category },
         brand: { like: productData.brand },
         id: { ne: id },

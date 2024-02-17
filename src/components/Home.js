@@ -9,7 +9,7 @@ import Product from "./Product";
 import LoadingIcons from "react-loading-icons";
 
 // Utils
-import convertToQuery from "../util/convertToQuery";
+import CustomQuery from "../util/CustomQuery";
 
 const productsLimit = 20;
 
@@ -26,7 +26,7 @@ export default function Home(props) {
     (async () => {
       if (!isLoading) props.setIsLoading(true);
       try {
-        const query = convertToQuery({
+        const query = CustomQuery.stringRepOf({
           page: { eq: pageNum },
           limit: { eq: productsLimit },
         });

@@ -9,7 +9,7 @@ import Review from "../Review";
 import LoadingIcons from "react-loading-icons";
 
 // Utils
-import convertToQuery from "../../util/convertToQuery";
+import CustomQuery from "../../util/CustomQuery";
 import Rating from "../Rating";
 import { userContext } from "../../Contexts/User";
 import { pageContext } from "../../Contexts/Page";
@@ -46,14 +46,14 @@ export default function ReveiwsSection(props) {
         };
 
         const reviews = await getReviews(
-          convertToQuery({
+          CustomQuery.stringRepOf({
             ...filter,
             CustomerId: { ne: isLoggedIn ? user.id : null },
           })
         );
 
         const userReview = await getReviews(
-          convertToQuery({
+          CustomQuery.stringRepOf({
             ...filter,
             CustomerId: { eq: isLoggedIn ? user.id : null },
           })
@@ -92,7 +92,7 @@ export default function ReveiwsSection(props) {
       if (reviewRate)
         filter["rating"] = { gt: +reviewRate - 1, lte: +reviewRate };
 
-      const query = convertToQuery(filter);
+      const query = CustomQuery.stringRepOf(filter);
 
       setIsReviewsLoading(true);
 
@@ -148,7 +148,7 @@ export default function ReveiwsSection(props) {
 
     setMoreReviews((preValue) => ({ get: false, isLoading: true }));
 
-    const reviews = await getReviews(convertToQuery(filter));
+    const reviews = await getReviews(CustomQuery.stringRepOf(filter));
 
     setReviewsData((prevReviews) => [...prevReviews, ...reviews]);
 
@@ -181,7 +181,7 @@ export default function ReveiwsSection(props) {
       });
 
       const userReview = await getReviews(
-        convertToQuery({
+        CustomQuery.stringRepOf({
           CustomerId: { eq: isLoggedIn ? user.id : null },
           ProductId: { eq: props.productData.id },
         })

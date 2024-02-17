@@ -1,15 +1,18 @@
 // Modules
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useRef, useContext } from "react";
+import { useEffect, useRef, useContext, useState, useCallback } from "react";
 // Utils
-import { userContext } from "../Contexts/User";
-import { pageContext } from "../Contexts/Page";
+import { userContext } from "../../Contexts/User";
+import { pageContext } from "../../Contexts/Page";
 // CSS
 import "./Header.css";
 import axios from "axios";
+// Components
+import SearchFrom from "./SearchFrom";
+import CategoryNavList from "./CategoryNavList";
 
 const categories = [
-  "",
+  "All",
   "Electronics",
   "Computers",
   "Fitness",
@@ -18,14 +21,21 @@ const categories = [
 ];
 
 export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
+  // useNavigate
   const navigate = useNavigate();
+  // useRef
   const timeoutId = useRef(0);
   const tempAuthNav = useRef();
-  const selectCatForm = useRef(null);
+  const selectCatElement = useRef(null);
+
+  // useContext
   const { user, isLoggedIn } = useContext(userContext);
   const {
     screen: { isMobile },
   } = useContext(pageContext);
+
+  // useState
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -51,35 +61,16 @@ export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
     };
   }, []);
 
-  function tempAuthNavMouseLeave(e) {
+  const tempAuthNavMouseLeave = useCallback((e) => {
     if (e) e.stopPropagation();
     timeoutId.current = setTimeout(() => {
       toggleAppearance(tempAuthNav.current, { show: false });
     }, 1000 * 10);
-  }
+  }, []);
 
-  function tempAuthNavMouseEnter(e) {
+  const tempAuthNavMouseEnter = useCallback((e) => {
     clearTimeout(timeoutId.current);
-  }
-
-  function handleSearchSubmit(e) {
-    e.preventDefault();
-
-    const formData = new FormData(e.target);
-
-    const params = new URLSearchParams(formData);
-
-    navigate(`/search/?${params.toString()}`);
-  }
-
-  function syncNavCatWithFormSelect(e) {
-    if (selectCatForm.current) {
-      const target = e.target;
-
-      selectCatForm.current.value =
-        target.innerText === "All" ? "" : target.innerText;
-    }
-  }
+  }, []);
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -109,46 +100,21 @@ export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
     }
   }, []);
 
-  const categoryNavElements = categories.map((category) => (
-    <li key={category}>
-      <Link
-        onClick={(e) => {
-          e.preventDefault();
-          syncNavCatWithFormSelect(e);
-          navigate(`/search?category=${category}`);
-        }}
-      >
-        {category ? category : "All"}
-      </Link>
-    </li>
-  ));
-
   return (
     <header id="main-header">
       <div>
         <Link to="/" className="p-2 d-flex align-items-center logo">
           <img
-            src={require("../images/amz-white-logo.png")}
+            src={require("../../images/amz-white-logo.png")}
             alt="amz-logo"
             width="80"
           />
         </Link>
-        <form
-          className="search align-self-center"
-          onSubmit={handleSearchSubmit}
-        >
-          <select name="category" defaultValue="All" ref={selectCatForm}>
-            {categories.map((category) => (
-              <option value={category} key={category}>
-                {category ? category : "All"}
-              </option>
-            ))}
-          </select>
-          <input placeholder="Search Amazon" type="text" name="name" />
-          <button type="submit" className="hover-yellow">
-            <i className="fa-solid fa-magnifying-glass"></i>
-          </button>
-        </form>
+        <SearchFrom
+          setSelectedCategory={setSelectedCategory}
+          categories={categories}
+          selectCatElement={selectCatElement}
+        />
         <div
           className="drop-list p-2 nav-list"
           onClick={(e) => {
@@ -279,9 +245,12 @@ export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
           <span>Cart</span>
         </Link>
       </div>
-      <div className="catigory-nav">
-        <ul>{categoryNavElements}</ul>
-      </div>
+      <CategoryNavList
+        categories={categories}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        selectCatElement={selectCatElement}
+      />
     </header>
   );
 }

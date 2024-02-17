@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { Route } from "react-router-dom";
 import axios from "axios";
 // Components
-import Header from "./Header";
+import Header from "./HeaderSection/Header";
 import Home from "./Home";
 import ProductPage from "./ProductPage/ProductPage";
 import Spinner from "./Spinner";

@@ -1,7 +1,7 @@
 // Modules
 import axios from "axios";
 // utils
-import convertToQuery from "./convertToQuery";
+import CustomQuery from "./CustomQuery";
 
 export default async function generateCart(LSCart) {
   const generatedCart = {};
@@ -26,7 +26,7 @@ async function getProducts(LSCart) {
   const productsPromises = [];
 
   for (const [productId] of LSCart) {
-    const query = convertToQuery({ id: { eq: productId } });
+    const query = CustomQuery.stringRepOf({ id: { eq: productId } });
     productsPromises.push(axios.get(axios.BASE_URL + `/product?${query}`));
   }
 
