@@ -2,8 +2,6 @@
 import { useEffect } from "react";
 import "./alertMsg.css";
 
-console.log("Hello");
-
 export default function AlertMsg(props) {
   function hideAlertMsg() {
     const alertMsgCon = document.querySelector(".alert-msg-con");
