@@ -12,16 +12,10 @@ import { productAPI } from "../../util/API/APIS";
 
 export default function FilterProductsPage(props) {
   const location = useLocation();
-  const [paramsObj, setParamsObj] = useState({});
 
-  useEffect(() => {
-    setParamsObj((preValue) => ({
-      ...preValue,
-      ...CustomQuery.objectRepOf(location.search.slice(1)),
-    }));
-  }, [location.search]);
+  const paramsObj = useUpdateParamObj(location.search);
 
-  useUpdateSearch(paramsObj, location);
+  useUpdateWindowQuery(paramsObj, location);
 
   const productsData = useGetProducts(paramsObj);
 
@@ -36,7 +30,8 @@ function useGetProducts(paramsObj) {
 
   useEffect(() => {
     async function start() {
-      if (!Object.keys(paramsObj).length) return;
+      if (!paramsObj) return;
+
       loading.setLoading(true);
 
       try {
@@ -57,7 +52,7 @@ function useGetProducts(paramsObj) {
   return productsData;
 }
 
-function useUpdateSearch(paramsObj, location) {
+function useUpdateWindowQuery(paramsObj, location) {
   useEffect(() => {
     window.history.pushState(
       {},
@@ -65,4 +60,21 @@ function useUpdateSearch(paramsObj, location) {
       location.pathname + `?${CustomQuery.stringRepOf(paramsObj)}`
     );
   }, [paramsObj]);
+}
+
+function useUpdateParamObj(params) {
+  const [paramsObj, setParamsObj] = useState(null);
+
+  useEffect(() => {
+    setParamsObj((preValue) => {
+      preValue = preValue || {};
+
+      return {
+        ...preValue,
+        ...CustomQuery.objectRepOf(params.slice(1)),
+      };
+    });
+  }, [params]);
+
+  return paramsObj;
 }
