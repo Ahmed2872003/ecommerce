@@ -1,11 +1,11 @@
 // Modules
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import axios from "axios";
 // Components
 import AlertMsg from "./AlertMsg";
 import validateData from "../util/validateData";
 import TogglePass from "./togglePass";
+import authAPI from "../util/API/authAPI";
 
 export default function ResetPass() {
   const [[type, msg], setMsg] = useState(["", ""]);
@@ -33,19 +33,11 @@ export default function ResetPass() {
       return;
     }
     try {
-      const {
-        data: { msg },
-      } = await axios.post(
-        axios.BASE_URL + `/auth/reset/password/${token}`,
-        formData
-      );
+      const { msg } = await authAPI.resetPassword(formData, token);
+
       setMsg(["success", msg]);
     } catch (err) {
-      if (err.response) setMsg(["error", err.response.data.msg]);
-      else if (err.code === "ERR_NETWORK")
-        setMsg(["error", "Server error pelase try again later."]);
-      else console.log(err);
-      console.log(err);
+      setMsg(["error", err.message]);
     }
   }
 

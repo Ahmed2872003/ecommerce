@@ -8,11 +8,6 @@ export default function AlertMsg(props) {
     alertMsgCon.classList.remove("show-con");
     props.setMsg(["", ""]);
   }
-  // useEffect(() => {
-  //   const alertMsgCon = document.querySelector(".alert-msg-con");
-  //   if (props.msg) alertMsgCon.classList.add("show-con");
-  //   else alertMsgCon.classList.remove("show-con");
-  // }, [props.msg]);
 
   return (
     <div

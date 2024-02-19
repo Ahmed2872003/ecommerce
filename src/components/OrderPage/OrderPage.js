@@ -1,9 +1,9 @@
 // Modules
 import { useEffect, useState, useContext } from "react";
-import axios from "axios";
 
 // Utils
 import { pageContext } from "../../Contexts/Page";
+import { orderAPI } from "../../util/API/APIS";
 
 // Components
 import Order from "./Order";
@@ -38,9 +38,7 @@ function useGetOrders() {
     async function start() {
       page.loading.setLoading(true);
       try {
-        const orders = await getOrders();
-
-        console.log(orders);
+        const { orders } = await orderAPI.get();
 
         setOrdersDetails(orders);
       } catch (err) {
@@ -53,14 +51,4 @@ function useGetOrders() {
   }, []);
 
   return ordersDetails;
-}
-
-async function getOrders() {
-  const {
-    data: {
-      data: { orders },
-    },
-  } = await axios.get(axios.BASE_URL + "/order");
-
-  return orders;
 }

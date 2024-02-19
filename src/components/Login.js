@@ -1,10 +1,12 @@
 // Modules
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import axios from "axios";
 // Components
 import AlretMsg from "./AlertMsg";
 import TogglePass from "./togglePass";
+
+// Utils
+import { authAPI } from "../util/API/APIS";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -16,14 +18,11 @@ export default function Login() {
     const formData = new FormData(e.target);
 
     try {
-      await axios.post(axios.BASE_URL + "/auth/login", formData);
+      await authAPI.login(formData);
 
       navigate("/");
     } catch (err) {
-      if (err.response) setMsg(["error", err.response.data.msg]);
-      else if (err.code === "ERR_NETWORK")
-        setMsg(["error", "Server error pelase try again later."]);
-      else console.log(err);
+      setMsg(["error", err.message]);
     }
   }
   return (

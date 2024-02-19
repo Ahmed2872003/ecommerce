@@ -2,7 +2,6 @@
 import Cookies from "js-cookie";
 import { useContext, useEffect, useState } from "react";
 import { Route } from "react-router-dom";
-import axios from "axios";
 // Components
 import Header from "./HeaderSection/Header";
 import Home from "./Home";
@@ -18,6 +17,7 @@ import CustomSwitch from "../util/CustomSwitch";
 import { pageContext } from "../Contexts/Page";
 import { UserContextProvider } from "../Contexts/User";
 import getCurrentCustomerData from "../util/getCurrentUserData";
+import { cartAPI } from "../util/API/APIS";
 
 export default function MainApp() {
   const [numberOfCartItems, setNumberOfCartItems] = useState(0);
@@ -97,11 +97,9 @@ function useMergeCart(setNumberOfCartItems) {
         try {
           await mergetCart(LSCart);
 
-          const {
-            data: { data },
-          } = await axios.get(axios.BASE_URL + "/cart");
+          const { cart } = await cartAPI.get(null);
 
-          setNumberOfCartItems(data.cart.Products.length);
+          setNumberOfCartItems(cart.Products.length);
         } catch (err) {
           console.log(err);
         }
@@ -117,7 +115,7 @@ async function mergetCart(LSCart) {
 
   for (const [productId, quantity] of LSCart) {
     try {
-      await axios.post(axios.BASE_URL + "/cart", {
+      await cartAPI.post({
         productId,
         quantity,
       });

@@ -1,11 +1,13 @@
 // Modules
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 // Components
 import AlertMsg from "./AlertMsg";
 import validateData from "../util/validateData";
 import TogglePass from "./togglePass";
+
+// Utils
+import { authAPI } from "../util/API/APIS";
 
 export default function Signup({ handleAuthState }) {
   const [[msgType, msgContent], setMsg] = useState(["", ""]);
@@ -35,7 +37,7 @@ export default function Signup({ handleAuthState }) {
     }
 
     try {
-      await axios.post(axios.BASE_URL + "/auth/signup", formData);
+      await authAPI.signup(formData);
       setMsg(["success", "Account have been created successfully"]);
       setTimeout(() => {
         navigate("/auth/confirm/email", {
@@ -43,10 +45,7 @@ export default function Signup({ handleAuthState }) {
         });
       }, 1000);
     } catch (err) {
-      if (err.response) setMsg(["error", err.response.data.msg]);
-      else if (err.code === "ERR_NETWORK")
-        setMsg(["error", "Server error pelase try again later."]);
-      else console.log(err);
+      setMsg(["error", err.message]);
     }
   }
 

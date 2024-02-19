@@ -6,7 +6,6 @@ import Rating from "./Rating";
 // Modules
 import { AdvancedImage } from "@cloudinary/react";
 
-import axios from "axios";
 import { useNavigate } from "react-router";
 
 // Utils

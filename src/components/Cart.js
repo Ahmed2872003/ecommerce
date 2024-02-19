@@ -2,10 +2,10 @@
 import { useContext, useEffect, useState } from "react";
 import ReactDOMServer from "react-dom/server";
 
-import axios from "axios";
 // Utils
 import { userContext } from "../Contexts/User";
 import generateCart from "../util/generateCart";
+import { cartAPI, stripeAPI } from "../util/API/APIS";
 // Components
 import { Link, useNavigate, parsePath } from "react-router-dom";
 // CSS
@@ -32,11 +32,7 @@ export default function Cart(props) {
       if (!isLoggedIn) {
         UserCart = await handleGetCartLoggedOff();
       } else {
-        const {
-          data: {
-            data: { cart },
-          },
-        } = await axios.get(axios.BASE_URL + "/cart");
+        const { cart } = await cartAPI.get(null);
 
         UserCart = cart;
       }
@@ -73,13 +69,9 @@ export default function Cart(props) {
       }
     } else {
       try {
-        await axios.delete(axios.BASE_URL + `/cart/item/${productId}`);
+        await cartAPI.deleteById(productId);
 
-        const {
-          data: {
-            data: { cart },
-          },
-        } = await axios.get(axios.BASE_URL + "/cart");
+        const { cart } = await cartAPI.get(null);
 
         setCartDetails(cart);
 
@@ -119,11 +111,7 @@ export default function Cart(props) {
     else {
       const body = { productId, quantity };
       try {
-        const {
-          data: {
-            data: { cart },
-          },
-        } = await axios.patch(axios.BASE_URL + "/cart", body);
+        const { cart } = await cartAPI.patch(body);
 
         setCartDetails(cart);
       } catch (err) {
@@ -158,11 +146,7 @@ export default function Cart(props) {
 
     setIsCartChanging(true);
     try {
-      const {
-        data: {
-          data: { url },
-        },
-      } = await axios.post(axios.BASE_URL + "/stripe/create-checkout-session", {
+      const { url } = await stripeAPI.createCheckoutSession({
         products: cartDetails.Products,
       });
 

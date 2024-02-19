@@ -1,6 +1,6 @@
 //Modules
 import { createRoot } from "react-dom/client";
-import "./axios";
+import "./util/axios";
 // CSS
 import "./Normalizatoin.css";
 import "bootstrap/dist/css/bootstrap.css";

@@ -79,3 +79,6 @@
 .amount-con p {
   font-weight: var(--font-w-b);
 }
+.product-details > * {
+  font-size: calc(0.259rem + 1vw) !important;
+}

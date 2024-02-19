@@ -9,10 +9,10 @@ import ReactDOMServer from "react-dom/server";
 import getCurrentCustomerData from "../util/getCurrentUserData";
 import { userContext } from "../Contexts/User";
 import { pageContext } from "../Contexts/Page";
+import { reviewAPI, productAPI } from "../util/API/APIS";
 
 // CSS
 import "./Review.css";
-import axios from "axios";
 
 const userData = getCurrentCustomerData();
 
@@ -72,16 +72,12 @@ export default function Review(props) {
         props.btnLoading.current
       );
 
-      await axios.patch(axios.BASE_URL + `/review/${props.reviewData.id}`, {
+      await reviewAPI.updateById(props.reviewData.id, {
         comment: commentInput,
         rating: ratingInput,
       });
 
-      const {
-        data: {
-          data: { product },
-        },
-      } = await axios.get(axios.BASE_URL + `/product/${props.productId}`);
+      const { product } = await productAPI.getById(props.productId);
 
       props.reviewData.comment = commentInput;
       props.reviewData.rating = ratingInput;
@@ -115,13 +111,13 @@ export default function Review(props) {
     if (!removeIntent) return;
 
     try {
-      await axios.delete(axios.BASE_URL + `/review/${props.reviewData.id}`);
+      await reviewAPI.deleteById(props.reviewData.id);
 
       props.setCurrentUserReview(null);
 
       alertMsg.setMsg(["success", "Your review has been deleted"]);
 
-      const product = await props.getProduct(props.productId);
+      const { product } = await productAPI.getById(props.productId);
 
       props.setProductData((preValue) => ({
         ...preValue,

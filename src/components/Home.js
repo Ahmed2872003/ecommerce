@@ -2,7 +2,6 @@
 import { useEffect, useRef, useState, isValidElement } from "react";
 import "./Home.css";
 // Modules
-import axios from "axios";
 
 // Components
 import Product from "./Product";
@@ -10,6 +9,7 @@ import LoadingIcons from "react-loading-icons";
 
 // Utils
 import CustomQuery from "../util/CustomQuery";
+import { productAPI } from "../util/API/APIS";
 
 const productsLimit = 20;
 
@@ -26,12 +26,10 @@ export default function Home(props) {
     (async () => {
       if (!isLoading) props.setIsLoading(true);
       try {
-        const query = CustomQuery.stringRepOf({
+        const { products } = await productAPI.get({
           page: { eq: pageNum },
           limit: { eq: productsLimit },
         });
-
-        const products = await getProducts(query);
 
         if (products.length)
           setProducts((prevData) => {
@@ -75,15 +73,6 @@ export default function Home(props) {
   }, []);
 
   // handle function
-  async function getProducts(query) {
-    const {
-      data: {
-        data: { products },
-      },
-    } = await axios.get(axios.BASE_URL + "/product?" + query);
-
-    return products;
-  }
 
   return (
     <>

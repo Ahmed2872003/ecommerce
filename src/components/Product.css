@@ -42,7 +42,6 @@
 }
 .price {
   font-weight: var(--font-w-b);
-  font-size: 15px;
 }
 sub {
   z-index: -1;

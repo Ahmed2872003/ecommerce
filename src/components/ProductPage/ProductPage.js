@@ -2,7 +2,6 @@
 import { useEffect, useRef, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router";
 import cloudinary from "../../util/cloudinary";
-import axios from "axios";
 import ReactDOMServer from "react-dom/server";
 // Components
 import { AdvancedImage } from "@cloudinary/react";
@@ -24,6 +23,10 @@ import priceFormatter from "../../util/priceFormatter";
 import CustomQuery from "../../util/CustomQuery";
 import LoadingIcons from "react-loading-icons";
 import { userContext } from "../../Contexts/User";
+import { productAPI, cartAPI } from "../../util/API/APIS";
+
+// errors
+import AxiosAPIError from "../../util/errors/AxiosAPIError";
 
 export default function ProductPage(props) {
   const nav = useNavigate();
@@ -57,7 +60,7 @@ export default function ProductPage(props) {
     props.setIsLoading(true);
     (async () => {
       try {
-        const product = await getProduct(id);
+        const { product } = await productAPI.getById(id);
 
         isAvailable.current = product.quantity > 0;
 
@@ -104,7 +107,7 @@ export default function ProductPage(props) {
       e.target.innerHTML = ReactDOMServer.renderToString(btnLoading.current);
       e.target.disabled = true;
 
-      await axios.post(axios.BASE_URL + "/cart", {
+      await cartAPI.post({
         productId: id,
         quantity: quantityInput.current.value,
       });
@@ -112,14 +115,8 @@ export default function ProductPage(props) {
       props.setNumberOfCartItems((prevNumber) => prevNumber + 1);
       props.setMsg(["success", "Added to cart successfully"]);
     } catch (err) {
-      const errResponse = err.response;
-      if (errResponse.data) {
-        if (errResponse.status === 409)
-          props.setMsg([
-            "error",
-            "This item has been already added to the cart",
-          ]);
-      }
+      if (err instanceof AxiosAPIError && err.statusCode === 409)
+        props.setMsg(["error", "This item has been already added to the cart"]);
     }
     e.target.innerText = btnText;
     e.target.disabled = false;
@@ -148,33 +145,20 @@ export default function ProductPage(props) {
 
   async function getRelatedProducts(offset) {
     try {
-      const query = CustomQuery.stringRepOf({
+      const filter = {
         category: { like: productData.category },
         brand: { like: productData.brand },
         id: { ne: id },
         limit: { eq: numOfLoadedProducts.current },
         offset: { eq: offset },
-      });
-      const {
-        data: {
-          data: { products },
-        },
-      } = await axios.get(axios.BASE_URL + "/product?" + query);
+      };
+
+      const { products } = await productAPI.get(filter);
 
       return products;
     } catch (err) {
       console.log(err);
     }
-  }
-
-  async function getProduct(id) {
-    const {
-      data: {
-        data: { product },
-      },
-    } = await axios.get(axios.BASE_URL + `/product/${id}`);
-
-    return product;
   }
 
   return (
@@ -323,8 +307,7 @@ export default function ProductPage(props) {
           <ReviewsSection
             productData={productData}
             setProductData={setProductData}
-            setRelated
-            getProduct={getProduct}
+            setRelatedProducts={setRelatedProducts}
             btnLoading={btnLoading}
           />
         </div>

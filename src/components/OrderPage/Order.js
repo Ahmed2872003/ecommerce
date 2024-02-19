@@ -102,7 +102,7 @@ function Product({ id, image, name, price, quantity, currency }) {
   return (
     <div id={id} className="d-flex gap-4 mb-4   ">
       <AdvancedImage cldImg={image} onClick={() => nav(`/product/${id}`)} />
-      <div>
+      <div className="product-details">
         <Link className="a-hover d-block mb-2" to={`/product/${id}`}>
           {name}
         </Link>

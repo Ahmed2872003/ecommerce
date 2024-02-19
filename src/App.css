@@ -199,7 +199,7 @@ main {
 
 .a-hover {
   cursor: pointer;
-  font-size: calc(0.625rem + 1vw) !important;
+  font-size: calc(0.259rem + 1vw) !important;
 }
 .a-hover:hover {
   color: var(--amz-orange) !important;

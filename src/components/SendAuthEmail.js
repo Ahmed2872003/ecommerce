@@ -53,10 +53,7 @@ function SendEmail({ URL_Request, title, hint }) {
       } = await axios.post(axios.BASE_URL + URL_Request, formData);
       setMsg(["success", msg]);
     } catch (err) {
-      if (err.response) setMsg(["error", err.response.data.msg]);
-      else if (err.code === "ERR_NETWORK")
-        setMsg(["error", "Server error pelase try again later."]);
-      else console.log(err);
+      setMsg(["error", err.message]);
       clearInterval(interval);
       setTimer({ minutes: 0, seconds: 0 });
     }

@@ -8,7 +8,7 @@ import "./FilterProductsPage.css";
 
 // Utils
 import CustomQuery from "../../util/CustomQuery";
-import axios from "axios";
+import { productAPI } from "../../util/API/APIS";
 
 export default function FilterProductsPage(props) {
   const location = useLocation();
@@ -32,21 +32,22 @@ export default function FilterProductsPage(props) {
 
 function useGetProducts(paramsObj) {
   const [productsData, setProductsData] = useState([]);
-  const { loading } = useContext(pageContext);
+  const { loading, alertMsg } = useContext(pageContext);
 
   useEffect(() => {
     async function start() {
       if (!Object.keys(paramsObj).length) return;
       loading.setLoading(true);
-      const {
-        data: {
-          data: { products },
-        },
-      } = await axios.get(
-        axios.BASE_URL + `/product?${CustomQuery.stringRepOf(paramsObj)}`
-      );
 
-      setProductsData(products);
+      try {
+        const { products } = await productAPI.get(paramsObj);
+
+        setProductsData(products);
+      } catch (err) {
+        console.log(err.message);
+        alertMsg.setMsg(["error", err.message]);
+      }
+
       loading.setLoading(false);
     }
 

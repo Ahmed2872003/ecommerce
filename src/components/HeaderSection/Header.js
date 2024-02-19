@@ -4,9 +4,9 @@ import { useEffect, useRef, useContext, useState, useCallback } from "react";
 // Utils
 import { userContext } from "../../Contexts/User";
 import { pageContext } from "../../Contexts/Page";
+import { cartAPI, authAPI } from "../../util/API/APIS";
 // CSS
 import "./Header.css";
-import axios from "axios";
 // Components
 import SearchFrom from "./SearchFrom";
 import CategoryNavList from "./CategoryNavList";
@@ -73,31 +73,29 @@ export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
   }, []);
 
   useEffect(() => {
-    if (isLoggedIn) {
-      if (window.location.pathname === "/payment-status/success") {
-        setNumberOfCartItems(0);
-        return;
-      }
+    async function start() {
+      if (isLoggedIn) {
+        if (window.location.pathname === "/payment-status/success") {
+          setNumberOfCartItems(0);
+          return;
+        }
 
-      axios
-        .get(axios.BASE_URL + "/cart")
-        .then((res) => {
+        try {
           const {
-            data: {
-              data: {
-                cart: { Products },
-              },
-            },
-          } = res;
+            cart: { Products },
+          } = await cartAPI.get(null);
 
           setNumberOfCartItems(Products.length);
-        })
-        .catch((err) => console.log(err.response));
-    } else {
-      const LSCart = JSON.parse(window.localStorage.getItem("cart") || "[]");
+        } catch (err) {
+          console.log(err.message);
+        }
+      } else {
+        const LSCart = JSON.parse(window.localStorage.getItem("cart") || "[]");
 
-      setNumberOfCartItems(LSCart.length);
+        setNumberOfCartItems(LSCart.length);
+      }
     }
+    start();
   }, []);
 
   return (
@@ -212,7 +210,7 @@ export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
                     <Link
                       to="/auth/login"
                       onClick={async () => {
-                        await axios.get(axios.BASE_URL + "/auth/logout");
+                        await authAPI.logout();
                       }}
                     >
                       Sign Out

@@ -1,7 +1,6 @@
 // Modules
-
 import { useContext, useEffect, useRef, useState } from "react";
-import axios from "axios";
+
 import ReactDOMServer from "react-dom/server";
 
 // Components
@@ -13,6 +12,7 @@ import CustomQuery from "../../util/CustomQuery";
 import Rating from "../Rating";
 import { userContext } from "../../Contexts/User";
 import { pageContext } from "../../Contexts/Page";
+import { productAPI, reviewAPI } from "../../util/API/APIS";
 
 export default function ReveiwsSection(props) {
   const [reviewsData, setReviewsData] = useState([]);
@@ -45,19 +45,15 @@ export default function ReveiwsSection(props) {
           limit: { eq: 5 },
         };
 
-        const reviews = await getReviews(
-          CustomQuery.stringRepOf({
-            ...filter,
-            CustomerId: { ne: isLoggedIn ? user.id : null },
-          })
-        );
+        const { reviews } = await reviewAPI.get({
+          ...filter,
+          CustomerId: { ne: isLoggedIn ? user.id : null },
+        });
 
-        const userReview = await getReviews(
-          CustomQuery.stringRepOf({
-            ...filter,
-            CustomerId: { eq: isLoggedIn ? user.id : null },
-          })
-        );
+        const { reviews: userReview } = await reviewAPI.get({
+          ...filter,
+          CustomerId: { eq: isLoggedIn ? user.id : null },
+        });
 
         window.removeEventListener("scroll", checkScrollThenFetch);
 
@@ -92,11 +88,9 @@ export default function ReveiwsSection(props) {
       if (reviewRate)
         filter["rating"] = { gt: +reviewRate - 1, lte: +reviewRate };
 
-      const query = CustomQuery.stringRepOf(filter);
-
       setIsReviewsLoading(true);
 
-      const reviews = await getReviews(query);
+      const { reviews } = await reviewAPI.get(filter);
 
       setReviewsData(reviews);
 
@@ -113,28 +107,6 @@ export default function ReveiwsSection(props) {
     }
   }
 
-  async function getReviews(filters) {
-    // return new Promise((res, rej) => {
-    //   setTimeout(async () => {
-    //     const {
-    //       data: {
-    //         data: { reviews },
-    //       },
-    //     } = await axios.get(axios.BASE_URL + `/review?${filters}`);
-
-    //     res(reviews);
-    //   }, 1000);
-    // });
-
-    const {
-      data: {
-        data: { reviews },
-      },
-    } = await axios.get(axios.BASE_URL + `/review?${filters}`);
-
-    return reviews;
-  }
-
   async function handleGetMoreReviews() {
     const reviewRate = Number.parseInt(selectedFilterId);
     const filter = {
@@ -148,7 +120,7 @@ export default function ReveiwsSection(props) {
 
     setMoreReviews((preValue) => ({ get: false, isLoading: true }));
 
-    const reviews = await getReviews(CustomQuery.stringRepOf(filter));
+    const { reviews } = await reviewAPI.get(filter);
 
     setReviewsData((prevReviews) => [...prevReviews, ...reviews]);
 
@@ -174,20 +146,20 @@ export default function ReveiwsSection(props) {
     const formData = new FormData(e.target);
 
     try {
-      await axios.post(axios.BASE_URL + "/review", {
+      await reviewAPI.post({
         comment: formData.get("reviewContent"),
         rating: formData.get("rating"),
         ProductId: props.productData.id,
       });
 
-      const userReview = await getReviews(
-        CustomQuery.stringRepOf({
-          CustomerId: { eq: isLoggedIn ? user.id : null },
-          ProductId: { eq: props.productData.id },
-        })
-      );
+      const { reviews } = await reviewAPI.get({
+        CustomerId: { eq: isLoggedIn ? user.id : null },
+        ProductId: { eq: props.productData.id },
+      });
 
-      const product = await props.getProduct(props.productData.id);
+      const userReview = reviews[0];
+
+      const { product } = await productAPI.getById(props.productData.id);
 
       props.setProductData((prevProductData) => ({
         ...prevProductData,
@@ -195,7 +167,7 @@ export default function ReveiwsSection(props) {
         reviewsCount: product.reviewsCount,
       }));
 
-      setCurrentUserReview(userReview[0] || null);
+      setCurrentUserReview(userReview || null);
       alertMsg.setMsg(["success", "Your review is added"]);
     } catch (err) {
       console.log(err.response);
