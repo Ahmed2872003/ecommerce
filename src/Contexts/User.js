@@ -6,6 +6,7 @@ import { authAPI } from "../util/API/APIS";
 import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { axiosAPI } from "../util/axios";
+import AxiosAPIError from "../util/errors/AxiosAPIError";
 
 const userContext = createContext();
 
@@ -40,7 +41,10 @@ function useCheckToken(isLoggedIn) {
       authAPI
         .checkToken()
         .then(() => setIsTokenExpired(false))
-        .catch((err) => setIsTokenExpired(true));
+        .catch((err) => {
+          if (err instanceof AxiosAPIError && err.statusCode === 401)
+            setIsTokenExpired(true);
+        });
     }
   }, [isLoggedIn]);
 
