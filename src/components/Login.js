@@ -24,8 +24,6 @@ export default function Login() {
       localStorage.setItem("customer", JSON.stringify(customer));
       localStorage.setItem("token", `Bearer ${token}`);
 
-      console.log(`Bearer ${token}`);
-
       axiosAPI.interceptors.request.use((config) => {
         config.headers.Authorization = `Bearer ${token}`;
         return config;

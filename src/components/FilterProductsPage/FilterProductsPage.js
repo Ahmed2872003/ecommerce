@@ -18,10 +18,6 @@ export default function FilterProductsPage(props) {
   useUpdateWindowQuery(paramsObj, location);
 
   const productsData = useGetProducts(paramsObj);
-
-  useEffect(() => {
-    console.log(productsData);
-  }, [productsData]);
 }
 
 function useGetProducts(paramsObj) {

@@ -13,8 +13,6 @@ export default function SearchFrom(props) {
 
     const paramsObject = Object.fromEntries(params);
 
-    console.log(paramsObject);
-
     if (nameInputElement.current)
       nameInputElement.current.value = paramsObject.namelike || "";
 
