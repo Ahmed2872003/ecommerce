@@ -13,7 +13,7 @@ import { PageContextProvider } from "./Contexts/Page";
 
 export default function App() {
   return (
-    <BrowserRouter basename="ecommerce">
+    <BrowserRouter>
       <PageContextProvider>
         <CustomSwitch>
           <Route path="/*" element={<MainApp />}></Route>
