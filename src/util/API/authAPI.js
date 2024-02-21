@@ -28,6 +28,9 @@ class AuthAPI extends CallAPI {
       data
     );
   }
+  async checkToken() {
+    return await super.get("auth/check-token");
+  }
 }
 
 const authAPI = new AuthAPI();

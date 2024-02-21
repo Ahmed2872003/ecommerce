@@ -1,5 +1,4 @@
 // Modules
-import Cookies from "js-cookie";
 import { useContext, useEffect, useState } from "react";
 import { Route } from "react-router-dom";
 // Components

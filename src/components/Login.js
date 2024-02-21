@@ -1,6 +1,7 @@
 // Modules
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { axiosAPI } from "../util/axios";
 // Components
 import AlretMsg from "./AlertMsg";
 import TogglePass from "./togglePass";
@@ -18,7 +19,17 @@ export default function Login() {
     const formData = new FormData(e.target);
 
     try {
-      await authAPI.login(formData);
+      const { customer, token } = await authAPI.login(formData);
+
+      localStorage.setItem("customer", JSON.stringify(customer));
+      localStorage.setItem("token", `Bearer ${token}`);
+
+      console.log(`Bearer ${token}`);
+
+      axiosAPI.interceptors.request.use((config) => {
+        config.headers.Authorization = `Bearer ${token}`;
+        return config;
+      });
 
       navigate("/");
     } catch (err) {

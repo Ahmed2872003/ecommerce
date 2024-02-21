@@ -1,9 +1,5 @@
-import Cookies from "js-cookie";
-
 export default function getCurrentCustomerData() {
-  const encodedData = Cookies.get("user");
+  const encodedData = JSON.parse(localStorage.getItem("customer"));
 
-  if (encodedData) return JSON.parse(encodedData);
-
-  return undefined;
+  return encodedData;
 }

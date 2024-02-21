@@ -29,7 +29,7 @@ export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
   const selectCatElement = useRef(null);
 
   // useContext
-  const { user, isLoggedIn } = useContext(userContext);
+  const { user, isLoggedIn, setUser } = useContext(userContext);
   const {
     screen: { isMobile },
   } = useContext(pageContext);
@@ -210,7 +210,8 @@ export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
                     <Link
                       to="/auth/login"
                       onClick={async () => {
-                        await authAPI.logout();
+                        localStorage.clear();
+                        setUser(null);
                       }}
                     >
                       Sign Out

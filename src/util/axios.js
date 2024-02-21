@@ -1,4 +1,8 @@
 import axios from "axios";
 
-axios.BASE_URL = process.env.REACT_APP_SERVER_URL || "";
-axios.defaults.withCredentials = true;
+const axiosAPI = axios.create({
+  withCredentials: true,
+  baseURL: process.env.REACT_APP_SERVER_URL || "",
+});
+
+export { axiosAPI };

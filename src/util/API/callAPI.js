@@ -1,5 +1,5 @@
 import CustomQuery from "../CustomQuery";
-import axios, { Axios } from "axios";
+import { axiosAPI } from "../../util/axios";
 import AxiosAPIError from "../errors/AxiosAPIError";
 
 export default class CallAPI {
@@ -7,7 +7,7 @@ export default class CallAPI {
     const query = CustomQuery.stringRepOf(filters);
 
     try {
-      const res = await axios.get(axios.BASE_URL + `/${endpoint}?` + query);
+      const res = await axiosAPI.get(`/${endpoint}?` + query);
 
       return res.data ? res.data.data : undefined;
     } catch (err) {
@@ -17,7 +17,7 @@ export default class CallAPI {
 
   async getById(endpoint, id) {
     try {
-      const res = await axios.get(axios.BASE_URL + `/${endpoint}/${id}`);
+      const res = await axiosAPI.get(`/${endpoint}/${id}`);
 
       return res.data.data;
     } catch (err) {
@@ -27,7 +27,7 @@ export default class CallAPI {
 
   async post(endpoint, data) {
     try {
-      const res = await axios.post(axios.BASE_URL + `/${endpoint}`, data);
+      const res = await axiosAPI.post(`/${endpoint}`, data);
 
       return res.data ? res.data.data : undefined;
     } catch (err) {
@@ -37,7 +37,7 @@ export default class CallAPI {
 
   async patch(endpoint, data) {
     try {
-      const res = await axios.patch(axios.BASE_URL + `/${endpoint}`, data);
+      const res = await axiosAPI.patch(`/${endpoint}`, data);
 
       return res.data ? res.data.data : undefined;
     } catch (err) {
@@ -47,15 +47,15 @@ export default class CallAPI {
 
   async updateById(endpoint, id, data) {
     try {
-      return await axios.patch(axios.BASE_URL + `/${endpoint}/${id}`, data);
+      return await axiosAPI.patch(`/${endpoint}/${id}`, data);
     } catch (err) {
-      throw Axios.format(err);
+      throw AxiosAPIError.format(err);
     }
   }
 
   async deleteById(endpoint, id) {
     try {
-      await axios.delete(axios.BASE_URL + `/${endpoint}/${id}`);
+      await axiosAPI.delete(`/${endpoint}/${id}`);
     } catch (err) {
       AxiosAPIError.format(err);
     }
