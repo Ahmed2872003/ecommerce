@@ -29,13 +29,14 @@ button {
   --amz-red: #ff3333;
   --amz-offWhite: #f2f2f2;
   --amz-borderC: #e6e6e6;
+  --amz-shadowC: #ddd;
   --main-time: 1.2s;
   --short-time: 0.5s;
   --font-w-r: 400;
   --font-w-b: 700;
   --font-w-black: 900;
   --font-s-s: 12px;
-  --max-img-width: 250px;
+  --max-img-width: 300px;
   --min-img-width: 150px;
 }
 
@@ -194,7 +195,6 @@ main {
   z-index: 0;
   width: 100%;
   flex: 1;
-  padding: calc(10px + 0.5rem);
 }
 
 .a-hover {

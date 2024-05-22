@@ -1,7 +1,8 @@
 // Modules
 import { useLocation } from "react-router";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { pageContext } from "../../Contexts/Page";
+import Product from "../Product";
 
 // CSS
 import "./FilterProductsPage.css";
@@ -9,43 +10,28 @@ import "./FilterProductsPage.css";
 // Utils
 import CustomQuery from "../../util/CustomQuery";
 import { productAPI } from "../../util/API/APIS";
+import ProductLoaderCon from "../ProductLoaderCon";
 
 export default function FilterProductsPage(props) {
   const location = useLocation();
+
+  const [resCount, setResCount] = useState(0);
 
   const paramsObj = useUpdateParamObj(location.search);
 
   useUpdateWindowQuery(paramsObj, location);
 
-  const productsData = useGetProducts(paramsObj);
-}
-
-function useGetProducts(paramsObj) {
-  const [productsData, setProductsData] = useState([]);
-  const { loading, alertMsg } = useContext(pageContext);
-
-  useEffect(() => {
-    async function start() {
-      if (!paramsObj) return;
-
-      loading.setLoading(true);
-
-      try {
-        const { products } = await productAPI.get(paramsObj);
-
-        setProductsData(products);
-      } catch (err) {
-        console.log(err.message);
-        alertMsg.setMsg(["error", err.message]);
-      }
-
-      loading.setLoading(false);
-    }
-
-    start();
-  }, [paramsObj]);
-
-  return productsData;
+  return (
+    <>
+      <h6 id="res-con">
+        {resCount > 100 ? "Over 100" : resCount} results for
+        <span> "{paramsObj && paramsObj.name?.like}"</span>
+      </h6>
+      {paramsObj && (
+        <ProductLoaderCon filters={paramsObj} setResCount={setResCount} />
+      )}
+    </>
+  );
 }
 
 function useUpdateWindowQuery(paramsObj, location) {
@@ -53,7 +39,7 @@ function useUpdateWindowQuery(paramsObj, location) {
     window.history.pushState(
       {},
       "",
-      location.pathname + `?${CustomQuery.stringRepOf(paramsObj)}`
+      "search" + `?${CustomQuery.stringRepOf(paramsObj)}`
     );
   }, [paramsObj]);
 }

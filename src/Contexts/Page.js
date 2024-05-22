@@ -3,18 +3,16 @@ import { createContext, useEffect, useState } from "react";
 const pageContext = createContext();
 
 function PageContextProvider({ children }) {
-  const windowWidth = useWindowWidth();
-
   const [isLoading, setIsLoading] = useState(false);
 
   const [[msgType, msgContent], setMsg] = useState(["", ""]);
 
-  const isMobile = isMobileScreen(windowWidth);
+  const isMobile = isMobileScreen(window.innerWidth);
 
   return (
     <pageContext.Provider
       value={{
-        screen: { width: windowWidth, isMobile },
+        screen: { isMobile },
         alertMsg: { type: msgType, content: msgContent, setMsg },
         loading: { value: isLoading, setLoading: setIsLoading },
       }}
@@ -22,24 +20,6 @@ function PageContextProvider({ children }) {
       {children}
     </pageContext.Provider>
   );
-}
-
-function useWindowWidth() {
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  useEffect(() => {
-    function handleScreenResize(e) {
-      setWindowWidth(window.innerWidth);
-    }
-
-    window.addEventListener("resize", handleScreenResize);
-
-    return () => {
-      window.removeEventListener("resize", handleScreenResize);
-    };
-  }, []);
-
-  return windowWidth;
 }
 
 function isMobileScreen(size) {

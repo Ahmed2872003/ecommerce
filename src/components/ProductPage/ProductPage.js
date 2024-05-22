@@ -118,6 +118,7 @@ export default function ProductPage(props) {
       if (err instanceof AxiosAPIError && err.statusCode === 409)
         props.setMsg(["error", "This item has been already added to the cart"]);
     }
+
     e.target.innerText = btnText;
     e.target.disabled = false;
   }

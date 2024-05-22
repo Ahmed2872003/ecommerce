@@ -1,0 +1,8 @@
+#res-con {
+  border-bottom: 1px solid var(--amz-borderC);
+  padding: 5px;
+  box-shadow: 0px 0 10px var(--amz-shadowC);
+}
+#res-con span {
+  color: var(--amz-alt-orange);
+}

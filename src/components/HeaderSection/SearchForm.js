@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from "react";
 
 import { useNavigate, useLocation } from "react-router";
 
-export default function SearchFrom(props) {
+export default function SearchForm(props) {
   const navigate = useNavigate();
   const { search } = useLocation();
 
@@ -33,7 +33,7 @@ export default function SearchFrom(props) {
     const { name, category } = Object.fromEntries(params.entries());
 
     navigate(
-      `/search?namelike=${name}&categorylike=${
+      `search?namelike=${name}&categorylike=${
         category === "All" ? "" : category
       }`
     );

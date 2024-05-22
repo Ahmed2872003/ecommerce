@@ -8,7 +8,7 @@ import { cartAPI, authAPI } from "../../util/API/APIS";
 // CSS
 import "./Header.css";
 // Components
-import SearchFrom from "./SearchFrom";
+import SearchForm from "./SearchForm";
 import CategoryNavList from "./CategoryNavList";
 
 const categories = [
@@ -108,7 +108,7 @@ export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
             width="80"
           />
         </Link>
-        <SearchFrom
+        <SearchForm
           setSelectedCategory={setSelectedCategory}
           categories={categories}
           selectCatElement={selectCatElement}

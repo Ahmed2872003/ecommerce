@@ -50,7 +50,7 @@ export default function MainApp() {
                 />
               }
             ></Route>
-            <Route path="/search" element={<FilterProductsPage />}></Route>
+            <Route path="search" element={<FilterProductsPage />}></Route>
             <Route
               path="product/:id"
               element={
