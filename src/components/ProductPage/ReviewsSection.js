@@ -202,7 +202,7 @@ export default function ReveiwsSection(props) {
           <div id="reviews-con" className="flex-column flex-md-row">
             <div id="reviews-filter-con">
               <p>
-                <Rating rating={props.productData.rating} />
+                {/* <Rating rating={props.productData.rating} /> */}
                 &nbsp;
                 <span>{props.productData.rating} From 5</span>
               </p>
@@ -254,7 +254,7 @@ export default function ReveiwsSection(props) {
                         .fill(0)
                         .map((item, index) => (
                           <option value={0.5 * (index + 1)} key={index}>
-                            {/* <GenStars rating={0.5 * (index + 1)} /> */}
+                            <Rating rating={0.5 * (index + 1)} />
                             {0.5 * (index + 1)}
                           </option>
                         ))}

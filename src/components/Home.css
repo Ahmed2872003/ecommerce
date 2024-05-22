@@ -3,7 +3,7 @@
   justify-content: center;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 30px;
-  padding: calc(10px + 0.5rem);
+  padding: var(--std-padding);
 }
 
 @media (max-width: 768px) {

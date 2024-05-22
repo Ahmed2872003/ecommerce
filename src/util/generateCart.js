@@ -1,5 +1,5 @@
 // Modules
-import axios from "axios";
+import { axiosAPI as axios } from "./axios";
 // utils
 import CustomQuery from "./CustomQuery";
 
@@ -27,7 +27,7 @@ async function getProducts(LSCart) {
 
   for (const [productId] of LSCart) {
     const query = CustomQuery.stringRepOf({ id: { eq: productId } });
-    productsPromises.push(axios.get(axios.BASE_URL + `/product?${query}`));
+    productsPromises.push(axios.get(`/product?${query}`));
   }
 
   const productsResponses = await Promise.all(productsPromises);

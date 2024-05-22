@@ -15,7 +15,7 @@ export default function OrderPage() {
   const ordersDetails = useGetOrders();
 
   return ordersDetails && ordersDetails.length ? (
-    <>
+    <div id="order">
       <h4 className="title">Orders</h4>
       <div id="orders-con">
         <p>Total: {ordersDetails.length}</p>
@@ -23,7 +23,7 @@ export default function OrderPage() {
           <Order order={order} key={order.id} />
         ))}
       </div>
-    </>
+    </div>
   ) : (
     <p className="centered-msg">No orders found</p>
   );

@@ -5,7 +5,9 @@
 .order > * {
   padding: 1rem;
 }
-
+#order {
+  padding: var(--std-padding);
+}
 .order-head {
   display: flex;
   justify-content: space-between;

@@ -1,3 +1,7 @@
+#productPage {
+  padding: var(--std-padding);
+}
+
 #productPage > div:first-child > * {
   padding: 10px;
 }

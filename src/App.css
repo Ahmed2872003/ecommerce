@@ -38,6 +38,7 @@ button {
   --font-s-s: 12px;
   --max-img-width: 300px;
   --min-img-width: 150px;
+  --std-padding: calc(10px + 0.5rem);
 }
 
 /* util */
@@ -124,7 +125,7 @@ textarea {
   border: 1px solid var(--amz-borderC);
   border-radius: 5px;
 }
-input:focus,
+input:not([type="range"]):focus,
 textarea:focus {
   box-shadow: 2px 2px 5px -2px var(--amz-yellow),
     -2px -2px 5px -2px var(--amz-yellow);

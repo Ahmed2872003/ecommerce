@@ -1,8 +1,45 @@
 #res-con {
+  padding: var(--std-padding);
+  display: flex;
+}
+
+#items-count-con {
   border-bottom: 1px solid var(--amz-borderC);
   padding: 5px;
   box-shadow: 0px 0 10px var(--amz-shadowC);
 }
-#res-con span {
+#items-count-con span {
   color: var(--amz-alt-orange);
+}
+
+.searched-items {
+  flex: 1;
+  margin-left: 10px;
+}
+.searched-items > * {
+  padding: 0;
+}
+.filters {
+  position: sticky;
+  top: 10px;
+  height: 500px;
+  border: 1px solid var(--amz-borderC);
+  padding: 10px;
+  width: 25%;
+}
+.filter {
+  margin-bottom: 20px;
+}
+.filter div {
+  display: flex;
+  align-items: center;
+}
+.filter div span {
+  font-size: var(--font-s-s);
+  font-weight: var(--font-w-b);
+  margin: 5px;
+}
+
+.filter select {
+  margin-right: 10px;
 }

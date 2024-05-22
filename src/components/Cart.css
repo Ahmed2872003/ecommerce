@@ -1,3 +1,7 @@
+#cart {
+  padding: var(--std-padding);
+}
+
 #cart-items {
   flex-grow: 6;
 }
