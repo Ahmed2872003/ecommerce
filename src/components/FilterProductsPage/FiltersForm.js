@@ -63,7 +63,7 @@ export default function FiltersForm({ setFilters }) {
           <span>{price} EGP</span>
           <span>& Up</span>
           <button
-            className="reg-btn"
+            className="rounded"
             onClick={(e) => {
               e.target = priceInput.current;
               handleChangedFilters(e);
@@ -71,13 +71,6 @@ export default function FiltersForm({ setFilters }) {
           >
             Go
           </button>
-        </div>
-      </div>
-
-      <div className="filter brand-filter">
-        <span>Brand</span>
-        <div>
-          <input ref={priceInput} onChange={(e) => setPrice(e.target.value)} />
         </div>
       </div>
     </form>

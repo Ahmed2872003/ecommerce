@@ -43,3 +43,8 @@
 .filter select {
   margin-right: 10px;
 }
+
+.price-filter button {
+  margin-left: auto;
+  background-color: var(--amz-offWhite);
+}

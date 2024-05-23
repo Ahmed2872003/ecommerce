@@ -1,7 +1,7 @@
 // MODULES
 import { useEffect, useState } from "react";
 import { useLocation, Link } from "react-router-dom";
-import axios from "axios";
+import { axiosAPI as axios } from "../util/axios";
 // CSS
 import "./SendAuthEmail.css";
 // Components
@@ -50,7 +50,8 @@ function SendEmail({ URL_Request, title, hint }) {
     try {
       const {
         data: { msg },
-      } = await axios.post(axios.BASE_URL + URL_Request, formData);
+      } = await axios.post(URL_Request, formData);
+
       setMsg(["success", msg]);
     } catch (err) {
       setMsg(["error", err.message]);

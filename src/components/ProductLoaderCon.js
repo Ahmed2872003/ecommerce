@@ -52,8 +52,6 @@ export default function ProductLoaderCon(props) {
     (async () => {
       if (!filterChanged && pageNum === 1) return;
 
-      console.log(pageNum);
-
       if (!isLoading) page.loading.setLoading(true);
 
       try {
