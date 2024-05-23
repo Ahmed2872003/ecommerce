@@ -1,9 +1,7 @@
 // Modules
 import { useLocation } from "react-router";
-import { useState, useEffect, useContext, useRef } from "react";
-import { pageContext } from "../../Contexts/Page";
+import { useState, useEffect } from "react";
 // Components
-import Product from "../Product";
 import FiltersForm from "./FiltersForm";
 
 // CSS
@@ -11,7 +9,6 @@ import "./FilterProductsPage.css";
 
 // Utils
 import CustomQuery from "../../util/CustomQuery";
-import { productAPI } from "../../util/API/APIS";
 import ProductLoaderCon from "../ProductLoaderCon";
 
 export default function FilterProductsPage(props) {
