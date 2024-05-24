@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 
-export default function FiltersForm({ setFilters }) {
+export default function FiltersForm({ filters, setFilters }) {
   const [price, setPrice] = useState(0);
 
   const priceInput = useRef(null);
@@ -35,7 +35,7 @@ export default function FiltersForm({ setFilters }) {
         <div>
           <select
             name="rating"
-            defaultValue={5}
+            defaultValue={0}
             onChange={handleChangedFilters}
           >
             <option value={0}>0</option>

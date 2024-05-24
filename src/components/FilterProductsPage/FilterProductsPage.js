@@ -29,7 +29,7 @@ export default function FilterProductsPage(props) {
         <span> "{paramsObj && paramsObj.name?.like}"</span>
       </h6>
       <div id="res-con">
-        <FiltersForm setFilters={setParamsObj} />
+        <FiltersForm setFilters={setParamsObj} filters={paramsObj} />
 
         <div className="searched-items">
           {paramsObj && (
