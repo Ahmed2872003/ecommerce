@@ -34,7 +34,7 @@ export default function FiltersForm({ filters, setFilters }) {
 
   return (
     <div
-      className={`${isFilterOpen ? "show" : ""} ${
+      className={`${isFilterOpen ? "show-filter-con" : ""} ${
         screen.isMobile ? "float-list" : ""
       }`}
     >
