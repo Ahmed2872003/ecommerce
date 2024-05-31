@@ -1,4 +1,5 @@
 #res-con {
+  position: relative;
   padding: var(--std-padding);
   display: flex;
 }
@@ -14,18 +15,15 @@
 
 .searched-items {
   flex: 1;
-  margin-left: 10px;
 }
 .searched-items > * {
   padding: 0;
 }
 .filters {
-  position: sticky;
-  top: 10px;
-  height: 500px;
+  flex: 1;
   border: 1px solid var(--amz-borderC);
   padding: 10px;
-  width: 25%;
+  background-color: white;
 }
 .filter {
   margin-bottom: 20px;
@@ -47,4 +45,28 @@
 .price-filter button {
   margin-left: auto;
   background-color: var(--amz-offWhite);
+}
+
+.float-list {
+  position: absolute;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: start;
+  left: calc(-100% + 12.5px);
+  top: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.show {
+  left: 0;
+}
+
+#filters-btn {
+  color: var(--amz-grey);
+  align-self: self-start;
+  cursor: pointer;
+}
+#filters-btn i {
+  font-size: 20px;
 }

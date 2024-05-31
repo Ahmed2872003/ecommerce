@@ -23,7 +23,7 @@ function PageContextProvider({ children }) {
 }
 
 function isMobileScreen(size) {
-  if (size <= 767) return true;
+  if (size <= 768) return true;
   else return false;
 }
 
