@@ -177,7 +177,7 @@ export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
               <ul className="account-sec m-0">
                 <h6 style={{ fontWeight: "var(--font-w-b)" }}>Your Account</h6>
                 <li>
-                  <Link to={isLoggedIn ? "/" : "/auth/login"}>
+                  <Link to={isLoggedIn ? "/account" : "/auth/login"}>
                     Your Account
                   </Link>
                 </li>

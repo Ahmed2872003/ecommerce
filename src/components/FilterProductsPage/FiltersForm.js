@@ -26,6 +26,8 @@ export default function FiltersForm({ filters, setFilters }) {
 
     filter[filterInput.name] = filterContent;
 
+    setIsFilterOpen(false);
+
     setFilters((prevFilters) => ({
       ...prevFilters,
       ...filter,
@@ -33,23 +35,22 @@ export default function FiltersForm({ filters, setFilters }) {
   }
 
   return (
-    <div
-      className={`${isFilterOpen ? "show-filter-con" : ""} ${
-        screen.isMobile ? "float-list" : ""
-      }`}
-    >
+    <div className={screen.isMobile ? "float-list" : ""}>
       {screen.isMobile && (
-        <span
-          id="filters-btn"
-          onClick={() => setIsFilterOpen((preVal) => !preVal)}
-        >
-          <i
-            class={`fa fa-angle-${isFilterOpen ? "left" : "right"}`}
-            aria-hidden="true"
-          ></i>
-        </span>
+        <div id="filters-btn-sec">
+          <span
+            id="filter-btn"
+            onClick={() => setIsFilterOpen((preVal) => !preVal)}
+          >
+            Filters
+            <i
+              class={`fa fa-angle-${isFilterOpen ? "up" : "down"}`}
+              aria-hidden="true"
+            ></i>
+          </span>
+        </div>
       )}
-      <form className="filters">
+      <form className={`filters ${isFilterOpen ? "show-filters" : ""}`}>
         <div className="filter review-filter">
           <span>Customer reviews</span>
           <div>
