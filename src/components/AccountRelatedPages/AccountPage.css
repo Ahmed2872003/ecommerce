@@ -1,3 +1,29 @@
 .account-con {
   padding: var(--std-padding);
 }
+.serv-card {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: 10px;
+  border: 1px solid var(--amz-borderC);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: var(--std-padding);
+  font-weight: var(--font-w-b);
+  user-select: none;
+}
+.col {
+  margin: 5px;
+}
+.serv-card:hover {
+  background-color: var(--amz-offWhite);
+}
+
+.serv-card div p {
+  color: var(--amz-grey);
+}
+
+.serv-card img {
+  max-width: 60px;
+}

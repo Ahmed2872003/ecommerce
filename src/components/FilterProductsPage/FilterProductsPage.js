@@ -16,8 +16,6 @@ export default function FilterProductsPage(props) {
 
   const [resCount, setResCount] = useState(0);
 
-  const [filters, setFilters] = useState(null);
-
   const [paramsObj, setParamsObj] = useUpdateParamObj(location.search);
 
   useUpdateWindowQuery(paramsObj, location);
