@@ -43,7 +43,7 @@ export default function AccountPage() {
           </div>
           {user.seller && (
             <div className="col">
-              <Link className="serv-card">
+              <Link to="/account/products" className="serv-card">
                 <img
                   src={require("../../images/product.png")}
                   alt="account-service"

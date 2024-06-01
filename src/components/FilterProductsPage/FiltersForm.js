@@ -35,7 +35,7 @@ export default function FiltersForm({ filters, setFilters }) {
   }
 
   return (
-    <div className={screen.isMobile ? "float-list" : ""}>
+    <div className={screen.isMobile ? "float-list" : "filters-con"}>
       {screen.isMobile && (
         <div id="filters-btn-sec">
           <span
@@ -50,7 +50,11 @@ export default function FiltersForm({ filters, setFilters }) {
           </span>
         </div>
       )}
-      <form className={`filters ${isFilterOpen ? "show-filters" : ""}`}>
+      <form
+        className={`filters ${
+          isFilterOpen || !screen.isMobile ? "show-filters" : "hide-filters"
+        }`}
+      >
         <div className="filter review-filter">
           <span>Customer reviews</span>
           <div>
