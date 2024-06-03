@@ -8,8 +8,6 @@ import "./AccountPage.css";
 export default function AccountPage() {
   const { user } = useContext(userContext);
 
-  console.log(user);
-
   return (
     <div className="account-con">
       <h4 className="title">Account</h4>
@@ -49,8 +47,8 @@ export default function AccountPage() {
                   alt="account-service"
                 />
                 <div>
-                  <h5>Your Products</h5>
-                  <p>Manage Products</p>
+                  <h5>Your Inventory</h5>
+                  <p>Manage Inventory</p>
                 </div>
               </Link>
             </div>

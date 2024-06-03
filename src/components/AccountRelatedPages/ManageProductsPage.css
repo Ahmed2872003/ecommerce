@@ -1,0 +1,9 @@
+#inventory-con {
+  position: relative;
+}
+#products-table tr {
+  border-bottom: 1px solid var(--amz-borderC);
+}
+#products-table th[scope="col"] {
+  color: var(--amz-blue);
+}

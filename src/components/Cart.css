@@ -14,17 +14,6 @@
 .item-details a {
   font-size: calc(1rem + 0.3vw);
 }
-td,
-th {
-  margin: 5px;
-  display: inline-block;
-}
-
-table,
-td,
-th {
-  border: 1px solid black;
-}
 
 .delete-item-btn {
   cursor: pointer;
