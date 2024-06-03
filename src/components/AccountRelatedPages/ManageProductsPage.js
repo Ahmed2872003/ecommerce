@@ -2,6 +2,8 @@ import { createElement, useContext, useEffect, useState } from "react";
 
 import { userContext } from "../../Contexts/User";
 
+import { pageContext } from "../../Contexts/Page";
+
 import { productAPI } from "../../util/API/APIS";
 
 import ProductRow from "./ProductRow";
@@ -82,18 +84,23 @@ export default function ManageProductsPage() {
   );
 }
 
-function useGetCreatedProducts(sellerId, page) {
+function useGetCreatedProducts(sellerId, pageNum) {
   const [createdProducts, setCreatedProducts] = useState(null);
 
+  const page = useContext(pageContext);
+
   useEffect(() => {
+    page.loading.setLoading(true);
+
     productAPI
       .get({
         SellerId: { eq: sellerId },
-        page: { eq: page },
+        page: { eq: pageNum },
         limit: { eq: limit },
       })
-      .then((products) => setCreatedProducts(products));
-  }, [page]);
+      .then((products) => setCreatedProducts(products))
+      .finally(() => page.loading.setLoading(false));
+  }, [pageNum]);
 
   return createdProducts;
 }

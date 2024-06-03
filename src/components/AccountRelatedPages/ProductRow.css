@@ -4,8 +4,3 @@
 #product-row {
   cursor: pointer;
 }
-
-/* #product-row:hover {
-  background-color: var(--amz-grey);
-  --bs-table-bg: none;
-} */
