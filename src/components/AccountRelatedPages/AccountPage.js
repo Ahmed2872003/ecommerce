@@ -1,12 +1,18 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { Link } from "react-router-dom";
 
 import { userContext } from "../../Contexts/User";
+import { pageContext } from "../../Contexts/Page";
+
 import "./AccountPage.css";
 
 export default function AccountPage() {
   const { user } = useContext(userContext);
+
+  const page = useContext(pageContext);
+
+  useEffect(() => page.loading.setLoading(false), []);
 
   return (
     <div className="account-con">
