@@ -14,12 +14,13 @@ const limit = 5;
 
 export default function ManageProductsPage() {
   const { user } = useContext(userContext);
+  const page = useContext(pageContext);
 
-  const [page, setPage] = useState(1);
+  const [pageNum, setpageNum] = useState(1);
 
   const [isPageChanging, setIsPageChanging] = useState(false);
 
-  const createdProducts = useGetCreatedProducts(user.id, page);
+  const createdProducts = useGetCreatedProducts(user.id, pageNum);
 
   const productRows =
     createdProducts &&
@@ -36,13 +37,17 @@ export default function ManageProductsPage() {
       .map((e, ind) => <option value={ind + 1}>{ind + 1}</option>);
 
   useEffect(() => {
+    page.loading.setLoading(true);
+  }, []);
+
+  useEffect(() => {
     setIsPageChanging(false);
   }, [createdProducts]);
 
   function handlePageChange(e) {
     setIsPageChanging(true);
 
-    setPage(e.target.value);
+    setpageNum(e.target.value);
   }
 
   return (
@@ -51,6 +56,7 @@ export default function ManageProductsPage() {
       <p className="centered-msg">No products have been added yet</p>
     ) : (
       <div id="inventory-con">
+        {isPageChanging && <div className="cover-con"></div>}
         <h4 className="title">Manage Inventory</h4>
         <p style={{ color: "var(--amz-grey)" }}>
           <b>{createdProducts.MatchedProductsCount} Product(s)</b>
@@ -92,8 +98,6 @@ function useGetCreatedProducts(sellerId, pageNum) {
   const page = useContext(pageContext);
 
   useEffect(() => {
-    page.loading.setLoading(true);
-
     productAPI
       .get({
         SellerId: { eq: sellerId },
