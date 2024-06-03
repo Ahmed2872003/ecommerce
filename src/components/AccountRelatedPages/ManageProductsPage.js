@@ -35,12 +35,14 @@ export default function ManageProductsPage() {
       .fill(null)
       .map((e, ind) => <option value={ind + 1}>{ind + 1}</option>);
 
+  useEffect(() => {
+    setIsPageChanging(false);
+  }, [createdProducts]);
+
   function handlePageChange(e) {
     setIsPageChanging(true);
 
     setPage(e.target.value);
-
-    setIsPageChanging(false);
   }
 
   return (
