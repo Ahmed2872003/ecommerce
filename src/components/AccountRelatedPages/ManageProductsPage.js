@@ -9,6 +9,7 @@ import { productAPI } from "../../util/API/APIS";
 import ProductRow from "./ProductRow";
 
 import "./ManageProductsPage.css";
+import errorHandler from "../../util/errors/errorHandler";
 
 const limit = 5;
 
@@ -20,15 +21,33 @@ export default function ManageProductsPage() {
 
   const [isPageChanging, setIsPageChanging] = useState(false);
 
-  const createdProducts = useGetCreatedProducts(user.id, pageNum);
+  const [createdProducts, setCreatedProducts] = useGetCreatedProducts(
+    user.id,
+    pageNum,
+    limit
+  );
 
   const productRows =
     createdProducts &&
-    createdProducts.products.map((p) => <ProductRow product={p} />);
+    createdProducts.products.map((p) => (
+      <ProductRow
+        key={p.id}
+        product={p}
+        limit={limit}
+        pageNum={pageNum}
+        setpageNum={setpageNum}
+        createdProducts={createdProducts}
+        setCreatedProducts={setCreatedProducts}
+        setIsPageChanging={setIsPageChanging}
+        sellerId={user.id}
+      />
+    ));
 
   const pagesNum =
     createdProducts &&
     calcPagesNum(createdProducts.MatchedProductsCount, limit);
+
+  console.log(createdProducts?.MatchedProductsCount);
 
   const pagesNumOptions =
     pagesNum &&
@@ -47,7 +66,7 @@ export default function ManageProductsPage() {
   function handlePageChange(e) {
     setIsPageChanging(true);
 
-    setpageNum(e.target.value);
+    setpageNum(+e.target.value);
   }
 
   return (
@@ -81,7 +100,7 @@ export default function ManageProductsPage() {
         </table>
         <label>Page</label>
         <select
-          defaultValue={1}
+          value={pageNum}
           onChange={handlePageChange}
           disabled={isPageChanging}
         >
@@ -92,23 +111,27 @@ export default function ManageProductsPage() {
   );
 }
 
-function useGetCreatedProducts(sellerId, pageNum) {
+function useGetCreatedProducts(sellerId, pageNum, limit) {
   const [createdProducts, setCreatedProducts] = useState(null);
 
   const page = useContext(pageContext);
 
   useEffect(() => {
-    productAPI
-      .get({
-        SellerId: { eq: sellerId },
-        page: { eq: pageNum },
-        limit: { eq: limit },
-      })
-      .then((products) => setCreatedProducts(products))
-      .finally(() => page.loading.setLoading(false));
+    (async () => {
+      await errorHandler(async () => {
+        const products = await productAPI.get({
+          SellerId: { eq: sellerId },
+          page: { eq: pageNum },
+          limit: { eq: limit },
+        });
+        setCreatedProducts(products);
+      }, page.alertMsg.setMsg);
+
+      page.loading.setLoading(false);
+    })();
   }, [pageNum]);
 
-  return createdProducts;
+  return [createdProducts, setCreatedProducts];
 }
 
 function calcPagesNum(count, limit) {

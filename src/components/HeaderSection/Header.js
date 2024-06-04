@@ -4,12 +4,13 @@ import { useEffect, useRef, useContext, useState, useCallback } from "react";
 // Utils
 import { userContext } from "../../Contexts/User";
 import { pageContext } from "../../Contexts/Page";
-import { cartAPI, authAPI } from "../../util/API/APIS";
+import { cartAPI } from "../../util/API/APIS";
 // CSS
 import "./Header.css";
 // Components
 import SearchForm from "./SearchForm";
 import CategoryNavList from "./CategoryNavList";
+import errorHandler from "../../util/errors/errorHandler";
 
 const categories = [
   "All",
@@ -32,6 +33,7 @@ export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
   const { user, isLoggedIn, setUser } = useContext(userContext);
   const {
     screen: { isMobile },
+    alertMsg,
   } = useContext(pageContext);
 
   // useState
@@ -80,15 +82,13 @@ export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
           return;
         }
 
-        try {
+        await errorHandler(async () => {
           const {
             cart: { Products },
           } = await cartAPI.get(null);
 
           setNumberOfCartItems(Products.length);
-        } catch (err) {
-          console.log(err.message);
-        }
+        }, alertMsg.setMsg);
       } else {
         const LSCart = JSON.parse(window.localStorage.getItem("cart") || "[]");
 

@@ -4,6 +4,7 @@ import ReactDOMServer from "react-dom/server";
 
 // Utils
 import { userContext } from "../Contexts/User";
+import { pageContext } from "../Contexts/Page";
 import generateCart from "../util/generateCart";
 import { cartAPI, stripeAPI } from "../util/API/APIS";
 // Components
@@ -12,10 +13,12 @@ import { Link, useNavigate, parsePath } from "react-router-dom";
 import "./Cart.css";
 import { AdvancedImage } from "@cloudinary/react";
 import cloudinary from "../util/cloudinary";
+import errorHandler from "../util/errors/errorHandler";
 
 export default function Cart(props) {
   // useContext
   const { user, isLoggedIn } = useContext(userContext);
+  const page = useContext(pageContext);
   // useState
   const [cartDetails, setCartDetails] = useState(null);
   const [isCartChanging, setIsCartChanging] = useState(false);
@@ -63,12 +66,11 @@ export default function Cart(props) {
     if (!isLoggedIn) {
       try {
         await handleDeleteCartItemLoggedOff(productId);
-        props.setNumberOfCartItems((preValue) => preValue - 1);
       } catch (err) {
         console.log(err);
       }
     } else {
-      try {
+      await errorHandler(async () => {
         await cartAPI.deleteById(productId);
 
         const { cart } = await cartAPI.get(null);
@@ -76,9 +78,7 @@ export default function Cart(props) {
         setCartDetails(cart);
 
         props.setNumberOfCartItems((preValue) => preValue - 1);
-      } catch (err) {
-        console.log(err.response);
-      }
+      }, page.alertMsg.setMsg);
     }
 
     setIsCartChanging(false);
@@ -97,6 +97,8 @@ export default function Cart(props) {
       window.localStorage.setItem("cart", JSON.stringify(newLSCart));
 
       setCartDetails(await generateCart(newLSCart));
+
+      props.setNumberOfCartItems((preValue) => preValue - 1);
     }
   }
 

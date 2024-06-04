@@ -23,10 +23,12 @@ import priceFormatter from "../../util/priceFormatter";
 import CustomQuery from "../../util/CustomQuery";
 import LoadingIcons from "react-loading-icons";
 import { userContext } from "../../Contexts/User";
+import { pageContext } from "../../Contexts/Page";
 import { productAPI, cartAPI } from "../../util/API/APIS";
 
 // errors
 import AxiosAPIError from "../../util/errors/AxiosAPIError";
+import errorHandler from "../../util/errors/errorHandler";
 
 export default function ProductPage(props) {
   const nav = useNavigate();
@@ -53,13 +55,14 @@ export default function ProductPage(props) {
 
   // useContext
   const { user, isLoggedIn } = useContext(userContext);
+  const page = useContext(pageContext);
 
   // useEffect
   useEffect(() => {
     setProductData(null);
     props.setIsLoading(true);
     (async () => {
-      try {
+      const isThereError = await errorHandler(async () => {
         const { product } = await productAPI.getById(id);
 
         isAvailable.current = product.quantity > 0;
@@ -70,10 +73,9 @@ export default function ProductPage(props) {
           product.price = priceFormatter(product.price);
           return product;
         });
-      } catch (err) {
-        console.log(err);
-        props.setIsLoading(false);
-      }
+      }, page.alertMsg.setMsg);
+
+      if (isThereError) props.setIsLoading(false);
     })();
 
     return () => {
@@ -85,12 +87,11 @@ export default function ProductPage(props) {
     if (!productData) return;
 
     (async () => {
-      try {
+      await errorHandler(async () => {
         const products = await getRelatedProducts();
         setRelatedProducts(products);
-      } catch (err) {
-        console.log(err);
-      }
+      }, page.alertMsg.setMsg);
+
       props.setIsLoading(false);
     })();
   }, [productData]);
@@ -103,10 +104,10 @@ export default function ProductPage(props) {
     }
     const btnText = e.target.innerText;
 
-    try {
-      e.target.innerHTML = ReactDOMServer.renderToString(btnLoading.current);
-      e.target.disabled = true;
+    e.target.innerHTML = ReactDOMServer.renderToString(btnLoading.current);
+    e.target.disabled = true;
 
+    errorHandler(async () => {
       await cartAPI.post({
         productId: id,
         quantity: quantityInput.current.value,
@@ -114,14 +115,12 @@ export default function ProductPage(props) {
 
       props.setNumberOfCartItems((prevNumber) => prevNumber + 1);
       props.setMsg(["success", "Added to cart successfully"]);
-    } catch (err) {
-      if (err instanceof AxiosAPIError && err.statusCode === 409)
-        props.setMsg(["error", "This item has been already added to the cart"]);
-    }
+    }, page.alertMsg.setMsg);
 
     e.target.innerText = btnText;
     e.target.disabled = false;
   }
+  // props.setMsg(["error", "This item has been already added to the cart"]);
 
   function handleAddToCartNoAccount(e) {
     const neededQuantity = +quantityInput.current.value;
@@ -145,21 +144,17 @@ export default function ProductPage(props) {
   }
 
   async function getRelatedProducts(offset) {
-    try {
-      const filter = {
-        category: { like: productData.category },
-        brand: { like: productData.brand },
-        id: { ne: id },
-        limit: { eq: numOfLoadedProducts.current },
-        offset: { eq: offset },
-      };
+    const filter = {
+      category: { like: productData.category },
+      brand: { like: productData.brand },
+      id: { ne: id },
+      limit: { eq: numOfLoadedProducts.current },
+      offset: { eq: offset },
+    };
 
-      const { products } = await productAPI.get(filter);
+    const { products } = await productAPI.get(filter);
 
-      return products;
-    } catch (err) {
-      console.log(err);
-    }
+    return products;
   }
 
   return (

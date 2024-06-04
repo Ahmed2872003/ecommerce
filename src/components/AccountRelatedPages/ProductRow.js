@@ -1,15 +1,76 @@
+import { useContext, useState } from "react";
+
 import { useNavigate } from "react-router";
 
 import { AdvancedImage } from "@cloudinary/react";
 
 import cloudinary from "../../util/cloudinary";
 
+import { pageContext } from "../../Contexts/Page";
+
+import { productAPI } from "../../util/API/APIS";
+
+import errorHandler from "../../util/errors/errorHandler";
+
 // CSS
 import "./ProductRow.css";
 
-export default function ProductRow({ product }) {
+export default function ProductRow({
+  product,
+  limit,
+  sellerId,
+  createdProducts,
+  setCreatedProducts,
+  setIsPageChanging,
+  pageNum,
+  setpageNum,
+}) {
   const nav = useNavigate();
-  console.log(product);
+
+  const page = useContext(pageContext);
+
+  async function handleDeleteProduct(e) {
+    e.stopPropagation();
+
+    const deleteIntent = window.confirm(
+      `Are you  sure you want to delete "${product.name}"?`
+    );
+
+    if (!deleteIntent) return;
+
+    await errorHandler(async () => {
+      setIsPageChanging(true);
+      // Get the next product
+      const {
+        products: [nextProduct],
+        MatchedProductsCount,
+      } = await productAPI.get({
+        SellerId: { eq: sellerId },
+        page: {
+          eq: createdProducts.products.length + limit * (pageNum - 1) + 1,
+        },
+        limit: { eq: 1 },
+      });
+
+      await productAPI.deleteById(product.id);
+
+      const newProducts = createdProducts.products.filter(
+        (p) => p.id !== product.id
+      );
+
+      if (nextProduct) newProducts.push(nextProduct);
+
+      if (!newProducts.length) setpageNum((prevPageNum) => prevPageNum - 1);
+      else
+        setCreatedProducts(({ MatchedProductsCount }) => ({
+          products: newProducts,
+          MatchedProductsCount: MatchedProductsCount - 1,
+        }));
+
+      page.alertMsg.setMsg(["success", `"${product.name}" is deleted`]);
+    }, page.alertMsg.setMsg);
+  }
+
   return (
     <tr id="product-row" onClick={() => nav(`/product/${product.id}`)}>
       <th scope="row">{product.id}</th>
@@ -44,7 +105,7 @@ export default function ProductRow({ product }) {
           <button
             type="button"
             class="btn btn-danger"
-            onClick={(e) => e.stopPropagation()}
+            onClick={handleDeleteProduct}
           >
             Delete
           </button>

@@ -11,5 +11,5 @@ import ProductLoaderCon from "./ProductLoaderCon";
 import { productAPI } from "../util/API/APIS";
 
 export default function Home(props) {
-  return <ProductLoaderCon filters />;
+  return <ProductLoaderCon />;
 }

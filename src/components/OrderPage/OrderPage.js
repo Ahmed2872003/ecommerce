@@ -10,9 +10,14 @@ import Order from "./Order";
 
 // CSS
 import "./OrderPage.css";
+import errorHandler from "../../util/errors/errorHandler";
 
 export default function OrderPage() {
-  const ordersDetails = useGetOrders();
+  const [isThereError, setIsThereError] = useState(false);
+
+  const ordersDetails = useGetOrders(setIsThereError);
+
+  if (isThereError) return null;
 
   return ordersDetails && ordersDetails.length ? (
     <div id="order">
@@ -29,7 +34,7 @@ export default function OrderPage() {
   );
 }
 
-function useGetOrders() {
+function useGetOrders(setIsThereError) {
   const [ordersDetails, setOrdersDetails] = useState(null);
 
   const page = useContext(pageContext);
@@ -37,13 +42,15 @@ function useGetOrders() {
   useEffect(() => {
     async function start() {
       page.loading.setLoading(true);
-      try {
+
+      const isThereError = await errorHandler(async () => {
         const { orders } = await orderAPI.get();
 
         setOrdersDetails(orders);
-      } catch (err) {
-        console.log(err);
-      }
+      }, page.alertMsg.setMsg);
+
+      setIsThereError(isThereError);
+
       page.loading.setLoading(false);
     }
 

@@ -5,6 +5,9 @@ import Product from "./Product";
 import LoadingIcons from "react-loading-icons";
 
 import productAPI from "../util/API/product";
+import AxiosAPIError from "../util/errors/AxiosAPIError";
+
+import errorHandler from "../util/errors/errorHandler";
 
 const productsLimit = 20;
 
@@ -52,33 +55,35 @@ export default function ProductLoaderCon(props) {
     (async () => {
       if (!filterChanged && pageNum === 1) return;
 
-      if (!isLoading) page.loading.setLoading(true);
+      await errorHandler(handleGetProductsWithFilters, page.alertMsg.setMsg);
 
-      try {
-        const { products, MatchedProductsCount } = await productAPI.get({
-          page: { eq: pageNum },
-          limit: { eq: productsLimit },
-          ...props.filters,
-        });
-
-        if (props.setResCount) props.setResCount(MatchedProductsCount);
-
-        if (products.length) {
-          setProducts((prevData) => {
-            return [...prevData, ...products];
-          });
-
-          getMoreProducts.current = true;
-        }
-      } catch (err) {
-        console.log(err);
-      }
       setIsLoading(false);
 
       setFilterChanged(false);
+
       if (!isLoading) page.loading.setLoading(false);
     })();
   }, [pageNum, filterChanged]);
+
+  async function handleGetProductsWithFilters() {
+    if (!isLoading) page.loading.setLoading(true);
+
+    const { products, MatchedProductsCount } = await productAPI.get({
+      page: { eq: pageNum },
+      limit: { eq: productsLimit },
+      ...props.filters,
+    });
+
+    if (props.setResCount) props.setResCount(MatchedProductsCount);
+
+    if (products.length) {
+      setProducts((prevData) => {
+        return [...prevData, ...products];
+      });
+
+      getMoreProducts.current = true;
+    }
+  }
 
   return (
     <>

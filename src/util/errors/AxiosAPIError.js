@@ -12,7 +12,7 @@ export default class AxiosAPIError extends Error {
       statusCode = axiosApiError.response.status;
       message = axiosApiError.response.data.msg;
     } else {
-      message = axiosApiError.message;
+      if (axiosApiError.message === "Network Error") message = "Server is down";
     }
 
     return new AxiosAPIError(statusCode, message);

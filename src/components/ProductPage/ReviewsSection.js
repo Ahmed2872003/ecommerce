@@ -8,11 +8,11 @@ import Review from "../Review";
 import LoadingIcons from "react-loading-icons";
 
 // Utils
-import CustomQuery from "../../util/CustomQuery";
 import Rating from "../Rating";
 import { userContext } from "../../Contexts/User";
 import { pageContext } from "../../Contexts/Page";
 import { productAPI, reviewAPI } from "../../util/API/APIS";
+import errorHandler from "../../util/errors/errorHandler";
 
 export default function ReveiwsSection(props) {
   const [reviewsData, setReviewsData] = useState([]);
@@ -40,31 +40,34 @@ export default function ReveiwsSection(props) {
         window.scrollY + window.innerHeight >=
         reviewsSection.current.offsetTop
       ) {
+        console.log("Called");
         const filter = {
           ProductId: { eq: props.productData.id },
           limit: { eq: 5 },
         };
 
-        const { reviews } = await reviewAPI.get({
-          ...filter,
-          CustomerId: { ne: isLoggedIn ? user.id : null },
-        });
+        await errorHandler(async () => {
+          const { reviews } = await reviewAPI.get({
+            ...filter,
+            CustomerId: { ne: isLoggedIn ? user.id : null },
+          });
 
-        const { reviews: userReview } = await reviewAPI.get({
-          ...filter,
-          CustomerId: { eq: isLoggedIn ? user.id : null },
-        });
+          const { reviews: userReview } = await reviewAPI.get({
+            ...filter,
+            CustomerId: { eq: isLoggedIn ? user.id : null },
+          });
+
+          setReviewsData(reviews);
+
+          setCurrentUserReview(userReview[0]);
+
+          setIsSectionLoading(false);
+
+          if (reviews.length === 5)
+            setMoreReviews((preValue) => ({ ...preValue, get: true }));
+        }, alertMsg.setMsg);
 
         window.removeEventListener("scroll", checkScrollThenFetch);
-
-        setReviewsData(reviews);
-
-        setCurrentUserReview(userReview[0]);
-
-        if (reviews.length === 5)
-          setMoreReviews((preValue) => ({ ...preValue, get: true }));
-
-        setIsSectionLoading(false);
       }
     }
 
@@ -76,7 +79,8 @@ export default function ReveiwsSection(props) {
   //   Handling function
   async function handleReviewsFilter(event) {
     event.stopPropagation();
-    try {
+
+    await errorHandler(async () => {
       const reviewRate = Number.parseInt(event.target.innerText);
 
       const filter = {
@@ -100,34 +104,35 @@ export default function ReveiwsSection(props) {
         setMoreReviews((preValue) => ({ ...preValue, get: true }));
 
       setIsReviewsLoading(false);
-
       setSelectedFilterId(event.target.parentNode.getAttribute("id"));
-    } catch (err) {
-      console.log(err);
-    }
+    }, alertMsg.setMsg);
   }
 
   async function handleGetMoreReviews() {
     const reviewRate = Number.parseInt(selectedFilterId);
+
     const filter = {
       ProductId: { eq: props.productData.id },
       CustomerId: { ne: isLoggedIn ? user.id : null },
       limit: { eq: 5 },
       page: { eq: reviewsData.length / 5 + 1 },
     };
+
     if (reviewRate)
       filter["rating"] = { gt: +reviewRate - 1, lte: +reviewRate };
 
     setMoreReviews((preValue) => ({ get: false, isLoading: true }));
 
-    const { reviews } = await reviewAPI.get(filter);
+    await errorHandler(async () => {
+      const { reviews } = await reviewAPI.get(filter);
 
-    setReviewsData((prevReviews) => [...prevReviews, ...reviews]);
+      setReviewsData((prevReviews) => [...prevReviews, ...reviews]);
 
-    if (reviews.length < 5)
-      setMoreReviews((preValue) => ({ ...preValue, get: false }));
-    else if (reviews.length === 5)
-      setMoreReviews((preValue) => ({ ...preValue, get: true }));
+      if (reviews.length < 5)
+        setMoreReviews((preValue) => ({ ...preValue, get: false }));
+      else if (reviews.length === 5)
+        setMoreReviews((preValue) => ({ ...preValue, get: true }));
+    }, alertMsg.setMsg);
 
     setMoreReviews((preValue) => ({ ...preValue, isLoading: false }));
   }
@@ -145,7 +150,7 @@ export default function ReveiwsSection(props) {
 
     const formData = new FormData(e.target);
 
-    try {
+    await errorHandler(async () => {
       await reviewAPI.post({
         comment: formData.get("reviewContent"),
         rating: formData.get("rating"),
@@ -169,9 +174,7 @@ export default function ReveiwsSection(props) {
 
       setCurrentUserReview(userReview || null);
       alertMsg.setMsg(["success", "Your review is added"]);
-    } catch (err) {
-      console.log(err.response);
-    }
+    }, alertMsg.setMsg);
 
     addReviewBtn.current["disabled"] = false;
     addReviewBtn.current.innerText = BtnTxt;
