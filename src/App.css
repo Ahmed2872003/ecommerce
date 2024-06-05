@@ -129,12 +129,12 @@ textarea {
 input:not([type="range"]):focus,
 textarea:focus {
   box-shadow: 2px 2px 5px -2px var(--amz-yellow),
-    -2px -2px 5px -2px var(--amz-yellow);
-  border: 1px solid var(--amz-yellow);
+    -2px -2px 5px -2px var(--amz-yellow) !important;
+  border: 1px solid var(--amz-yellow) !important;
 }
-input.wrong-input,
-input.wrong-input:focus {
-  box-shadow: 2px 2px 5px -2px var(--amz-red), -2px -2px 5px -2px var(--amz-red);
+.wrong-input,
+.wrong-input:focus {
+  box-shadow: 2px 2px 5px -2px var(--amz-red), -2px -2px 5px -2px var(--amz-red) !important;
   border: 1px solid var(--amz-red) !important;
 }
 

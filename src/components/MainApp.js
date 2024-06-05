@@ -13,6 +13,7 @@ import OrderPage from "./OrderPage/OrderPage";
 import FilterProductsPage from "./FilterProductsPage/FilterProductsPage";
 import AccountPage from "./AccountRelatedPages/AccountPage";
 import ManageProductsPage from "./AccountRelatedPages/ManageProductsPage";
+import AddProductPage from "./AccountRelatedPages/AddProductPage";
 // Utils
 import CustomSwitch from "../util/CustomSwitch";
 import { pageContext } from "../Contexts/Page";
@@ -82,8 +83,12 @@ export default function MainApp() {
 
             <Route path="account" element={<AccountPage />}></Route>
             <Route
-              path="account/products"
+              path="account/inventory/products"
               element={<ManageProductsPage />}
+            ></Route>
+            <Route
+              path="account/inventory/product/create"
+              element={<AddProductPage />}
             ></Route>
           </CustomSwitch>
         </main>
