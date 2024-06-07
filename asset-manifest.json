@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/ecommerce/static/css/main.a310283b.css",
-    "main.js": "/ecommerce/static/js/main.d58b009c.js",
+    "main.css": "/ecommerce/static/css/main.9b2c9961.css",
+    "main.js": "/ecommerce/static/js/main.9d404e16.js",
     "static/media/fa-solid-900.ttf": "/ecommerce/static/media/fa-solid-900.d75e3fd1eb12e9bd6655.ttf",
     "static/media/fa-brands-400.ttf": "/ecommerce/static/media/fa-brands-400.016b4a6cdced82ab3aa1.ttf",
     "static/media/fa-solid-900.woff2": "/ecommerce/static/media/fa-solid-900.b6879d41b0852f01ed5b.woff2",
@@ -15,11 +15,11 @@
     "static/media/revicons.woff": "/ecommerce/static/media/revicons.e8746a624ed098489406.woff",
     "static/media/fa-v4compatibility.woff2": "/ecommerce/static/media/fa-v4compatibility.1bac2991f3dbfa237aec.woff2",
     "index.html": "/ecommerce/index.html",
-    "main.a310283b.css.map": "/ecommerce/static/css/main.a310283b.css.map",
-    "main.d58b009c.js.map": "/ecommerce/static/js/main.d58b009c.js.map"
+    "main.9b2c9961.css.map": "/ecommerce/static/css/main.9b2c9961.css.map",
+    "main.9d404e16.js.map": "/ecommerce/static/js/main.9d404e16.js.map"
   },
   "entrypoints": [
-    "static/css/main.a310283b.css",
-    "static/js/main.d58b009c.js"
+    "static/css/main.9b2c9961.css",
+    "static/js/main.9d404e16.js"
   ]
 }
