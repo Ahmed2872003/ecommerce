@@ -51,8 +51,6 @@ export default function ManageProductsPage() {
     createdProducts &&
     calcPagesNum(createdProducts.MatchedProductsCount, limit);
 
-  console.log(createdProducts?.MatchedProductsCount);
-
   const pagesNumOptions =
     pagesNum &&
     Array(pagesNum)
