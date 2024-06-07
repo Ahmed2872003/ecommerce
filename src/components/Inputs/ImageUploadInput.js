@@ -6,24 +6,36 @@ import { Image } from "../../util/Image";
 import "./ImageUploadInput.css";
 import { useEffect, useState } from "react";
 
-export default function ImageUploadInput({ file, ind, setFormData, formData }) {
+export default function ImageUploadInput({
+  file,
+  ind,
+  formData,
+  setFormData,
+  setFormErrorMsgs,
+}) {
   const [base64Img, setBase64Img] = useState("");
+
+  useEffect(() => {
+    if (file) {
+      Image.toBase64(file).then((base64Image) => setBase64Img(base64Image));
+    }
+  }, [file]);
 
   async function handleImageChange(e) {
     const file = e.target.files[0];
 
     if (!file) return;
 
-    const base64Image = await Image.toBase64(file);
-
-    setBase64Img(base64Image);
-
     setFormData((prevFormData) => {
       const newImagesFiles = new Array(...prevFormData.images);
 
       newImagesFiles[+ind] = file;
 
-      console.log(newImagesFiles);
+      if (!newImagesFiles.slice(1).some((file) => file === undefined))
+        setFormErrorMsgs((errMsgs) => ({
+          ...errMsgs,
+          images: "",
+        }));
 
       return {
         ...prevFormData,
@@ -40,8 +52,6 @@ export default function ImageUploadInput({ file, ind, setFormData, formData }) {
 
       newImagesFiles[+ind] = undefined;
 
-      console.log(newImagesFiles);
-
       return {
         ...prevFormData,
         images: newImagesFiles,
@@ -49,13 +59,14 @@ export default function ImageUploadInput({ file, ind, setFormData, formData }) {
     });
   }
 
-  // console.log(formData);
-
   return (
     <div className="upload-img-con">
       {!file ? (
         <div className="input-sec">
-          <label className="file-input-label p-2" htmlFor={`image-${ind}`}>
+          <label
+            className="file-input-label p-2 btn btn-light"
+            htmlFor={`image-${ind}`}
+          >
             <span>
               <i class="fa-solid fa-upload"></i>
             </span>

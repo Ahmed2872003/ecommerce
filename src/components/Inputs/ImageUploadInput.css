@@ -19,10 +19,6 @@
   transition: var(--short-time);
 }
 
-.file-input-label:hover {
-  background-color: var(--bs-tertiary-bg);
-}
-
 .file-input-label i {
   font-size: calc(20px + 0.5vw);
 }

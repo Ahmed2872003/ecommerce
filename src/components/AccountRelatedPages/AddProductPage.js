@@ -4,7 +4,7 @@ import { useState } from "react";
 // CSS
 import "./AddProductPage.css";
 import { name } from "@cloudinary/url-gen/actions/namedTransformation";
-import { text } from "@cloudinary/url-gen/qualifiers/source";
+import { image, text } from "@cloudinary/url-gen/qualifiers/source";
 import ImageUploadInput from "../Inputs/ImageUploadInput";
 
 const nOfImages = 6;
@@ -41,8 +41,62 @@ export default function AddProductPage(props) {
   }
 
   function handleFormSubmit(e) {
-    console.log([...new FormData(e.target).entries()]);
     e.preventDefault();
+
+    if (!validateData()) return;
+
+    console.log("Pass");
+  }
+
+  function validateData() {
+    let isValide = true;
+
+    for (const fieldName in formData) {
+      if (fieldName === "images") {
+        if (isEmpty(["image", formData[fieldName][0]])) isValide = false;
+        if (isEmpty(["images", formData[fieldName].slice(1)])) isValide = false;
+      } else if (isEmpty([fieldName, formData[fieldName]])) isValide = false;
+    }
+
+    return isValide;
+
+    function isEmpty([field, val]) {
+      let emptyExist = false;
+
+      if (field === "image" && val) emptyExist = false;
+      else if (!val || (typeof val === "object" && val.some((f) => !f)))
+        emptyExist = true;
+
+      setFormErrorMsgs((preVal) => ({
+        ...preVal,
+        [field]: emptyExist ? "Required" : "",
+      }));
+
+      return emptyExist;
+    }
+  }
+
+  function handleMultiImagesChoose(e) {
+    const imagesFiles = e.target.files;
+
+    if (!imagesFiles.length) return;
+
+    if (imagesFiles.length !== 5) {
+      setFormErrorMsgs((errMsgs) => ({
+        ...errMsgs,
+        images: "Please choose exactly 5 images",
+      }));
+      return;
+    }
+    setFormErrorMsgs((errMsgs) => ({
+      ...errMsgs,
+      images: "",
+    }));
+
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      images: [prevFormData.images[0], ...imagesFiles],
+    }));
   }
 
   const uploadImgElements = new Array(nOfImages - 1)
@@ -53,12 +107,11 @@ export default function AddProductPage(props) {
           file={formData.images[ind + 1]}
           ind={ind + 1}
           setFormData={setFormData}
+          setFormErrorMsgs={setFormErrorMsgs}
           formData={formData}
         />
       </div>
     ));
-
-  // console.log(formData.images);
 
   return (
     <>
@@ -81,7 +134,7 @@ export default function AddProductPage(props) {
               />
             </div>
             {formErrorMsgs.name && (
-              <div className="form-text text-danger" id="basic-addon4">
+              <div className="form-text text-danger fw-bold" id="basic-addon4">
                 {formErrorMsgs.name}
               </div>
             )}
@@ -104,7 +157,7 @@ export default function AddProductPage(props) {
               {`${txtBoxLen}/500`}
             </div>
             {formErrorMsgs.description && (
-              <div className="form-text text-danger" id="basic-addon4">
+              <div className="form-text text-danger fw-bold" id="basic-addon4">
                 {formErrorMsgs.description}
               </div>
             )}
@@ -124,7 +177,7 @@ export default function AddProductPage(props) {
               <span class="input-group-text">.00 $</span>
             </div>
             {formErrorMsgs.price && (
-              <div className="form-text text-danger" id="basic-addon4">
+              <div className="form-text text-danger fw-bold" id="basic-addon4">
                 {formErrorMsgs.price}
               </div>
             )}
@@ -146,27 +199,52 @@ export default function AddProductPage(props) {
               />
             </div>
             {formErrorMsgs.quantity && (
-              <div className="form-text text-danger" id="basic-addon4">
+              <div className="form-text text-danger fw-bold" id="basic-addon4">
                 {formErrorMsgs.quantity}
               </div>
             )}
           </div>
           <div className="mb-4">
-            <div className="form-text" id="basic-addon4">
+            <div className="form-text mb-3" id="basic-addon4">
               Main image
             </div>
-            <div className="col d-flex">
+            <div className="col d-flex align-items-center">
               <ImageUploadInput
                 file={formData.images[0]}
                 ind="0"
                 setFormData={setFormData}
+                setFormErrorMsgs={setFormErrorMsgs}
                 formData={formData}
               />
+              {formErrorMsgs.image && (
+                <span className="text-danger ms-3 fw-bold">
+                  {formErrorMsgs.image}
+                </span>
+              )}
             </div>
           </div>
           <div className="mb-4">
-            <div className="form-text" id="basic-addon4">
+            <div className="form-text mb-3" id="basic-addon4">
               Images
+            </div>
+            <div className="mb-3">
+              <label htmlFor="images-upload-input" className="btn btn-light">
+                Upload images
+              </label>
+              {formErrorMsgs.images && (
+                <span className="ms-3  text-danger fw-bold">
+                  {formErrorMsgs.images}
+                </span>
+              )}
+              <input
+                className="d-none"
+                id={`images-upload-input`}
+                type="file"
+                name="images"
+                multiple
+                accept="image/png, image/jpeg"
+                onChange={handleMultiImagesChoose}
+              />
             </div>
             <div className="d-flex gap-5 row">{uploadImgElements}</div>
             <br />
