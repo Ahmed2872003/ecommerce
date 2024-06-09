@@ -1,5 +1,6 @@
-// Modules
-import { useState } from "react";
+// Hooks
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 
 // CSS
 import "./AddProductPage.css";
@@ -7,117 +8,65 @@ import { name } from "@cloudinary/url-gen/actions/namedTransformation";
 import { image, text } from "@cloudinary/url-gen/qualifiers/source";
 import ImageUploadInput from "../Inputs/ImageUploadInput";
 
+// Modules
+import { Image } from "../../util/Image";
+
 const nOfImages = 6;
+const textRegExp = /^([a-z]\s?)+[\sa-z0-9.,'’"?!&()\-:;\/]*$/i;
 
 export default function AddProductPage(props) {
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    price: 10,
-    quantity: 1,
-    images: new Array(nOfImages).fill(undefined),
+  const {
+    register,
+    handleSubmit,
+
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      name: "",
+      description: "",
+      price: 10,
+      quantity: 1,
+      image: null,
+      images: null,
+    },
   });
 
-  const [formErrorMsgs, setFormErrorMsgs] = useState({
-    name: "",
-    description: "",
-    price: "",
-    quantity: "",
-    image: "",
-    images: "",
-  });
+  const [base64Imgs, setBase64Imgs] = useState(null);
+  const [base64Img, setBase64Img] = useState(null);
 
   const [txtBoxLen, setTxtBoxLen] = useState(0);
 
-  function handleFormDataChange(e) {
-    let { name, value } = e.target;
-
-    if ((name === "price" || name === "quantity") && !Number.isInteger(+value))
-      value = Math.floor(value);
-
-    if (name === "description") setTxtBoxLen(value.length);
-
-    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  function handleFormSubmit(data) {
+    console.log(data);
   }
 
-  function handleFormSubmit(e) {
-    e.preventDefault();
+  async function handelImgsChange(e) {
+    const imgsFiles = Array.from(e.target.files);
 
-    if (!validateData()) return;
+    if (!imgsFiles.length) return setBase64Imgs(null);
 
-    console.log("Pass");
+    const convertToBase64Promises = imgsFiles.map((f) => Image.toBase64(f));
+
+    const base64Imgs = await Promise.all(convertToBase64Promises);
+
+    setBase64Imgs(base64Imgs);
   }
 
-  function validateData() {
-    let isValide = true;
+  async function handleImgChange(e) {
+    const imgFile = e.target.files[0];
 
-    for (const fieldName in formData) {
-      if (fieldName === "images") {
-        if (isEmpty(["image", formData[fieldName][0]])) isValide = false;
-        if (isEmpty(["images", formData[fieldName].slice(1)])) isValide = false;
-      } else if (isEmpty([fieldName, formData[fieldName]])) isValide = false;
-    }
+    if (!imgFile) return setBase64Img(null);
 
-    return isValide;
+    const base64Img = await Image.toBase64(imgFile);
 
-    function isEmpty([field, val]) {
-      let emptyExist = false;
-
-      if (field === "image" && val) emptyExist = false;
-      else if (!val || (typeof val === "object" && val.some((f) => !f)))
-        emptyExist = true;
-
-      setFormErrorMsgs((preVal) => ({
-        ...preVal,
-        [field]: emptyExist ? "Required" : "",
-      }));
-
-      return emptyExist;
-    }
+    setBase64Img(base64Img);
   }
-
-  function handleMultiImagesChoose(e) {
-    const imagesFiles = e.target.files;
-
-    if (!imagesFiles.length) return;
-
-    if (imagesFiles.length !== 5) {
-      setFormErrorMsgs((errMsgs) => ({
-        ...errMsgs,
-        images: "Please choose exactly 5 images",
-      }));
-      return;
-    }
-    setFormErrorMsgs((errMsgs) => ({
-      ...errMsgs,
-      images: "",
-    }));
-
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      images: [prevFormData.images[0], ...imagesFiles],
-    }));
-  }
-
-  const uploadImgElements = new Array(nOfImages - 1)
-    .fill(null)
-    .map((val, ind) => (
-      <div className="col-12 col-sm-5 col-md d-flex justify-content-center">
-        <ImageUploadInput
-          file={formData.images[ind + 1]}
-          ind={ind + 1}
-          setFormData={setFormData}
-          setFormErrorMsgs={setFormErrorMsgs}
-          formData={formData}
-        />
-      </div>
-    ));
 
   return (
     <>
       <h4 className="title">Create product</h4>
       <div className="container" id="add-product-con">
-        <form onSubmit={handleFormSubmit}>
+        <form onSubmit={handleSubmit(handleFormSubmit)}>
           <div className="mb-4">
             <div className="input-group">
               <span className="input-group-text" id="basic-addon1">
@@ -125,17 +74,24 @@ export default function AddProductPage(props) {
               </span>
               <input
                 type="text"
-                value={formData.name}
-                onChange={handleFormDataChange}
-                name="name"
-                className={`form-control ${
-                  formErrorMsgs.name ? "wrong-input" : ""
-                }`}
+                className={`form-control ${errors.name ? "wrong-input" : ""}`}
+                {...register("name", {
+                  required: "Required",
+                  minLength: { value: 5, message: "length should be >= 5" },
+                  maxLength: { value: 50, message: "Length should be <= 50" },
+                  pattern: {
+                    value: textRegExp,
+                    message: `1- Should start with an alphapet\n2- Shouldn't contain special characters except ( space . , ' ’ " ? ! & ( ) - : / )`,
+                  },
+                })}
               />
             </div>
-            {formErrorMsgs.name && (
-              <div className="form-text text-danger fw-bold" id="basic-addon4">
-                {formErrorMsgs.name}
+            {errors.name && (
+              <div
+                className="form-text text-danger fw-bold err-con"
+                id="basic-addon4"
+              >
+                {errors.name.message}
               </div>
             )}
           </div>
@@ -143,22 +99,31 @@ export default function AddProductPage(props) {
             <div className="input-group">
               <span className="input-group-text">Description</span>
               <textarea
-                value={formData.description}
-                name="description"
-                onChange={handleFormDataChange}
                 className={`form-control ${
-                  formErrorMsgs.description ? "wrong-input" : ""
+                  errors.description ? "wrong-input" : ""
                 }`}
-                minLength="5"
-                maxLength="500"
+                {...register("description", {
+                  required: "Required",
+                  minLength: { value: 100, message: "length should be >= 100" },
+                  maxLength: { value: 500, message: "Length should be <= 500" },
+                  pattern: {
+                    value: textRegExp,
+                    message: `1- Should start with an alphapet\n2- Shouldn't contain special characters except ( space . , ' ’ " ? ! & ( ) - : / )`,
+                  },
+                  onChange: (e) => setTxtBoxLen(e.target.value.length),
+                })}
+                maxLength={"500"}
               ></textarea>
             </div>
-            <div className="form-text text-end" id="basic-addon4">
+            <div className="form-text text-end" id="basic err-con-addon4">
               {`${txtBoxLen}/500`}
             </div>
-            {formErrorMsgs.description && (
-              <div className="form-text text-danger fw-bold" id="basic-addon4">
-                {formErrorMsgs.description}
+            {errors.description && (
+              <div
+                className="form-text text-danger fw-bold err-con"
+                id="basic-addon4"
+              >
+                {errors.description.message}
               </div>
             )}
           </div>
@@ -167,18 +132,29 @@ export default function AddProductPage(props) {
               <input
                 type="number"
                 name="price"
-                value={formData.price}
                 step="1"
-                onChange={handleFormDataChange}
-                className={`form-control ${
-                  formErrorMsgs.price ? "wrong-input" : ""
-                }`}
+                className={`form-control ${errors.price ? "wrong-input" : ""}`}
+                {...register("price", {
+                  required: "Required",
+                  // min: 10,
+                  validate: {
+                    isInteger: (num) => Number.isInteger(+num),
+                    matchMin: (num) => +num >= 10,
+                  },
+                })}
               />
               <span class="input-group-text">.00 $</span>
             </div>
-            {formErrorMsgs.price && (
-              <div className="form-text text-danger fw-bold" id="basic-addon4">
-                {formErrorMsgs.price}
+            {errors.price && (
+              <div
+                className="form-text text-danger fw-bold err-con"
+                id="basic-addon4"
+              >
+                {errors.price.type === "isInteger"
+                  ? "Value must be an integer"
+                  : errors.price.type === "matchMin"
+                  ? "Value must be >= 10$"
+                  : errors.price.message}
               </div>
             )}
           </div>
@@ -189,69 +165,98 @@ export default function AddProductPage(props) {
               </span>
               <input
                 type="number"
-                value={formData.quantity}
                 name="quantity"
                 step="1"
-                onChange={handleFormDataChange}
                 className={`form-control ${
-                  formErrorMsgs.quantity ? "wrong-input" : ""
+                  errors.quantity ? "wrong-input" : ""
                 }`}
+                {...register("quantity", {
+                  required: "Required",
+                  validate: {
+                    isInteger: (num) => Number.isInteger(+num),
+                    isPositive: (num) => +num >= 0,
+                    matchMin: (num) => +num >= 1,
+                  },
+                })}
               />
             </div>
-            {formErrorMsgs.quantity && (
-              <div className="form-text text-danger fw-bold" id="basic-addon4">
-                {formErrorMsgs.quantity}
+            {errors.quantity && (
+              <div
+                className="form-text text-danger fw-bold err-con"
+                id="basic-addon4"
+              >
+                {errors.quantity.type === "isInteger"
+                  ? "Value must be an integer"
+                  : errors.quantity.type === "isPositive"
+                  ? "Value must be positive"
+                  : errors.quantity.type === "matchMin"
+                  ? "Value must be >= 1"
+                  : errors.quantity.message}
               </div>
             )}
           </div>
           <div className="mb-4">
-            <div className="form-text mb-3" id="basic-addon4">
-              Main image
-            </div>
-            <div className="col d-flex align-items-center">
+            <div className="mb-3">
+              <div className="form-text mb-3" id="basic-add err-conon4">
+                Main image
+              </div>
               <ImageUploadInput
-                file={formData.images[0]}
-                ind="0"
-                setFormData={setFormData}
-                setFormErrorMsgs={setFormErrorMsgs}
-                formData={formData}
+                registerData={register("image", {
+                  required: "Required",
+                  onChange: handleImgChange,
+                })}
               />
-              {formErrorMsgs.image && (
-                <span className="text-danger ms-3 fw-bold">
-                  {formErrorMsgs.image}
+              {errors.images && (
+                <span className="ms-3  text-danger fw-bold">
+                  {errors.images.type === "matchImgsNum"
+                    ? `Number of images must be ${nOfImages - 1} images`
+                    : errors.images.message}
                 </span>
               )}
             </div>
+            {base64Img && (
+              <div className="img-cover" style={{ width: "fit-content" }}>
+                <img src={base64Img} href="" />
+              </div>
+            )}
           </div>
           <div className="mb-4">
-            <div className="form-text mb-3" id="basic-addon4">
+            <div className="form-text mb-3" id="basic-add err-conon4">
               Images
             </div>
-            <div className="mb-3">
-              <label htmlFor="images-upload-input" className="btn btn-light">
-                Upload images
-              </label>
-              {formErrorMsgs.images && (
-                <span className="ms-3  text-danger fw-bold">
-                  {formErrorMsgs.images}
-                </span>
-              )}
-              <input
-                className="d-none"
-                id={`images-upload-input`}
-                type="file"
-                name="images"
-                multiple
-                accept="image/png, image/jpeg"
-                onChange={handleMultiImagesChoose}
-              />
-            </div>
-            <div className="d-flex gap-5 row">{uploadImgElements}</div>
-            <br />
             <div className="hint">
               <i className="fa-solid fa-circle-exclamation"></i>
-              <p>You can click on the image to delete it</p>
+              <p>Choose exactly 5 images</p>
             </div>
+            <br />
+            <div className="mb-3">
+              <ImageUploadInput
+                multiple={true}
+                registerData={register("images", {
+                  required: "Required",
+                  onChange: handelImgsChange,
+                  validate: {
+                    matchImgsNum: (val) => val.length === nOfImages - 1,
+                  },
+                })}
+              />
+              {errors.images && (
+                <span className="ms-3  text-danger fw-bold">
+                  {errors.images.type === "matchImgsNum"
+                    ? `Number of images must be ${nOfImages - 1} images`
+                    : errors.images.message}
+                </span>
+              )}
+            </div>
+            {base64Imgs && (
+              <div className="row">
+                {base64Imgs.map((base64Img) => (
+                  <div className="col img-cover">
+                    <img src={base64Img} href="" />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           <div className="text-end">
             <button type="submit" className="btn btn-warning">
