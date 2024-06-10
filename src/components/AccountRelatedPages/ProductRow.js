@@ -76,6 +76,7 @@ export default function ProductRow({
       <th scope="row">{product.id}</th>
       <td id="small-img">
         <AdvancedImage
+          className="w-100"
           cldImg={cloudinary.image(product.image)}
           alt={product.name}
         />

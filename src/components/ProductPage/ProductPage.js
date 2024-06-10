@@ -2,6 +2,8 @@
 import { useEffect, useRef, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router";
 import cloudinary from "../../util/cloudinary";
+import { CloudinaryImage } from "@cloudinary/url-gen/index";
+import { fill } from "@cloudinary/url-gen/actions/resize";
 import ReactDOMServer from "react-dom/server";
 // Components
 import { AdvancedImage } from "@cloudinary/react";
@@ -163,16 +165,18 @@ export default function ProductPage(props) {
         <div id="productPage">
           <div className="d-flex gap-4 flex-column flex-md-row flex-md-wrap flex-lg-nowrap">
             <div className="slide-container">
-              <Slide transitionDuration={500}>
+              <Slide transitionDuration={500} autoplay={false}>
                 {productData.images.map((imgUrl, index) => {
                   const imageObj = cloudinary.image(imgUrl);
 
                   return (
-                    <AdvancedImage
-                      cldImg={imageObj}
-                      alt={productData.name}
-                      key={imgUrl}
-                    />
+                    <div className="d-flex align-items-center h-100">
+                      <AdvancedImage
+                        cldImg={imageObj}
+                        alt={productData.name}
+                        key={imgUrl}
+                      />
+                    </div>
                   );
                 })}
               </Slide>
@@ -199,7 +203,7 @@ export default function ProductPage(props) {
               </p>
               <hr />
               <div className="mt-5 mb-5">
-                <p>
+                <p style={{ whiteSpace: "pre-line" }}>
                   <strong>Description: </strong>
                   {productData.description}
                 </p>

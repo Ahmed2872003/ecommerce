@@ -36,7 +36,7 @@ export default function AddProductPage(props) {
     },
   });
 
-  const { alertMsg } = useContext(pageContext);
+  const page = useContext(pageContext);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -58,29 +58,31 @@ export default function AddProductPage(props) {
 
     setBase64(isMultipleImgs ? base64 : base64[0]);
   }
+
   async function handleFormSubmit(data) {
-    [data.image] = await compressFormList(data.image);
-    data.images = await compressFormList(data.images);
+    console.log(data);
+    // [data.image] = await compressFormList(data.image);
+    // data.images = await compressFormList(data.images);
 
-    const formData = new FormData();
+    // const formData = new FormData();
 
-    data.images.forEach((img) => formData.append("images", img));
+    // data.images.forEach((img) => formData.append("images", img));
 
-    delete data.images;
+    // delete data.images;
 
-    Object.keys(data).forEach((key) => formData.append(key, data[key]));
+    // Object.keys(data).forEach((key) => formData.append(key, data[key]));
 
-    setIsSubmitting(true);
+    // setIsSubmitting(true);
 
-    const isError = await errorHandler(async () => {
-      await productAPI.post(formData, {
-        "Content-Type": "multipart/form-data",
-      });
-    }, alertMsg.setMsg);
+    // const isError = await errorHandler(async () => {
+    //   await productAPI.post(formData, {
+    //     "Content-Type": "multipart/form-data",
+    //   });
+    // }, page.alertMsg.setMsg);
 
-    setIsSubmitting(false);
+    // setIsSubmitting(false);
 
-    if (!isError) alertMsg.setMsg(["success", "Product has been created"]);
+    // if (!isError) page.alertMsg.setMsg(["success", "Product has been created"]);
   }
 
   async function compressFormList(formList) {
