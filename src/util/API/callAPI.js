@@ -25,9 +25,9 @@ export default class CallAPI {
     }
   }
 
-  async post(endpoint, data) {
+  async post(endpoint, data, headers = {}) {
     try {
-      const res = await axiosAPI.post(`/${endpoint}`, data);
+      const res = await axiosAPI.post(`/${endpoint}`, data, { headers });
 
       return res.data ? res.data.data : undefined;
     } catch (err) {

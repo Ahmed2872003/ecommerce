@@ -11,8 +11,8 @@ class ProductAPI extends CallAPI {
     return await super.getById(this.#endpointFirst, id);
   }
 
-  async post(data) {
-    return await super.post(this.#endpointFirst, data);
+  async post(data, headers = {}) {
+    return await super.post(this.#endpointFirst, data, headers);
   }
 
   async updateById(id, data) {

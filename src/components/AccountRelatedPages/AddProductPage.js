@@ -1,24 +1,29 @@
 // Hooks
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState, useContext } from "react";
+import { Form, useForm } from "react-hook-form";
 
 // CSS
 import "./AddProductPage.css";
-import { name } from "@cloudinary/url-gen/actions/namedTransformation";
-import { image, text } from "@cloudinary/url-gen/qualifiers/source";
+
 import ImageUploadInput from "../Inputs/ImageUploadInput";
 
 // Modules
 import { Image } from "../../util/Image";
+import { pageContext } from "../../Contexts/Page";
+import errorHandler from "../../util/errors/errorHandler";
+import { productAPI } from "../../util/API/APIS";
 
 const nOfImages = 6;
+
 const textRegExp = /^([a-z]\s?)+[\sa-z0-9.,'’"?!&()\-:;\/]*$/i;
 
 export default function AddProductPage(props) {
   const {
     register,
     handleSubmit,
-
+    trigger,
+    getValues,
+    setValue: setFormData,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -31,35 +36,67 @@ export default function AddProductPage(props) {
     },
   });
 
-  const [base64Imgs, setBase64Imgs] = useState(null);
+  const { alertMsg } = useContext(pageContext);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [base64Img, setBase64Img] = useState(null);
+  const [base64Imgs, setBase64Imgs] = useState(null);
 
   const [txtBoxLen, setTxtBoxLen] = useState(0);
 
-  function handleFormSubmit(data) {
-    console.log(data);
-  }
+  async function handleImgsChange(e) {
+    const isMultipleImgs = e.target.multiple;
 
-  async function handelImgsChange(e) {
+    const setBase64 = isMultipleImgs ? setBase64Imgs : setBase64Img;
+
     const imgsFiles = Array.from(e.target.files);
 
-    if (!imgsFiles.length) return setBase64Imgs(null);
+    if (!imgsFiles.length) return setBase64(null);
 
-    const convertToBase64Promises = imgsFiles.map((f) => Image.toBase64(f));
+    const base64 = await Promise.all(imgsFiles.map((f) => Image.toBase64(f)));
 
-    const base64Imgs = await Promise.all(convertToBase64Promises);
+    setBase64(isMultipleImgs ? base64 : base64[0]);
+  }
+  async function handleFormSubmit(data) {
+    [data.image] = await compressFormList(data.image);
+    data.images = await compressFormList(data.images);
 
-    setBase64Imgs(base64Imgs);
+    const formData = new FormData();
+
+    data.images.forEach((img) => formData.append("images", img));
+
+    delete data.images;
+
+    Object.keys(data).forEach((key) => formData.append(key, data[key]));
+
+    setIsSubmitting(true);
+
+    const isError = await errorHandler(async () => {
+      await productAPI.post(formData, {
+        "Content-Type": "multipart/form-data",
+      });
+    }, alertMsg.setMsg);
+
+    setIsSubmitting(false);
+
+    if (!isError) alertMsg.setMsg(["success", "Product has been created"]);
   }
 
-  async function handleImgChange(e) {
-    const imgFile = e.target.files[0];
+  async function compressFormList(formList) {
+    const compressOptions = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 800,
+      initialQuality: 0.8,
+    };
 
-    if (!imgFile) return setBase64Img(null);
+    const files = Array.from(formList);
 
-    const base64Img = await Image.toBase64(imgFile);
+    const compressedFiles = await Promise.all(
+      files.map((file) => Image.compress(file, compressOptions))
+    );
 
-    setBase64Img(base64Img);
+    return compressedFiles;
   }
 
   return (
@@ -203,20 +240,18 @@ export default function AddProductPage(props) {
               <ImageUploadInput
                 registerData={register("image", {
                   required: "Required",
-                  onChange: handleImgChange,
+                  onChange: handleImgsChange,
                 })}
               />
-              {errors.images && (
+              {errors.image && (
                 <span className="ms-3  text-danger fw-bold">
-                  {errors.images.type === "matchImgsNum"
-                    ? `Number of images must be ${nOfImages - 1} images`
-                    : errors.images.message}
+                  {errors.image.message}
                 </span>
               )}
             </div>
             {base64Img && (
               <div className="img-cover" style={{ width: "fit-content" }}>
-                <img src={base64Img} href="" />
+                <img src={base64Img} alt="" loading="lazy" />
               </div>
             )}
           </div>
@@ -234,7 +269,7 @@ export default function AddProductPage(props) {
                 multiple={true}
                 registerData={register("images", {
                   required: "Required",
-                  onChange: handelImgsChange,
+                  onChange: handleImgsChange,
                   validate: {
                     matchImgsNum: (val) => val.length === nOfImages - 1,
                   },
@@ -249,17 +284,21 @@ export default function AddProductPage(props) {
               )}
             </div>
             {base64Imgs && (
-              <div className="row">
+              <div className="row" style={{ width: "fit-content" }}>
                 {base64Imgs.map((base64Img) => (
                   <div className="col img-cover">
-                    <img src={base64Img} href="" />
+                    <img src={base64Img} alt="" loading="lazy" />
                   </div>
                 ))}
               </div>
             )}
           </div>
           <div className="text-end">
-            <button type="submit" className="btn btn-warning">
+            <button
+              type="submit"
+              className="btn btn-warning"
+              disabled={isSubmitting}
+            >
               Submit
             </button>
           </div>
