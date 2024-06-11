@@ -3,11 +3,13 @@ import { axiosAPI } from "../../util/axios";
 import AxiosAPIError from "../errors/AxiosAPIError";
 
 export default class CallAPI {
-  async get(endpoint, filters) {
+  async get(endpoint, filters, params) {
     const query = CustomQuery.stringRepOf(filters);
 
     try {
-      const res = await axiosAPI.get(`/${endpoint}?` + query);
+      const res = await axiosAPI.get(`/${endpoint}?` + query, {
+        params,
+      });
 
       return res.data ? res.data.data : undefined;
     } catch (err) {
@@ -61,3 +63,7 @@ export default class CallAPI {
     }
   }
 }
+
+const callAPI = new CallAPI();
+
+export { callAPI };

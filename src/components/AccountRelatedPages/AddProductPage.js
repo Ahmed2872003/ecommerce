@@ -11,6 +11,7 @@ import ImageUploadInput from "../Inputs/ImageUploadInput";
 import { Image } from "../../util/Image";
 import { pageContext } from "../../Contexts/Page";
 import errorHandler from "../../util/errors/errorHandler";
+import { callAPI } from "../../util/API/callAPI";
 import { productAPI } from "../../util/API/APIS";
 
 const nOfImages = 6;
@@ -24,13 +25,15 @@ export default function AddProductPage(props) {
     trigger,
     getValues,
     setValue: setFormData,
-    formState: { errors },
+    formState: { errors, defaultValues },
   } = useForm({
     defaultValues: {
       name: "",
       description: "",
       price: 10,
       quantity: 1,
+      CategoryId: "Choose...",
+      BrandId: "Choose...",
       image: null,
       images: null,
     },
@@ -41,9 +44,20 @@ export default function AddProductPage(props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [base64Img, setBase64Img] = useState(null);
+
   const [base64Imgs, setBase64Imgs] = useState(null);
 
   const [txtBoxLen, setTxtBoxLen] = useState(0);
+
+  const [isBrandsLoading, setIsBrandsLoading] = useState(false);
+
+  const categories = useGetCategories(page);
+
+  const brands = useGetBrands(
+    getValues("CategoryId"),
+    page,
+    setIsBrandsLoading
+  );
 
   async function handleImgsChange(e) {
     const isMultipleImgs = e.target.multiple;
@@ -60,29 +74,28 @@ export default function AddProductPage(props) {
   }
 
   async function handleFormSubmit(data) {
-    console.log(data);
-    // [data.image] = await compressFormList(data.image);
-    // data.images = await compressFormList(data.images);
+    [data.image] = await compressFormList(data.image);
+    data.images = await compressFormList(data.images);
 
-    // const formData = new FormData();
+    const formData = new FormData();
 
-    // data.images.forEach((img) => formData.append("images", img));
+    data.images.forEach((img) => formData.append("images", img));
 
-    // delete data.images;
+    delete data.images;
 
-    // Object.keys(data).forEach((key) => formData.append(key, data[key]));
+    Object.keys(data).forEach((key) => formData.append(key, data[key]));
 
-    // setIsSubmitting(true);
+    setIsSubmitting(true);
 
-    // const isError = await errorHandler(async () => {
-    //   await productAPI.post(formData, {
-    //     "Content-Type": "multipart/form-data",
-    //   });
-    // }, page.alertMsg.setMsg);
+    const isError = await errorHandler(async () => {
+      await productAPI.post(formData, {
+        "Content-Type": "multipart/form-data",
+      });
+    }, page.alertMsg.setMsg);
 
-    // setIsSubmitting(false);
+    setIsSubmitting(false);
 
-    // if (!isError) page.alertMsg.setMsg(["success", "Product has been created"]);
+    if (!isError) page.alertMsg.setMsg(["success", "Product has been created"]);
   }
 
   async function compressFormList(formList) {
@@ -100,6 +113,16 @@ export default function AddProductPage(props) {
 
     return compressedFiles;
   }
+
+  const categoriesOptions =
+    categories &&
+    categories.map((category) => (
+      <option value={category.id}>{category.name}</option>
+    ));
+
+  const brandsOptions =
+    brands &&
+    brands.map((brand) => <option value={brand.id}>{brand.name}</option>);
 
   return (
     <>
@@ -167,7 +190,7 @@ export default function AddProductPage(props) {
             )}
           </div>
           <div className="mb-4">
-            <div class="input-group">
+            <div className="input-group">
               <input
                 type="number"
                 name="price"
@@ -175,14 +198,13 @@ export default function AddProductPage(props) {
                 className={`form-control ${errors.price ? "wrong-input" : ""}`}
                 {...register("price", {
                   required: "Required",
-                  // min: 10,
                   validate: {
                     isInteger: (num) => Number.isInteger(+num),
                     matchMin: (num) => +num >= 10,
                   },
                 })}
               />
-              <span class="input-group-text">.00 $</span>
+              <span className="input-group-text">.00 $</span>
             </div>
             {errors.price && (
               <div
@@ -197,42 +219,112 @@ export default function AddProductPage(props) {
               </div>
             )}
           </div>
-          <div className="mb-4" style={{ width: "fit-content" }}>
-            <div className="input-group">
-              <span className="input-group-text" id="basic-addon1">
-                Quantity
-              </span>
-              <input
-                type="number"
-                name="quantity"
-                step="1"
-                className={`form-control ${
-                  errors.quantity ? "wrong-input" : ""
-                }`}
-                {...register("quantity", {
-                  required: "Required",
-                  validate: {
-                    isInteger: (num) => Number.isInteger(+num),
-                    isPositive: (num) => +num >= 0,
-                    matchMin: (num) => +num >= 1,
-                  },
-                })}
-              />
-            </div>
-            {errors.quantity && (
-              <div
-                className="form-text text-danger fw-bold err-con"
-                id="basic-addon4"
-              >
-                {errors.quantity.type === "isInteger"
-                  ? "Value must be an integer"
-                  : errors.quantity.type === "isPositive"
-                  ? "Value must be positive"
-                  : errors.quantity.type === "matchMin"
-                  ? "Value must be >= 1"
-                  : errors.quantity.message}
+          <div
+            className="d-flex flex-column mb-4"
+            style={{ width: "fit-content" }}
+          >
+            <div className="mb-4 w-100">
+              <div className="input-group">
+                <span className="input-group-text" id="basic-addon1">
+                  Quantity
+                </span>
+                <input
+                  type="number"
+                  name="quantity"
+                  step="1"
+                  className={`form-control ${
+                    errors.quantity ? "wrong-input" : ""
+                  }`}
+                  {...register("quantity", {
+                    required: "Required",
+                    validate: {
+                      isInteger: (num) => Number.isInteger(+num),
+                      isPositive: (num) => +num >= 0,
+                      matchMin: (num) => +num >= 1,
+                    },
+                  })}
+                />
               </div>
-            )}
+              {errors.quantity && (
+                <div
+                  className="form-text text-danger fw-bold err-con"
+                  id="basic-addon4"
+                >
+                  {errors.quantity.type === "isInteger"
+                    ? "Value must be an integer"
+                    : errors.quantity.type === "isPositive"
+                    ? "Value must be positive"
+                    : errors.quantity.type === "matchMin"
+                    ? "Value must be >= 1"
+                    : errors.quantity.message}
+                </div>
+              )}
+            </div>
+            <div className="mb-4 w-100">
+              <div className="input-group">
+                <label className="input-group-text" for="inputGroupSelect01">
+                  Category
+                </label>
+                <select
+                  disabled={isBrandsLoading}
+                  className={`form-select ${
+                    errors.CategoryId ? "wrong-input" : ""
+                  }`}
+                  id="inputGroupSelect01"
+                  {...register("CategoryId", {
+                    required: "Required",
+                    validate: {
+                      isSelected: (val) => val !== defaultValues.CategoryId,
+                    },
+                    onChange: (e) => {
+                      setFormData("BrandId", defaultValues.BrandId);
+                      setIsBrandsLoading(true);
+                      trigger("CategoryId");
+                    },
+                  })}
+                >
+                  <option selected>Choose...</option>
+                  {categoriesOptions}
+                </select>
+              </div>
+              {errors.CategoryId && (
+                <div className="form-text text-danger fw-bold err-con">
+                  {errors.CategoryId.type === "isSelected"
+                    ? "Required"
+                    : errors.CategoryId.message}
+                </div>
+              )}
+            </div>
+            <div className="w-100">
+              <div className="input-group">
+                <label className="input-group-text" for="inputGroupSelect01">
+                  Brand
+                </label>
+                <select
+                  disabled={isBrandsLoading}
+                  className={`form-select ${
+                    errors.BrandId ? "wrong-input" : ""
+                  }`}
+                  id="inputGroupSelect01"
+                  {...register("BrandId", {
+                    required: "Required",
+                    validate: {
+                      isSelected: (val) => val !== defaultValues.BrandId,
+                    },
+                  })}
+                >
+                  <option selected>Choose...</option>
+                  {brandsOptions}
+                </select>
+              </div>
+              {errors.BrandId && (
+                <div className="form-text text-danger fw-bold err-con">
+                  {errors.BrandId.type === "isSelected"
+                    ? "Required"
+                    : errors.BrandId.message}
+                </div>
+              )}
+            </div>
           </div>
           <div className="mb-4">
             <div className="mb-3">
@@ -308,4 +400,36 @@ export default function AddProductPage(props) {
       </div>
     </>
   );
+}
+
+function useGetCategories(page) {
+  const [categories, setCategories] = useState(null);
+
+  useEffect(() => {
+    page.loading.setLoading(true);
+    errorHandler(async () => {
+      const categories = await callAPI.get("category");
+
+      page.loading.setLoading(false);
+      setCategories(categories);
+    }, page.alertMsg.setMsg);
+  }, []);
+
+  return categories;
+}
+
+function useGetBrands(categoryId, page, setIsBrandsLoading) {
+  const [brands, setBrands] = useState(null);
+
+  useEffect(() => {
+    errorHandler(async () => {
+      if (!Number.isInteger(+categoryId)) return;
+
+      const brands = await callAPI.get("category/brands", null, { categoryId });
+
+      setBrands(brands);
+    }, page.alertMsg.setMsg).finally(() => setIsBrandsLoading(false));
+  }, [categoryId]);
+
+  return brands;
 }
