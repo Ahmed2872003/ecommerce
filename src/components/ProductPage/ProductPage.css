@@ -19,7 +19,7 @@
 .slide-container {
   max-width: 800px;
   max-height: 800px;
-  min-width: 500px;
+  min-width: 280px;
   align-self: flex-start;
   margin: 0 auto;
   position: sticky;
