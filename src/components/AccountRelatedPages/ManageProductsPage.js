@@ -98,8 +98,12 @@ export default function ManageProductsPage() {
                       Date Updated
                     </th>
                   </th>
-                  <th scope="col">Available</th>
-                  <th scope="col">Price</th>
+                  <th scope="col" className="d-none d-lg-table-cell">
+                    Available
+                  </th>
+                  <th scope="col" className="d-none d-lg-table-cell">
+                    Price
+                  </th>
                 </tr>
               </thead>
               <tbody>{productRows}</tbody>

@@ -85,14 +85,14 @@ export default function ProductRow({
       </td>
       <td>{product.name}</td>
       <td>
-        {product.createdAt}
-        <br />{" "}
+        {product.createdAt.split("T")[0]}
+        <br />
         <th scope="col" style={{ color: "var(--amz-grey)" }}>
-          {product.updatedAt}
+          {product.updatedAt.split("T")[0]}
         </th>
       </td>
-      <td>{product.quantity}</td>
-      <td>
+      <td className="d-none d-lg-table-cell">{product.quantity}</td>
+      <td className="d-none d-lg-table-cell">
         {product.price}&nbsp;
         {product.currency}
       </td>

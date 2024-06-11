@@ -12,7 +12,9 @@ a,
 p,
 span,
 i,
-button {
+button,
+th,
+td {
   white-space: pre-line;
   font-size: calc(0.5rem + 0.423vw);
 }
