@@ -140,7 +140,7 @@ export default function AddProductPage(props) {
                 {...register("name", {
                   required: "Required",
                   minLength: { value: 5, message: "length should be >= 5" },
-                  maxLength: { value: 50, message: "Length should be <= 50" },
+                  maxLength: { value: 100, message: "Length should be <= 100" },
                   pattern: {
                     value: textRegExp,
                     message: `1- Should start with an alphapet\n2- Shouldn't contain special characters except ( space . , ' ’ " ? ! & ( ) - : / )`,

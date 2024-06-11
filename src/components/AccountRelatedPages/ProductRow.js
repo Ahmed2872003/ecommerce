@@ -69,6 +69,8 @@ export default function ProductRow({
 
       page.alertMsg.setMsg(["success", `"${product.name}" is deleted`]);
     }, page.alertMsg.setMsg);
+
+    setIsPageChanging(false);
   }
 
   return (
