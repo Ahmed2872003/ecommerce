@@ -17,9 +17,7 @@
 }
 
 .slide-container {
-  max-width: 800px;
-  max-height: 800px;
-  min-width: 280px;
+  width: 50%;
   align-self: flex-start;
   margin: 0 auto;
   position: sticky;
@@ -39,7 +37,7 @@
 }
 
 .slide-container img {
-  width: 100%;
+  width: 50%;
 }
 
 #product-name {

@@ -170,7 +170,7 @@ export default function ProductPage(props) {
                   const imageObj = cloudinary.image(imgUrl);
 
                   return (
-                    <div className="d-flex align-items-center h-100">
+                    <div className="d-flex align-items-center justify-content-center h-100">
                       <AdvancedImage
                         cldImg={imageObj}
                         alt={productData.name}

@@ -12,6 +12,7 @@
 }
 .img-cover img {
   max-width: var(--max-img-width);
+  height: 100%;
 }
 .img-cover,
 .product {
