@@ -166,19 +166,16 @@ export default function ProductPage(props) {
           <div className="d-flex gap-4 flex-column flex-md-row flex-md-wrap flex-lg-nowrap">
             <div className="slide-container">
               <Slide transitionDuration={500} autoplay={false}>
-                {productData.images.map((imgUrl, index) => {
-                  const imageObj = cloudinary.image(imgUrl);
-
-                  return (
-                    <div className="d-flex align-items-center justify-content-center h-100">
-                      <AdvancedImage
-                        cldImg={imageObj}
-                        alt={productData.name}
-                        key={imgUrl}
-                      />
-                    </div>
-                  );
-                })}
+                {productData.images.map((imgUrl, index) => (
+                  <div className="d-flex align-items-center justify-content-center h-100">
+                    <AdvancedImage
+                      cldImg={cloudinary.image(imgUrl)}
+                      loading="lazy"
+                      alt={productData.name}
+                      key={imgUrl}
+                    />
+                  </div>
+                ))}
               </Slide>
             </div>
             <div id="product-detail">

@@ -1,5 +1,6 @@
 // Hooks
 import { useEffect, useState, useContext } from "react";
+import { useLocation } from "react-router-dom";
 import { Form, useForm } from "react-hook-form";
 
 // CSS
@@ -13,12 +14,18 @@ import { pageContext } from "../../Contexts/Page";
 import errorHandler from "../../util/errors/errorHandler";
 import { callAPI } from "../../util/API/callAPI";
 import { productAPI } from "../../util/API/APIS";
+import cloudinary from "../../util/cloudinary";
+import { AdvancedImage } from "@cloudinary/react";
 
 const nOfImages = 6;
 
 const textRegExp = /^([a-z]\s?)+[\sa-z0-9.,'’"?!&()\-:;\/]*$/i;
 
 export default function AddProductPage(props) {
+  const { state } = useLocation();
+
+  const product = state?.product;
+
   const {
     register,
     handleSubmit,
@@ -28,14 +35,14 @@ export default function AddProductPage(props) {
     formState: { errors, defaultValues },
   } = useForm({
     defaultValues: {
-      name: "",
-      description: "",
-      price: 10,
-      quantity: 1,
-      CategoryId: "Choose...",
-      BrandId: "Choose...",
+      name: product?.name || "",
+      description: product?.description || "",
+      price: product?.price || "",
+      quantity: product?.quantity || "",
+      CategoryId: product?.CategoryId || undefined,
+      BrandId: product?.BrandId || undefined,
       image: null,
-      images: null,
+      images: [],
     },
   });
 
@@ -47,7 +54,7 @@ export default function AddProductPage(props) {
 
   const [base64Imgs, setBase64Imgs] = useState(null);
 
-  const [txtBoxLen, setTxtBoxLen] = useState(0);
+  const [txtBoxLen, setTxtBoxLen] = useState(product?.description.length || 0);
 
   const [isBrandsLoading, setIsBrandsLoading] = useState(false);
 
@@ -74,8 +81,8 @@ export default function AddProductPage(props) {
   }
 
   async function handleFormSubmit(data) {
-    [data.image] = await compressFormList(data.image);
-    data.images = await compressFormList(data.images);
+    [data.image] = await compressFiles(data.image);
+    data.images = await compressFiles(data.images);
 
     const formData = new FormData();
 
@@ -87,28 +94,38 @@ export default function AddProductPage(props) {
 
     setIsSubmitting(true);
 
+    console.log([...formData]);
+
     const isError = await errorHandler(async () => {
-      await productAPI.post(formData, {
-        "Content-Type": "multipart/form-data",
-      });
+      product
+        ? await productAPI.updateById(product.id, formData)
+        : await productAPI.post(formData, {
+            "Content-Type": "multipart/form-data",
+          });
     }, page.alertMsg.setMsg);
 
     setIsSubmitting(false);
 
-    if (!isError) page.alertMsg.setMsg(["success", "Product has been created"]);
+    if (!isError)
+      page.alertMsg.setMsg([
+        "success",
+        `Product has been ${product ? "updated" : "created"}`,
+      ]);
   }
 
-  async function compressFormList(formList) {
+  async function compressFiles(filesList) {
+    if (!filesList || !filesList.length) return [null];
+
     const compressOptions = {
       maxSizeMB: 1,
       maxWidthOrHeight: 800,
       initialQuality: 0.8,
     };
 
-    const files = Array.from(formList);
+    const filesArr = Array.from(filesList);
 
     const compressedFiles = await Promise.all(
-      files.map((file) => Image.compress(file, compressOptions))
+      filesArr.map((file) => Image.compress(file, compressOptions))
     );
 
     return compressedFiles;
@@ -126,7 +143,7 @@ export default function AddProductPage(props) {
 
   return (
     <>
-      <h4 className="title">Create product</h4>
+      <h4 className="title">{product ? "Update" : "Create"} product</h4>
       <div className="container" id="add-product-con">
         <form onSubmit={handleSubmit(handleFormSubmit)}>
           <div className="mb-4">
@@ -274,7 +291,7 @@ export default function AddProductPage(props) {
                   {...register("CategoryId", {
                     required: "Required",
                     validate: {
-                      isSelected: (val) => val !== defaultValues.CategoryId,
+                      isSelected: (val) => val !== "Choose...",
                     },
                     onChange: (e) => {
                       setFormData("BrandId", defaultValues.BrandId);
@@ -282,6 +299,7 @@ export default function AddProductPage(props) {
                       trigger("CategoryId");
                     },
                   })}
+                  value={product?.CategoryId}
                 >
                   <option selected>Choose...</option>
                   {categoriesOptions}
@@ -309,9 +327,10 @@ export default function AddProductPage(props) {
                   {...register("BrandId", {
                     required: "Required",
                     validate: {
-                      isSelected: (val) => val !== defaultValues.BrandId,
+                      isSelected: (val) => val !== "Choose...",
                     },
                   })}
+                  value={product?.BrandId}
                 >
                   <option selected>Choose...</option>
                   {brandsOptions}
@@ -333,7 +352,7 @@ export default function AddProductPage(props) {
               </div>
               <ImageUploadInput
                 registerData={register("image", {
-                  required: "Required",
+                  required: product ? false : "Required",
                   onChange: handleImgsChange,
                 })}
               />
@@ -343,9 +362,16 @@ export default function AddProductPage(props) {
                 </span>
               )}
             </div>
-            {base64Img && (
+            {(base64Img || product) && (
               <div className="img-cover" style={{ width: "fit-content" }}>
-                <img src={base64Img} alt="" loading="lazy" />
+                {base64Img && <img src={base64Img} alt="" loading="lazy" />}
+                {product && !base64Img && (
+                  <AdvancedImage
+                    cldImg={cloudinary.image(product.image)}
+                    alt=""
+                    loading="lazy"
+                  />
+                )}
               </div>
             )}
           </div>
@@ -362,10 +388,11 @@ export default function AddProductPage(props) {
               <ImageUploadInput
                 multiple={true}
                 registerData={register("images", {
-                  required: "Required",
+                  required: product ? false : "Required",
                   onChange: handleImgsChange,
                   validate: {
-                    matchImgsNum: (val) => val.length === nOfImages - 1,
+                    matchImgsNum: (val) =>
+                      val.length ? val.length === nOfImages - 1 : product,
                   },
                 })}
               />
@@ -377,13 +404,25 @@ export default function AddProductPage(props) {
                 </span>
               )}
             </div>
-            {base64Imgs && (
+            {(base64Imgs || product) && (
               <div className="row" style={{ width: "fit-content" }}>
-                {base64Imgs.map((base64Img) => (
-                  <div className="col img-cover">
-                    <img src={base64Img} alt="" loading="lazy" />
-                  </div>
-                ))}
+                {base64Imgs &&
+                  base64Imgs.map((base64Img) => (
+                    <div className="col img-cover">
+                      <img src={base64Img} alt="" loading="lazy" />
+                    </div>
+                  ))}
+                {product &&
+                  !base64Imgs &&
+                  product.images.map((cldURL) => (
+                    <div className="col img-cover">
+                      <AdvancedImage
+                        cldImg={cloudinary.image(cldURL)}
+                        alt=""
+                        loading="lazy"
+                      />
+                    </div>
+                  ))}
               </div>
             )}
           </div>
@@ -393,7 +432,7 @@ export default function AddProductPage(props) {
               className="btn btn-warning"
               disabled={isSubmitting}
             >
-              Submit
+              {product ? "Update" : "Create"}
             </button>
           </div>
         </form>

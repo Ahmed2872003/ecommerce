@@ -101,7 +101,10 @@ export default function ProductRow({
           <button
             type="button"
             class="btn btn-light"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation();
+              nav("/account/inventory/product/create", { state: { product } });
+            }}
           >
             Edit
           </button>
