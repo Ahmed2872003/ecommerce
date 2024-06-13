@@ -12,6 +12,7 @@ const userContext = createContext();
 
 function UserContextProvider({ children }) {
   const [user, setUser] = useState(getCurrentCustomerData());
+
   const nav = useNavigate();
 
   const isLoggedIn = user ? true : false;

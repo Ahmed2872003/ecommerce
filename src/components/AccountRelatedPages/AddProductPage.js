@@ -11,6 +11,7 @@ import ImageUploadInput from "../Inputs/ImageUploadInput";
 // Modules
 import { Image } from "../../util/Image";
 import { pageContext } from "../../Contexts/Page";
+import { userContext } from "../../Contexts/User";
 import errorHandler from "../../util/errors/errorHandler";
 import { callAPI } from "../../util/API/callAPI";
 import { productAPI } from "../../util/API/APIS";
@@ -90,11 +91,11 @@ export default function AddProductPage(props) {
 
     delete data.images;
 
+    if (!data.image) delete data.image;
+
     Object.keys(data).forEach((key) => formData.append(key, data[key]));
 
     setIsSubmitting(true);
-
-    console.log([...formData]);
 
     const isError = await errorHandler(async () => {
       product
@@ -114,7 +115,7 @@ export default function AddProductPage(props) {
   }
 
   async function compressFiles(filesList) {
-    if (!filesList || !filesList.length) return [null];
+    if (!filesList || !filesList.length) return [];
 
     const compressOptions = {
       maxSizeMB: 1,

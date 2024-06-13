@@ -20,14 +20,15 @@ export default function Login() {
 
     try {
       const { customer, token } = await authAPI.login(formData);
+      const auth = `Bearer ${token}`;
 
       localStorage.setItem("customer", JSON.stringify(customer));
-      localStorage.setItem("token", `Bearer ${token}`);
+      localStorage.setItem("token", auth);
 
-      axiosAPI.interceptors.request.use((config) => {
-        config.headers.Authorization = `Bearer ${token}`;
-        return config;
-      });
+      axiosAPI.defaults.headers = {
+        ...axiosAPI.defaults.headers,
+        Authorization: auth,
+      };
 
       navigate("/");
     } catch (err) {

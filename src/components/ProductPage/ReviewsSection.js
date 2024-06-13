@@ -40,7 +40,6 @@ export default function ReveiwsSection(props) {
         window.scrollY + window.innerHeight >=
         reviewsSection.current.offsetTop
       ) {
-        console.log("Called");
         const filter = {
           ProductId: { eq: props.productData.id },
           limit: { eq: 5 },
