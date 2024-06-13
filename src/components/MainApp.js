@@ -104,10 +104,9 @@ function useMergeCart(setNumberOfCartItems) {
 
       if (getCurrentCustomerData() && LSCart.length) {
         // The user is logged in
-        window.localStorage.removeItem("cart");
 
         try {
-          await mergetCart(LSCart);
+          if (await mergetCart(LSCart)) window.localStorage.removeItem("cart");
 
           const { cart } = await cartAPI.get(null);
 
@@ -135,7 +134,9 @@ async function mergetCart(LSCart) {
       errs.push(err);
     }
   }
-  if (errs.length) console.log(errs);
+  if (errs.length) return false;
+
+  return true;
 }
 
 const getLSCart = () => JSON.parse(window.localStorage.getItem("cart") || "[]");

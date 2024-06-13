@@ -210,7 +210,8 @@ export default function Header({ numberOfCartItems, setNumberOfCartItems }) {
                     <Link
                       to="/auth/login"
                       onClick={async () => {
-                        localStorage.clear();
+                        localStorage.removeItem("customer");
+                        localStorage.removeItem("token");
                         setUser(null);
                       }}
                     >
