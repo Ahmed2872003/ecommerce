@@ -30,8 +30,6 @@ export default function ProductRow({
   const page = useContext(pageContext);
 
   async function handleDeleteProduct(e) {
-    e.stopPropagation();
-
     const deleteIntent = window.confirm(
       `Are you  sure you want to delete "${product.name}"?`
     );
@@ -97,24 +95,33 @@ export default function ProductRow({
         {product.currency}
       </td>
       <td>
-        <div className="btn-group">
+        <div class="btn-group" onClick={(e) => e.stopPropagation()}>
           <button
             type="button"
-            class="btn btn-light"
-            onClick={(e) => {
-              e.stopPropagation();
-              nav("/account/inventory/product/create", { state: { product } });
-            }}
+            class="btn btn-secondary dropdown-toggle"
+            data-bs-toggle="dropdown"
+            data-bs-display="static"
+            aria-expanded="false"
           >
-            Edit
+            Actions
           </button>
-          <button
-            type="button"
-            class="btn btn-danger"
-            onClick={handleDeleteProduct}
+          <ul
+            class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start"
+            onClick={(e) => e.currentTarget.classList.remove("show")}
           >
-            Delete
-          </button>
+            <li
+              onClick={(e) => {
+                nav("/account/inventory/product/create", {
+                  state: { product },
+                });
+              }}
+            >
+              <button class="dropdown-item btn">Edit</button>
+            </li>
+            <li onClick={handleDeleteProduct}>
+              <button class="dropdown-item btn btn-danger">Delete</button>
+            </li>
+          </ul>
         </div>
       </td>
     </tr>
