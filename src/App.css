@@ -200,6 +200,7 @@ main {
   position: relative;
   z-index: 0;
   width: 100%;
+  min-height: 800px;
   flex: 1;
 }
 

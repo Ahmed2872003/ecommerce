@@ -24,7 +24,9 @@ export default function ProductLoaderCon(props) {
   // useEffect
   useEffect(() => {
     function handleScroll() {
-      let documentHeight = document.body.scrollHeight;
+      const footerElement = document.querySelector("#navFooter");
+      let documentHeight =
+        document.body.scrollHeight - footerElement.clientHeight;
       let currentScroll = window.scrollY + window.innerHeight;
       const modifier = 20;
 

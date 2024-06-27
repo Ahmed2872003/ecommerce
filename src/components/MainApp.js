@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { Route } from "react-router-dom";
 // Components
 import Header from "./HeaderSection/Header";
+import Footer from "./Footer";
 import Home from "./Home";
 import ProductPage from "./ProductPage/ProductPage";
 import Spinner from "./Spinner";
@@ -92,6 +93,7 @@ export default function MainApp() {
             ></Route>
           </CustomSwitch>
         </main>
+        <Footer />
       </div>
     </UserContextProvider>
   );
