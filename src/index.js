@@ -5,6 +5,9 @@ import "./Normalizatoin.css";
 import "bootstrap/dist/css/bootstrap.css";
 import "../node_modules/bootstrap/js/dist/dropdown";
 
+// Context
+import { PageContextProvider } from "./Contexts/Page";
+
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import App from "./App";
 

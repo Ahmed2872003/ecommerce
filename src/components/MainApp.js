@@ -1,6 +1,6 @@
 // Modules
 import { useContext, useEffect, useState } from "react";
-import { Route } from "react-router-dom";
+import { Route, useLocation } from "react-router-dom";
 // Components
 import Header from "./HeaderSection/Header";
 import Footer from "./Footer";
@@ -95,6 +95,7 @@ export default function MainApp() {
         </main>
         <Footer />
       </div>
+      <RestoreAlertMsg />
     </UserContextProvider>
   );
 }
@@ -142,3 +143,13 @@ async function mergetCart(LSCart) {
 }
 
 const getLSCart = () => JSON.parse(window.localStorage.getItem("cart") || "[]");
+
+function RestoreAlertMsg() {
+  const page = useContext(pageContext);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    page.alertMsg.setMsg(["", ""]);
+  }, [location.pathname]);
+}
