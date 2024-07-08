@@ -24,12 +24,7 @@
   font-family: inherit;
   white-space: normal;
 }
-a,
-a:link,
-a:visited {
-  text-decoration: none;
-  color: #007185;
-}
+
 #navFooter.navLeftFooter .navFooterBackToTop .navFooterBackToTopText {
   color: #fff;
 }
@@ -116,8 +111,8 @@ ul li {
 #navFooter.navLeftFooter li.nav_a_carat span.nav_a_carat {
   color: #ddd;
 }
-#navFooter a:active,
-#navFooter a:active span,
+#navFooter a:not(#navBackToTop):active,
+#navFooter a:not(#navBackToTop):active span,
 #navFooter a:not(#navBackToTop):hover,
 #navFooter a:not(#navBackToTop):hover span {
   text-decoration: underline;
