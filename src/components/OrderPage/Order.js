@@ -23,6 +23,7 @@ export default function Order({ order }) {
   const deliveryDateFrom = createdAt.getDateAfter(order.delivery_estimate[0]);
 
   const deliveryDateTo = createdAt.getDateAfter(order.delivery_estimate[1]);
+  console.log(order.Customer);
 
   return (
     <div id={`${order.id} `} className="order">
@@ -64,7 +65,7 @@ export default function Order({ order }) {
         ></i>
       </div>
       <div
-        className={`order-body d-${
+        className={`order-body gap-3 d-${
           selected ? "flex" : "none"
         } flex-wrap-reverse`}
       >
@@ -82,10 +83,21 @@ export default function Order({ order }) {
             ))}
           </div>
         </div>
-        <div className="amount-con">
-          <p>Subtotal&ensp;{order.subtotal}$</p>
-          <p>Shipping&ensp;{order.shipping_amount}$</p>
-          <p>Total&ensp;{order.total_amount}$</p>
+        <div className="d-flex flex-column gap-3">
+          <div className="amount-con">
+            <p>Subtotal&ensp;{order.subtotal}$</p>
+            <p>Shipping&ensp;{order.shipping_amount}$</p>
+            <p>Total&ensp;{order.total_amount}$</p>
+          </div>
+          {order.Customer && (
+            <Link
+              to={""}
+              className="a-hover fw-bold"
+              state={{ id: order.Customer.id }}
+            >
+              Customer info
+            </Link>
+          )}
         </div>
       </div>
     </div>

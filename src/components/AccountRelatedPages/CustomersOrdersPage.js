@@ -1,18 +1,10 @@
-// Modules
-import { useEffect, useState, useContext } from "react";
-
-// Utils
-import { pageContext } from "../../Contexts/Page";
-import { orderAPI } from "../../util/API/APIS";
-
-// Components
-import Order from "./Order";
-
-// CSS
-import "./OrderPage.css";
+import { useContext, useEffect, useState } from "react";
+import Order from "../OrderPage/Order";
 import errorHandler from "../../util/errors/errorHandler";
+import { pageContext } from "../../Contexts/Page";
+import orderAPI from "../../util/API/orderAPI";
 
-export default function OrderPage() {
+export default function CustomersOrdersPage(props) {
   const [isThereError, setIsThereError] = useState(false);
 
   const ordersDetails = useGetOrders(setIsThereError);
@@ -21,7 +13,7 @@ export default function OrderPage() {
 
   return ordersDetails && ordersDetails.length ? (
     <div id="order">
-      <h4 className="title">Your Orders</h4>
+      <h4 className="title">Orders</h4>
       <div id="orders-con">
         <p>Total: {ordersDetails.length}</p>
         {ordersDetails.map((order) => (
@@ -44,7 +36,7 @@ function useGetOrders(setIsThereError) {
       page.loading.setLoading(true);
 
       const isThereError = await errorHandler(async () => {
-        const { orders } = await orderAPI.get();
+        const { orders } = await orderAPI.get("/incoming");
 
         setOrdersDetails(orders);
       }, page.alertMsg.setMsg);

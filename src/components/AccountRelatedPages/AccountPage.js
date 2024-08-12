@@ -60,6 +60,36 @@ export default function AccountPage() {
             </div>
           )}
         </div>
+
+        <div className="row">
+          {user.seller && (
+            <div className="col">
+              <Link to="/account/customers/orders" className="serv-card">
+                <img
+                  src={require("../../images/customer-orders.png")}
+                  alt="account-service"
+                />
+
+                <div>
+                  <h5>Orders</h5>
+                  <p>Customers orders</p>
+                </div>
+              </Link>
+            </div>
+          )}
+          <div className="col">
+            <Link to="/account/inventory/products" className="serv-card">
+              <span className="icon-con">
+                <i class="fa-solid fa-user"></i>
+              </span>
+
+              <div>
+                <h5>Profile</h5>
+                <p>Personal information</p>
+              </div>
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

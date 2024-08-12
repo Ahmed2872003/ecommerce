@@ -3,8 +3,8 @@ import CallAPI from "./callAPI";
 class OrderAPI extends CallAPI {
   #endpointFirst = "order";
 
-  async get() {
-    return await super.get(this.#endpointFirst, null);
+  async get(endpoint = "") {
+    return await super.get(this.#endpointFirst + endpoint, null);
   }
 }
 

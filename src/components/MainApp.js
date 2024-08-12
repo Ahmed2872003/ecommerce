@@ -21,6 +21,7 @@ import { pageContext } from "../Contexts/Page";
 import { UserContextProvider } from "../Contexts/User";
 import getCurrentCustomerData from "../util/getCurrentUserData";
 import { cartAPI } from "../util/API/APIS";
+import CustomersOrdersPage from "./AccountRelatedPages/CustomersOrdersPage";
 
 export default function MainApp() {
   const [numberOfCartItems, setNumberOfCartItems] = useState(0);
@@ -90,6 +91,10 @@ export default function MainApp() {
             <Route
               path="account/inventory/product/create"
               element={<AddProductPage />}
+            ></Route>
+            <Route
+              path="account/customers/orders"
+              element={<CustomersOrdersPage />}
             ></Route>
           </CustomSwitch>
         </main>
