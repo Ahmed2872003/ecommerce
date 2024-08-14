@@ -83,19 +83,7 @@ export default function MainApp() {
               element={<SuccessPayment />}
             ></Route>
 
-            <Route path="account" element={<AccountPage />}></Route>
-            <Route
-              path="account/inventory/products"
-              element={<ManageProductsPage />}
-            ></Route>
-            <Route
-              path="account/inventory/product/create"
-              element={<AddProductPage />}
-            ></Route>
-            <Route
-              path="account/customers/orders"
-              element={<CustomersOrdersPage />}
-            ></Route>
+            <Route path="account/*" element={<AccountPage />}></Route>
           </CustomSwitch>
         </main>
         <Footer />

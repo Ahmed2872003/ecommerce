@@ -55,7 +55,7 @@
 }
 
 .order-products-con img {
-  max-width: var(--max-img-width);
+  width: 15%;
   align-self: center;
   cursor: pointer;
 }

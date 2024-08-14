@@ -92,7 +92,7 @@ export default function Order({ order }) {
           {order.Customer && (
             <Link
               to={""}
-              className="a-hover fw-bold"
+              className="a-hover fw-bold text-decoration-underline"
               state={{ id: order.Customer.id }}
             >
               Customer info

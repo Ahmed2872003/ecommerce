@@ -139,7 +139,7 @@ export default function Review(props) {
       <div className="review-con" id={props.reviewData.id}>
         <div className="w-50">
           <img
-            src={require("../images/customer.jpeg")}
+            src={require("../images/customer.png")}
             alt="customer-img"
             width={34}
             height={34}
